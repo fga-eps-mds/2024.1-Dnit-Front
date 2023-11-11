@@ -14,6 +14,7 @@ import SolicitacaoAcao from "./pages/SolicitacaoAcao/";
 import TelaUPS from "./pages/UPS/";
 import GerenciarPerfis from "./pages/gerencia/GerenciarPerfis";
 import GerenciarUsuario from "./pages/gerencia/GerenciarUsuario";
+import GerenciarEmpresas from "./pages/gerencia/GerenciarEmpresas";
 import { AuthContext, configuraAutenticacaoAxios } from "./provider/Autenticacao";
 import "./styles/App.css";
 
@@ -35,6 +36,7 @@ function App() {
           <Route path="/telaUPS" element={<TelaUPS />} />
           <Route path="/gerenciarUsuario" element={<GerenciarUsuario />}/>
           <Route path="/gerenciarPerfis" element={<GerenciarPerfis />} />
+          <Route path="/gerenciarEmpresas" element={<GerenciarEmpresas/>}/>
         </>
       ) : (
         <>
