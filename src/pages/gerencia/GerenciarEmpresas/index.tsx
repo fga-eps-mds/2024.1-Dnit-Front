@@ -22,12 +22,12 @@ interface EmpresaDialogArgs {
 export default function GerenciarEmpresas() {
     const paginas = [{nome: "Gerenciar Empresas", link: "/gerenciarEmpresas"}];
     const [listaEmpresas, setListaEmpresas] = useState(exampleData);
-		const [empresaSelecionada, setEmpresaSelecionada] = useState('');
-		const [showEmpresa, setShowEmpresa] = useState<EmpresaDialogArgs | null>(null);
+	// const [empresaSelecionada, setEmpresaSelecionada] = useState<empresaModel | null>(null);
+	const [showEmpresa, setShowEmpresa] = useState<EmpresaDialogArgs | null>(null);
 
     return (
 			<div className="App">
-				{showEmpresa && <EditarEmpresasDialog closeDialog={() => setShowEmpresa(null)}/>}
+				{showEmpresa && <EditarEmpresasDialog id={showEmpresa.id} readOnly={showEmpresa.readOnly} closeDialog={() => setShowEmpresa(null)}/>}
 				<Header/>
 				<TrilhaDeNavegacao elementosLi={paginas}/>
 					<Table title="Empresas Cadastradas" initialItemsPerPage={10} columsTitle={["Razão Social", "CNPJ", "UFs"]}>
@@ -37,8 +37,12 @@ export default function GerenciarEmpresas() {
 									key={`${empresa.Cnpj}`} id={index}
 									data={{'0': empresa.RazaoSocial, '1': empresa.Cnpj, '2': empresa.Ufs.join(', ')}}
 									onEditRow={() => {
-										setEmpresaSelecionada(empresa.Cnpj)
+										// setEmpresaSelecionada(empresa.Cnpj)
 										setShowEmpresa({id: empresa.Cnpj, readOnly: false})
+									}}
+									onDetailRow={() => {
+										// setEmpresaSelecionada(empresa.Cnpj)
+										setShowEmpresa({id: empresa.Cnpj, readOnly: true})
 									}}
 								/>
 							))
