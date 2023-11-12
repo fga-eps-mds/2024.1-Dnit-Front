@@ -183,3 +183,9 @@ export interface CalcularUpsResponse {
   ups2022: number;
   upsGeral: number;
 }
+
+export interface CadastroEmpresaData {
+  Cnpj: string;
+  RazaoSocial: string;
+  UFs: number[];
+}

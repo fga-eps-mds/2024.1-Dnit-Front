@@ -1,5 +1,5 @@
-export interface empresaModel {
-    Cnpj: string;
-    RazaoSocial: string;
-    Ufs: string[];
+export interface EmpresaModel {
+    cnpj: string;
+    razaoSocial: string;
+    uFs: number[];
 }
