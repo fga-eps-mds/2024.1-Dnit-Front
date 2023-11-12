@@ -11,47 +11,17 @@ import { notification } from "antd";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../provider/Autenticacao";
 import { Permissao } from "../../../models/auth";
-// import { EditarEmpresaDialog } from "../../../components/EditarEmpresaDialog"
-
-// const exampleData: Array<EmpresaModel> = [
-//     {Cnpj: "123456789", RazaoSocial: "Empresa A", Ufs: ['1', '2', '3']},
-//     {Cnpj: "123456781", RazaoSocial: "Empresa A", Ufs: ['1', '2', '3']},
-//     {Cnpj: "123456735", RazaoSocial: "Empresa A", Ufs: ['1', '2', '3']}
-// ]
+import InputFilter from "../../../components/InputFilter";
 
 interface EmpresaDialogArgs {
   id: string | null;
   readOnly: boolean;
 }
 
-interface FiltroRazaoSocialProps {
-  nome?: string;
-  onNomeChange: (nome: string) => void;
-}
-
-export function FiltroRazaoSocial({ onNomeChange, nome }: FiltroRazaoSocialProps) {
-  return (
-    <div className="d-flex flex-column ml-3 mt-5 mb-5">
-      <label className="ml-2" style={{ textAlign: 'start', fontSize: '16px' }}>Razao Social:</label>
-      <div className="d-flex" style={{ fontSize: '16px' }}>
-        <div className="br-input large input-button">
-          <input data-testid="filtroNome" className="br-input-search-large" type="search" placeholder="Razão Social" value={nome}
-            onChange={e => onNomeChange(e.target.value)}
-          />
-          <button className="br-button" type="button" aria-label="Buscar" onClick={() => { }}>
-            <i className="fas fa-search" aria-hidden="true"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function GerenciarEmpresas() {
     const paginas = [{nome: "Gerenciar Empresas", link: "/gerenciarEmpresas"}];
 	const [loading, setLoading] = useState(false);
     const [listaEmpresas, setListaEmpresas] = useState<EmpresaModel[]>([]);
-	// const [empresaSelecionada, setEmpresaSelecionada] = useState<EmpresaModel | null>(null);
 	const [showEmpresa, setShowEmpresa] = useState<EmpresaDialogArgs | null>(null);
 	const [razaoSocial, setRazaoSocial] = useState('');
 	const [cnpj, setCnpj] = useState('');
@@ -96,7 +66,7 @@ export default function GerenciarEmpresas() {
 			<TrilhaDeNavegacao elementosLi={paginas}/>
 			<div className="d-flex flex-column m-5">
 				<div className="d-flex justify-content-left align-items-center mr-5">
-        			<FiltroRazaoSocial onNomeChange={setRazaoSocial}></FiltroRazaoSocial>
+        			<InputFilter onChange={setRazaoSocial} dataTestId="filtroRazaoSocial" label="Razão Social" placeholder="Razão Social" />
         		</div>
 				{listaEmpresas.length === 0 && <Table columsTitle={["Razão Social", "CNPJ", "UFs"]} initialItemsPerPage={10} title="Empresas Cadastradas"><></><></></Table>}
 				<Table title="Empresas Cadastradas" initialItemsPerPage={10} columsTitle={["Razão Social", "CNPJ", "UFs"]}>
@@ -104,7 +74,7 @@ export default function GerenciarEmpresas() {
 						listaEmpresas.map((empresa, index) => (
 							<CustomTableRow 
 								key={`${empresa.cnpj}`} id={index}
-								data={{'0': empresa.razaoSocial, '1': empresa.cnpj, '2': empresa.uFs.map(String).join(', ')}}
+								data={{'0': empresa.razaoSocial, '1': empresa.cnpj, '2': empresa.uFs.map((e) => e.sigla).join(', ')}}
 								onEditRow={() => {
 									// setEmpresaSelecionada(empresa.Cnpj)
 									setShowEmpresa({id: empresa.cnpj, readOnly: false})
