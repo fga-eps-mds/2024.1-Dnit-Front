@@ -25,7 +25,7 @@ const perfil: PerfilModel = {
 export const usuarios: UsuarioModel[] = [
   {
     id: "0",
-    cnpj: "cnpj0",
+    empresas: [],
     email: "Teste@email.com",
     nome: "usuario0",
     ufLotacao: 1,
@@ -35,7 +35,7 @@ export const usuarios: UsuarioModel[] = [
   },
   {
     id: "1",
-    cnpj: "cnpj1",
+    empresas: [],
     email: "Teste1@email.com",
     nome: "usuario1",
     ufLotacao: 27,

@@ -127,6 +127,7 @@ export async function fetchUsuarios<T>(params: ListarUsuariosQueryParams): Promi
     if (params.perfilId === '') params.perfilId = undefined
     if (params.ufLotacao === '') params.ufLotacao = undefined
     if (params.municipio === '') params.municipio = undefined
+    if (params.empresa === '') params.empresa = undefined
     try {
         const response: AxiosResponse<T> = await axios.get(URL.listarUsuarios, {
             params

@@ -16,6 +16,7 @@ import {fetchPerfis} from "../../../service/usuarioApi";
 import { Permissao } from "../../../models/auth";
 import { AuthContext } from "../../../provider/Autenticacao";
 import {fetchMunicipio} from "../../../service/escolaApi";
+import InputFilter from "../../../components/InputFilter";
 
 interface EditarTipoPerfilArgs {
   id: string | null;
@@ -30,42 +31,9 @@ interface ListaPaginada {
   items: UsuarioModel[];
 }
 
-interface FiltroNomeProps {
-  nome?: string;
-  onNomeChange: (nome: string) => void;
-}
-
 interface FilterOptions {
   id: string;
   rotulo: string;
-}
-
-interface FilterProfileOptions {
-  id: string;
-  rotulo: string;
-}
-
-interface FilterMunicipioOptions {
-  id: string;
-  rotulo: string;
-}
-
-export function FiltroNome({ onNomeChange, nome }: FiltroNomeProps) {
-  return (
-    <div className="d-flex flex-column ml-3 mt-5 mb-5">
-      <label className="ml-2" style={{ textAlign: 'start', fontSize: '16px' }}>Nome:</label>
-      <div className="d-flex" style={{ fontSize: '16px' }}>
-        <div className="br-input large input-button">
-          <input data-testid="filtroNome" className="br-input-search-large" type="search" placeholder="Nome" value={nome}
-            onChange={e => onNomeChange(e.target.value)}
-          />
-          <button className="br-button" type="button" aria-label="Buscar" onClick={() => { }}>
-            <i className="fas fa-search" aria-hidden="true"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-  );
 }
 
 export default function GerenciarUsuario() {
@@ -82,12 +50,13 @@ export default function GerenciarUsuario() {
   const [uf, setUF] = useState('');
   const [perfil, setPerfil] = useState('');
   const [municipio, setMunicipio] = useState('');
+  const [empresa, setEmpresa] = useState('');
   const [listaUsuarios, setListaUsuarios] = useState<UsuarioModel[]>([]);
   const [notificationApi, notificationContextHandler] = notification.useNotification();
   const [tamanhoPagina, setTamanhoPagina] = useState(10);
   const [listaUfs, setListaUfs] = useState<FilterOptions[]>([]);
-  const [listaPerfis, setListaPerfis] = useState<FilterProfileOptions[]>([]);
-  const [listaMunicipios, setListaMunicipios] = useState<FilterMunicipioOptions[]>([]);
+  const [listaPerfis, setListaPerfis] = useState<FilterOptions[]>([]);
+  const [listaMunicipios, setListaMunicipios] = useState<FilterOptions[]>([]);
   const [usuarioSelecionado, setUsuarioSelecionado] = useState('');
   const [atualizaPerfilSelecionado, setAtualizaPerfilSelecionado] = useState('');
 
@@ -97,7 +66,7 @@ export default function GerenciarUsuario() {
   const buscarUsuarios = () => {
     setLoading(true);
 
-    fetchUsuarios<ListaPaginada>({ pagina: 1, itemsPorPagina: tamanhoPagina, nome: nome, ufLotacao: uf, perfilId: perfil })
+    fetchUsuarios<ListaPaginada>({ pagina: 1, itemsPorPagina: tamanhoPagina, nome: nome, ufLotacao: uf, perfilId: perfil, empresa: empresa })
       .then(lista => {
         // setBackupListaUsuarios(lista.items)
         setListaUsuarios(lista.items)
@@ -133,9 +102,13 @@ export default function GerenciarUsuario() {
     return listaPerfis.find((perfil) => perfil.id === usuario.perfilId)?.rotulo
   }
 
+  function get_empresa(usuario: UsuarioModel) {
+    return usuario.empresas[0]?.razaoSocial
+  }
+
   useEffect(() => {
     buscarUsuarios();
-  }, [nome, uf, perfil, municipio]);
+  }, [nome, uf, perfil, municipio, empresa]);
 
   useEffect(() => {
     fetchMunicipios();
@@ -167,18 +140,19 @@ export default function GerenciarUsuario() {
       <TrilhaDeNavegacao elementosLi={paginas} />
       <div className="d-flex flex-column m-5">
         <div className="d-flex justify-content-left align-items-center mr-5">
-          <FiltroNome onNomeChange={setNome} />
+          <InputFilter onChange={setNome} dataTestId="filtroNome" label="Nome" placeholder="Nome"/>
+          <InputFilter onChange={setEmpresa} dataTestId="empresaNome" label="Empresa" placeholder="Nome da Empresa"/>
           <Select items={listaUfs} value={uf} label={"UF:"} onChange={setUF} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true}/>
           <Select items={listaPerfis} value={perfil} label={"Perfil:"} onChange={setPerfil} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true}/>
           <Select items={listaMunicipios} value={municipio} label={"Municipios:"} onChange={setMunicipio} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true}/>
         </div>
         {listaUsuarios.length === 0 && <Table columsTitle={['Nome', 'Tipo de Perfil', 'UF', 'Município', 'Email']} initialItemsPerPage={10} title="Perfis de usuário cadastrados"><></><></></Table>}
 
-        <Table columsTitle={['Nome', 'Tipo de Perfil', 'UF', 'Município', 'Email']} initialItemsPerPage={10} title="Perfis de usuário cadastrados">
+        <Table columsTitle={['Nome', 'Empresa', 'Tipo de Perfil', 'UF', 'Município', 'Email']} initialItemsPerPage={10} title="Perfis de usuário cadastrados">
           {
             listaUsuarios.map((usuario, index) =>
             (<CustomTableRow key={`${usuario.id}-${index}`} id={index}
-              data={{ '0': usuario.nome, '1': `${procuraNomePerfil(usuario)}`, '2': `${procuraRotuloUf(usuario) ?? ""}`, '3': "Não Cadastrado"/*`${usuario.municipio}`*/, '4': usuario.email }}
+              data={{ '0': usuario.nome, '1': get_empresa(usuario), '2': `${procuraNomePerfil(usuario)}`, '3': `${procuraRotuloUf(usuario) ?? ""}`, '4': "Não Cadastrado"/*`${usuario.municipio}`*/, '5': usuario.email }}
               onEditRow={() => {
                 setUsuarioSelecionado(usuario.id)
                 setMostrarPerfil({ id: null, readOnly: true })

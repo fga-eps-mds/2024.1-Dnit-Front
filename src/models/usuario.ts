@@ -1,4 +1,5 @@
 import { Permissao, PermissaoCategoria, PermissaoModel, TipoPerfil } from "./auth";
+import { EmpresaModel } from "./empresa";
 import { PerfilModel } from "./perfil";
 
 export interface UsuarioDto {
@@ -10,7 +11,7 @@ export interface UsuarioModel {
     id: string;
     email: string;
     nome: string;
-    cnpj: string;
+    empresas: EmpresaModel[];
     perfilId: string;
     perfil: PerfilModel;
     ufLotacao: number;
@@ -20,6 +21,7 @@ export interface UsuarioModel {
 export interface ListarUsuariosQueryParams {
     pagina: number;
     itemsPorPagina: number;
+    empresa?: string;
     nome?: string;
     ufLotacao?: string;
     perfilId?: string;
