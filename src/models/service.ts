@@ -189,3 +189,9 @@ export interface CadastroEmpresaData {
   RazaoSocial: string;
   UFs: number[];
 }
+
+export interface EditarEmpresaData {
+  Cnpj: string;
+  RazaoSocial: string;
+  UFs: number[];
+}
