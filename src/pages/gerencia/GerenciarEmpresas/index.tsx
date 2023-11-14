@@ -67,6 +67,8 @@ export default function GerenciarEmpresas() {
 			<div className="d-flex flex-column m-5">
 				<div className="d-flex justify-content-left align-items-center mr-5">
         			<InputFilter onChange={setRazaoSocial} dataTestId="filtroRazaoSocial" label="Razão Social" placeholder="Razão Social" />
+					<InputFilter onChange={setCnpj} dataTestId="filtroCnpj" label="Cnpj" placeholder="Cnpj" />
+					{/* <InputFilter onChange={setUFs} dataTestId="filtroRazaoSocial" label="Razão Social" placeholder="Razão Social" /> */}
         		</div>
 				{listaEmpresas.length === 0 && <Table columsTitle={["Razão Social", "CNPJ", "UFs"]} initialItemsPerPage={10} title="Empresas Cadastradas"><></><></></Table>}
 				<Table title="Empresas Cadastradas" initialItemsPerPage={10} columsTitle={["Razão Social", "CNPJ", "UFs"]}>
