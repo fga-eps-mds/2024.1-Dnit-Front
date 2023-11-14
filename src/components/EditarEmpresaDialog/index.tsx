@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Modal from "../Modal";
 import "./styles.css"
-import { fetchEmpresa, updateEmpresa } from "../../service/empresaApi";
+import { fetchEmpresa, sendCadastroEmpresa, updateEmpresa } from "../../service/empresaApi";
 import { notification } from "antd";
 import { EmpresaModel, UFs } from "../../models/empresa";
 
@@ -14,6 +14,7 @@ interface EditarEmpresasDialogProps {
 export default function EditarEmpresasDialog( { id, readOnly, closeDialog }: EditarEmpresasDialogProps ) {
 	const [notificationApi, contextHolder] = notification.useNotification();
 	const [razaoSocial, setRazaoSocial] = useState('');
+	const [cnpj, setCnpj] = useState('');
 	const [listaUfs, setListaUfs] = useState<UFs[]>([]);
 	const [loading, setLoading] = useState(false);
 
@@ -21,6 +22,7 @@ export default function EditarEmpresasDialog( { id, readOnly, closeDialog }: Edi
 		setLoading(true);
 		const empresa = await fetchEmpresa(cnpj);
 		setRazaoSocial(empresa.razaoSocial);
+		setCnpj(empresa.cnpj);
 		setListaUfs(empresa.uFs);
 		setLoading(false);
 		return empresa;
@@ -32,19 +34,26 @@ export default function EditarEmpresasDialog( { id, readOnly, closeDialog }: Edi
 			return;
 		}
 
-		if (!id)
-		{
-			// Cadastro de empresa
-			return;
-		}
-		
-		setLoading(true);
 		const empresa = {
-			Cnpj: id,
+			Cnpj: cnpj.trim(),
 			RazaoSocial: razaoSocial.trim(),
 			UFs: listaUfs.map(u => u.id)
 		};
 
+		setLoading(true);
+		
+		if (!id)
+		{
+			sendCadastroEmpresa(empresa)
+				.then(e => {
+				notification.success({message: 'A empresa foi cadastrada com sucesso!'});
+				closeDialog();
+			  })
+			  .catch(error => notificationApi.error({message: 'Falha no cadastro da empresa. ' + (error?.response?.data ?? ''), duration: 30}))
+			  .finally(() => setLoading(false));
+			return;
+		}
+		
 		updateEmpresa(id, empresa)
 		.then(e => {
 			notification.success({message: 'A empresa foi alterada com sucesso!'});
@@ -61,9 +70,12 @@ export default function EditarEmpresasDialog( { id, readOnly, closeDialog }: Edi
 	}, [id]);
 
 	return (
+		
 		<Modal className="modal-title">
+			{contextHolder}
 			<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-				<h4 className="text-center mt-1">Editar Empresa</h4>
+				{id && <h4 className="text-center mt-1">{readOnly ? 'Visualizar Empresa' : 'Editar Empresa'}</h4>}
+        		{!id && <h4 className="text-center mt-1">Cadastrar Empresa</h4>}
 				<button data-testid="botaoFechar" className="br-button close circle" type="button" aria-label="Close" onClick={() =>{ closeDialog() }}>
 					<i className="fas fa-times" aria-hidden="true"></i>
 				</button>
@@ -75,7 +87,7 @@ export default function EditarEmpresasDialog( { id, readOnly, closeDialog }: Edi
 				</div>
 				<div className="br-input edicao-empresa">
 					<label>CNPJ</label>
-					<input id="input-default" type={"text"} readOnly={readOnly} defaultValue={id ? id : ""}/>
+					<input id="input-default" type={"text"} readOnly={id ? true : false} onChange={e => setCnpj(e.target.value)} defaultValue={id ? id : ""}/>
 				</div>
 			</div>
 			{!readOnly &&

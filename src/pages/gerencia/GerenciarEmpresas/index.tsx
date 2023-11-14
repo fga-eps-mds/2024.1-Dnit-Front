@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../provider/Autenticacao";
 import { Permissao } from "../../../models/auth";
 import InputFilter from "../../../components/InputFilter";
+import { ButtonComponent } from "../../../components/Button";
 
 interface EmpresaDialogArgs {
   id: string | null;
@@ -26,7 +27,7 @@ export default function GerenciarEmpresas() {
 	const [razaoSocial, setRazaoSocial] = useState('');
 	const [cnpj, setCnpj] = useState('');
 	const [UFs, setUFs] = useState([]);
-	const [tamanhoPagina, setTamanhoPagina] = useState(10);
+	const [tamanhoPagina, setTamanhoPagina] = useState(20);
 	const [notificationApi, notificationContextHandler] = notification.useNotification();
 
 	const navigate = useNavigate();
@@ -69,6 +70,7 @@ export default function GerenciarEmpresas() {
         			<InputFilter onChange={setRazaoSocial} dataTestId="filtroRazaoSocial" label="Razão Social" placeholder="Razão Social" />
 					<InputFilter onChange={setCnpj} dataTestId="filtroCnpj" label="Cnpj" placeholder="Cnpj" />
 					{/* <InputFilter onChange={setUFs} dataTestId="filtroRazaoSocial" label="Razão Social" placeholder="Razão Social" /> */}
+					{temPermissaoGerenciar.cadastrar && <ButtonComponent label="Cadastrar Empresa" buttonStyle="primary" onClick={() => setShowEmpresa({ id: null, readOnly: false })}></ButtonComponent>}
         		</div>
 				{listaEmpresas.length === 0 && <Table columsTitle={["Razão Social", "CNPJ", "UFs"]} initialItemsPerPage={10} title="Empresas Cadastradas"><></><></></Table>}
 				<Table title="Empresas Cadastradas" initialItemsPerPage={10} columsTitle={["Razão Social", "CNPJ", "UFs"]}>
