@@ -11,7 +11,7 @@ export interface UsuarioModel {
     id: string;
     email: string;
     nome: string;
-    empresas: EmpresaModel[];
+    empresa?: EmpresaModel;
     perfilId: string;
     perfil: PerfilModel;
     ufLotacao: number;

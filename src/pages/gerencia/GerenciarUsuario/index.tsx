@@ -103,7 +103,7 @@ export default function GerenciarUsuario() {
   }
 
   function get_empresa(usuario: UsuarioModel) {
-    return usuario.empresas[0]?.razaoSocial
+    return usuario.empresa?.razaoSocial || ""
   }
 
   useEffect(() => {
