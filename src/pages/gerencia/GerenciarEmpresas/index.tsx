@@ -95,6 +95,7 @@ export default function GerenciarEmpresas() {
 								onDeleteRow={() => {
 									setShowDeleteEmpresa({id: empresa.cnpj, nome: empresa.razaoSocial})
 								}}
+								hideUsersIcon = {false}
 							/>
 						))
 					}
