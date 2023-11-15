@@ -3,7 +3,7 @@ import * as URL from "../consts/service"
 import * as DATA from "../models/service";
 import { ResponseStatus, fetchDados, sendCadastros, update} from "./apiUtils";
 import { EmpresaModel, ListaPaginada } from "../models/empresa";
-import { UsuarioModel } from "../models/usuario";
+import { ListarUsuariosQueryParams, UsuarioModel } from "../models/usuario";
 
 export async function sendCadastroEmpresa(data:DATA.CadastroEmpresaData):Promise<ResponseStatus>{
     return sendCadastros<DATA.CadastroEmpresaData>(URL.cadastrarEmpresaUrl, data);
@@ -52,15 +52,11 @@ export async function deleteEmpresa(cnpj: string): Promise<ResponseStatus> {
     }
 }
 
-export async function fetchUsuariosEmpresa(cnpj: string, pagina: number, tamanhoPagina: number, nome: string): Promise<ListaPaginada<UsuarioModel>> {
+export async function fetchUsuariosEmpresa(cnpj: string, params: ListarUsuariosQueryParams): Promise<ListaPaginada<UsuarioModel>> {
     const url = `${URL.listarUsuariosEmpresaUrl}/${cnpj}`;
     try {
         const response: AxiosResponse<ListaPaginada<UsuarioModel>> = await axios.get(url, {
-            params: {
-                pageIndex: pagina,
-                pageSize: tamanhoPagina,
-                nome
-            }
+            params        
         });
         return response.data;
     } catch (error) {

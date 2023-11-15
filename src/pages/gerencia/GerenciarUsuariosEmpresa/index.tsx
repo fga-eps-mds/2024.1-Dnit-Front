@@ -9,6 +9,10 @@ import TrilhaDeNavegacao from "../../../components/Navegacao";
 import InputFilter from "../../../components/InputFilter";
 import ReactLoading from "react-loading";
 import { useParams } from "react-router-dom";
+import { FilterOptions } from "../GerenciarUsuario";
+import { fetchUnidadeFederativa } from "../../../service/escolaApi";
+import { fetchPerfis } from "../../../service/usuarioApi";
+import Select from "../../../components/Select";
 
 export default function GerenciarUsuariosEmpresa() {
     const { cnpj } = useParams();
@@ -21,12 +25,14 @@ export default function GerenciarUsuariosEmpresa() {
     const [tamanhoPagina, setTamanhoPagina] = useState(20);
     const [loading, setLoading] = useState(false);
     const [notificationApi, notificationContextHandler] = notification.useNotification();
+    const [listaUfs, setListaUfs] = useState<FilterOptions[]>([]);
+    const [listaPerfis, setListaPerfis] = useState<FilterOptions[]>([]);
     
     const buscarUsuariosEmpresa = () => {
         setLoading(true);
-        console.log(cnpj);
+        
         if (cnpj) {
-            fetchUsuariosEmpresa(cnpj, 1, tamanhoPagina, nome)
+            fetchUsuariosEmpresa(cnpj, {pagina: 1, itemsPorPagina: tamanhoPagina, nome: nome, ufLotacao: uf, perfilId: perfil})
             .then(u => setListaUsuarios(u.items))
             .catch(error => notificationApi.error({ message: 'Falha na listagem de usuários. ' + (error?.response?.data || '') }))
             .finally(() => setLoading(false));
@@ -37,9 +43,30 @@ export default function GerenciarUsuariosEmpresa() {
         }
     }
 
+    async function fetchUf(): Promise<void> {
+      const listaUfs = await fetchUnidadeFederativa();
+      const novaUf = listaUfs.map((u) => ({ id: '' + u.id, rotulo: u.sigla }));
+      setListaUfs(novaUf);
+    }
+
+    async function fetchPerfil(pagina: number, tamanhoPagina: number, nome: string): Promise<void> {
+      const listaPerfis = await fetchPerfis(pagina, tamanhoPagina, nome);
+      const novoPerfil = listaPerfis.map((u) => ({ id: u.id, rotulo: u.nome }));
+      setListaPerfis(novoPerfil);
+    }
+    
+    function procuraRotuloUf(usuario: UsuarioModel) {
+      return listaUfs.find((uf) => uf.id === '' + usuario.ufLotacao)?.rotulo;
+    }
+
     useEffect(() => {
         buscarUsuariosEmpresa();
     }, [nome, uf, perfil]);
+
+    useEffect(() => {
+      fetchUf();
+      fetchPerfil(1, 100, '');
+    }, []);
 
     return (
         <div className="App">
@@ -49,14 +76,16 @@ export default function GerenciarUsuariosEmpresa() {
           <div className="d-flex flex-column m-5">
             <div className="d-flex justify-content-between align-items-center mr-5">
                 <InputFilter onChange={setNome} dataTestId="filtroNome" label="Nome" placeholder="Nome"/>
+                <Select items={listaUfs} value={uf} label={"UF:"} onChange={setUf} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true}/>
+                <Select items={listaPerfis} value={perfil} label={"Perfil:"} onChange={setPerfil} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true}/>
             </div>
-            {listaUsuarios.length === 0 && <Table columsTitle={['Nome', 'Tipo de Perfil', 'UF', 'E-mail']} initialItemsPerPage={10} title="Perfis de usuário cadastrados"><></><></></Table>}
+            {listaUsuarios.length === 0 && <Table columsTitle={['Nome', 'Tipo de Perfil', 'UF', 'E-mail']} initialItemsPerPage={10} title="Usuários cadastrados"><></><></></Table>}
     
             <Table columsTitle={['Nome', 'Tipo de Perfil', 'UF', 'E-mail']} initialItemsPerPage={10} title="Usuários cadastrados">
               {
-                listaUsuarios.map((u, index) =>
-                  <CustomTableRow key={`${u.id}-${index}`} id={index}
-                    data={{ '0': u.nome, '1': `${u.perfil.nome}`, '2': `${u.ufLotacao}`, '3': `${u.email}`}}
+                listaUsuarios.map((usuario, index) =>
+                  <CustomTableRow key={`${usuario.id}-${index}`} id={index}
+                    data={{ '0': usuario.nome, '1': `${usuario.perfil.nome}`, '2': `${procuraRotuloUf(usuario)}`, '3': `${usuario.email}`}}
                     hideEditIcon={true}
                     hideEyeIcon={true}
                     />
