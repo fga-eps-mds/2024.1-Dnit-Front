@@ -39,3 +39,14 @@ export async function updateEmpresa(cnpj: string, empresa: DATA.EditarEmpresaDat
         throw error;
     }
 }
+
+export async function deleteEmpresa(cnpj: string): Promise<ResponseStatus> {
+    const url = `${URL.excluirEmpresaUrl}/${cnpj}`;
+    try{
+        const response: AxiosResponse<ResponseStatus> = await  axios.delete(url);
+        return response.data;
+    } catch (error){
+        console.error(error);
+        throw error;
+    }
+}

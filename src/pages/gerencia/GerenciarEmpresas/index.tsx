@@ -13,6 +13,7 @@ import { AuthContext } from "../../../provider/Autenticacao";
 import { Permissao } from "../../../models/auth";
 import InputFilter from "../../../components/InputFilter";
 import { ButtonComponent } from "../../../components/Button";
+import DeletarEmpresaDialog, { DeletarEmpresaDialogArgs } from "../../../components/DeletarEmpresaDialog";
 
 interface EmpresaDialogArgs {
   id: string | null;
@@ -24,6 +25,7 @@ export default function GerenciarEmpresas() {
 	const [loading, setLoading] = useState(false);
     const [listaEmpresas, setListaEmpresas] = useState<EmpresaModel[]>([]);
 	const [showEmpresa, setShowEmpresa] = useState<EmpresaDialogArgs | null>(null);
+	const [showDeleteEmpresa, setShowDeleteEmpresa] = useState<DeletarEmpresaDialogArgs | null>(null);
 	const [razaoSocial, setRazaoSocial] = useState('');
 	const [cnpj, setCnpj] = useState('');
 	const [UFs, setUFs] = useState([]);
@@ -36,7 +38,9 @@ export default function GerenciarEmpresas() {
 	
 	const [temPermissaoGerenciar, setTemPermissaoGerenciar] = useState({
 		cadastrar: temPermissao(Permissao.EmpresaCadastrar),
-		visualizar: temPermissao(Permissao.EmpresaVisualizar)
+		visualizar: temPermissao(Permissao.EmpresaVisualizar),
+		remover: temPermissao(Permissao.EmpresaRemover),
+		editar: temPermissao(Permissao.EmpresaEditar)
 	  });
 
 	const buscarEmpresas = () => {
@@ -63,6 +67,7 @@ export default function GerenciarEmpresas() {
 		<div className="App">
 			{notificationContextHandler}
 			{showEmpresa && <EditarEmpresasDialog id={showEmpresa.id} readOnly={showEmpresa.readOnly} closeDialog={() => setShowEmpresa(null)}/>}
+			{showDeleteEmpresa && <DeletarEmpresaDialog id={showDeleteEmpresa.id} nome={showDeleteEmpresa.nome} closeDialog={() => setShowDeleteEmpresa(null)}/>}
 			<Header/>
 			<TrilhaDeNavegacao elementosLi={paginas}/>
 			<div className="d-flex flex-column m-5">
@@ -86,6 +91,9 @@ export default function GerenciarEmpresas() {
 								onDetailRow={() => {
 									// setEmpresaSelecionada(empresa.Cnpj)
 									setShowEmpresa({id: empresa.cnpj, readOnly: true})
+								}}
+								onDeleteRow={() => {
+									setShowDeleteEmpresa({id: empresa.cnpj, nome: empresa.razaoSocial})
 								}}
 							/>
 						))
