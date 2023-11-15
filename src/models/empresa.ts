@@ -9,3 +9,10 @@ export interface EmpresaModel {
     razaoSocial: string;
     uFs: UFs[];
 }
+
+export interface ListaPaginada<T> {
+    pagina: number;
+    itemsPorPagina: number;
+    total: number;
+    items: T[];
+}

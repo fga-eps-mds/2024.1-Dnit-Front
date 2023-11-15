@@ -2,16 +2,16 @@ import axios, { AxiosResponse } from "axios";
 import * as URL from "../consts/service"
 import * as DATA from "../models/service";
 import { ResponseStatus, fetchDados, sendCadastros, update} from "./apiUtils";
-import { EmpresaModel } from "../models/empresa";
+import { EmpresaModel, ListaPaginada } from "../models/empresa";
 import { UsuarioModel } from "../models/usuario";
 
 export async function sendCadastroEmpresa(data:DATA.CadastroEmpresaData):Promise<ResponseStatus>{
     return sendCadastros<DATA.CadastroEmpresaData>(URL.cadastrarEmpresaUrl, data);
 }
 
-export async function fetchEmpresas(pagina: number, tamanhoPagina: number, nome: string): Promise<EmpresaModel[]> {
+export async function fetchEmpresas(pagina: number, tamanhoPagina: number, nome: string): Promise<ListaPaginada<EmpresaModel>> {
     try {
-        const response: AxiosResponse<EmpresaModel[]> = await axios.get(URL.listarEmpresasUrl, {
+        const response: AxiosResponse<ListaPaginada<EmpresaModel>> = await axios.get(URL.listarEmpresasUrl, {
             params: {
                 pageIndex: pagina,
                 pageSize: tamanhoPagina,
@@ -52,10 +52,10 @@ export async function deleteEmpresa(cnpj: string): Promise<ResponseStatus> {
     }
 }
 
-export async function fetchUsuariosEmpresa(cnpj: string, pagina: number, tamanhoPagina: number, nome: string): Promise<UsuarioModel[]> {
+export async function fetchUsuariosEmpresa(cnpj: string, pagina: number, tamanhoPagina: number, nome: string): Promise<ListaPaginada<UsuarioModel>> {
     const url = `${URL.listarUsuariosEmpresaUrl}/${cnpj}`;
     try {
-        const response: AxiosResponse<UsuarioModel[]> = await axios.get(url, {
+        const response: AxiosResponse<ListaPaginada<UsuarioModel>> = await axios.get(url, {
             params: {
                 pageIndex: pagina,
                 pageSize: tamanhoPagina,

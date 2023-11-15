@@ -27,7 +27,7 @@ export default function GerenciarUsuariosEmpresa() {
         console.log(cnpj);
         if (cnpj) {
             fetchUsuariosEmpresa(cnpj, 1, tamanhoPagina, nome)
-            .then(u => setListaUsuarios(u))
+            .then(u => setListaUsuarios(u.items))
             .catch(error => notificationApi.error({ message: 'Falha na listagem de usuários. ' + (error?.response?.data || '') }))
             .finally(() => setLoading(false));
         }

@@ -47,7 +47,7 @@ export default function GerenciarEmpresas() {
 		setLoading(true);
 
 		fetchEmpresas(1, tamanhoPagina, razaoSocial)
-			.then(empresas => setListaEmpresas(empresas))
+			.then(pagina => setListaEmpresas(pagina.items))
 			.catch(error => notificationApi.error({ message: 'Falha na listagem de empresas. ' + (error?.response?.data || '') }))
 			.finally(() => setLoading(false));
 	}
