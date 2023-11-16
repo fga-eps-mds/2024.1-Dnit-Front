@@ -68,6 +68,10 @@ export default function GerenciarUsuariosEmpresa() {
       return listaUfs.find((uf) => uf.id === '' + usuario.ufLotacao)?.rotulo;
     }
 
+    const onUsuarioChange = (changed: boolean) => {
+      if (changed) buscarUsuariosEmpresa();
+    }
+
     useEffect(() => {
         buscarUsuariosEmpresa();
     }, [nome, uf, perfil]);
@@ -81,7 +85,7 @@ export default function GerenciarUsuariosEmpresa() {
         <div className="App">
           {notificationContextHandler}
           {showRemover && <RemoverUsuarioEmpresaDialog cnpj={showRemover.cnpj} usuarioId={showRemover.usuarioId} 
-            nomeEmpresa={showRemover.nomeEmpresa} nomeUsuario={showRemover.nomeUsuario} closeDialog={() => setShowRemover(null)}/>}
+            nomeEmpresa={showRemover.nomeEmpresa} nomeUsuario={showRemover.nomeUsuario} closeDialog={(removed) => {setShowRemover(null); onUsuarioChange(removed)}}/>}
           <Header />
           <TrilhaDeNavegacao elementosLi={paginas} />
           <div className="d-flex flex-column m-5">

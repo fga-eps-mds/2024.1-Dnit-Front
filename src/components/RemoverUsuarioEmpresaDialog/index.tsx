@@ -9,7 +9,7 @@ interface RemoverUsuarioEmpresaProps {
     nomeEmpresa: string | undefined,
     usuarioId: string,
     nomeUsuario: string,
-    closeDialog: () => void,
+    closeDialog: (removed: boolean) => void,
 }
 
 export default function RemoverUsuarioEmpresaDialog( { cnpj, nomeEmpresa, usuarioId, nomeUsuario, closeDialog }: RemoverUsuarioEmpresaProps) {
@@ -21,7 +21,7 @@ export default function RemoverUsuarioEmpresaDialog( { cnpj, nomeEmpresa, usuari
             deleteUsuarioEmpresa(cnpj, usuarioId)
             .then(() => {
                 notification.success({ message: "O usuário foi removido da empresa com sucesso." });
-                closeDialog();
+                closeDialog(true);
             })
             .catch((error) => {
                 notification.error({
@@ -42,7 +42,7 @@ export default function RemoverUsuarioEmpresaDialog( { cnpj, nomeEmpresa, usuari
             O usuário <strong>{nomeUsuario}</strong> será removido da empresa <strong>{nomeEmpresa}</strong>.
           </p>
           <div className="d-flex w-100 justify-content-center">
-            <button className="br-button secondary" type="button" onClick={closeDialog}>
+            <button className="br-button secondary" type="button" onClick={() => closeDialog(false)}>
               Cancelar
             </button>
             <button className="br-button primary" type="button"onClick={removerUsuario}>
