@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import * as URL from "../consts/service"
 import * as DATA from "../models/service";
-import { ResponseStatus, fetchDados, sendCadastros, update} from "./apiUtils";
+import { ResponseStatus, fetchDados, sendCadastros} from "./apiUtils";
 import { EmpresaModel, ListaPaginada } from "../models/empresa";
 import { ListarUsuariosQueryParams, UsuarioModel } from "../models/usuario";
 
@@ -58,6 +58,22 @@ export async function fetchUsuariosEmpresa(cnpj: string, params: ListarUsuariosQ
         const response: AxiosResponse<ListaPaginada<UsuarioModel>> = await axios.get(url, {
             params        
         });
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+export async function deleteUsuarioEmpresa(Cnpj: string, usuarioId: string) {
+    const url = `${URL.removerUsuarioEmpresaUrl}`;
+    try {
+        const response: AxiosResponse<ResponseStatus> = await axios.delete(url, {
+            params: {
+                cnpj: Cnpj,
+                usuarioid: usuarioId,
+            }
+        })
         return response.data;
     } catch (error) {
         console.log(error);

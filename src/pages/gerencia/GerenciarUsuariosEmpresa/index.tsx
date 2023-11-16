@@ -13,18 +13,27 @@ import { FilterOptions } from "../GerenciarUsuario";
 import { fetchUnidadeFederativa } from "../../../service/escolaApi";
 import { fetchPerfis } from "../../../service/usuarioApi";
 import Select from "../../../components/Select";
+import RemoverUsuarioEmpresaDialog from "../../../components/RemoverUsuarioEmpresaDialog";
+
+interface RemoverUsuarioEmpresaArgs {
+  cnpj: string | undefined,
+  nomeEmpresa: string | undefined,
+  nomeUsuario: string,
+  usuarioId: string,
+}
 
 export default function GerenciarUsuariosEmpresa() {
     const { cnpj } = useParams();
     const paginas = [{nome: "Gerenciar Empresas", link: "/gerenciarEmpresas"}, 
         {nome: "Usuarios", link: "/gerenciarUsuariosEmpresa"}];
+    const [notificationApi, notificationContextHandler] = notification.useNotification();
+    const [tamanhoPagina, setTamanhoPagina] = useState(20);
+    const [loading, setLoading] = useState(false);
+    const [showRemover, setShowRemover] = useState<RemoverUsuarioEmpresaArgs | null>(null);
     const [listaUsuarios, setListaUsuarios] = useState<UsuarioModel[]>([]);
     const [nome, setNome] = useState('');
     const [uf, setUf] = useState('');
     const [perfil, setPerfil] = useState('');
-    const [tamanhoPagina, setTamanhoPagina] = useState(20);
-    const [loading, setLoading] = useState(false);
-    const [notificationApi, notificationContextHandler] = notification.useNotification();
     const [listaUfs, setListaUfs] = useState<FilterOptions[]>([]);
     const [listaPerfis, setListaPerfis] = useState<FilterOptions[]>([]);
     
@@ -71,6 +80,8 @@ export default function GerenciarUsuariosEmpresa() {
     return (
         <div className="App">
           {notificationContextHandler}
+          {showRemover && <RemoverUsuarioEmpresaDialog cnpj={showRemover.cnpj} usuarioId={showRemover.usuarioId} 
+            nomeEmpresa={showRemover.nomeEmpresa} nomeUsuario={showRemover.nomeUsuario} closeDialog={() => setShowRemover(null)}/>}
           <Header />
           <TrilhaDeNavegacao elementosLi={paginas} />
           <div className="d-flex flex-column m-5">
@@ -88,6 +99,9 @@ export default function GerenciarUsuariosEmpresa() {
                     data={{ '0': usuario.nome, '1': `${usuario.perfil.nome}`, '2': `${procuraRotuloUf(usuario)}`, '3': `${usuario.email}`}}
                     hideEditIcon={true}
                     hideEyeIcon={true}
+                    onDeleteRow={() => setShowRemover({
+                      cnpj: cnpj, nomeEmpresa: usuario.empresa?.razaoSocial, nomeUsuario: usuario.nome, usuarioId: usuario.id
+                    })}
                     />
                 )
               }
