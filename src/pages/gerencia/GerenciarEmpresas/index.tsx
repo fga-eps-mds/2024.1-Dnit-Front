@@ -52,6 +52,8 @@ export default function GerenciarEmpresas() {
 			.finally(() => setLoading(false));
 	}
 
+	
+
 	useEffect(() => {
 		buscarEmpresas();
 	  }, [razaoSocial, cnpj, UFs]);
@@ -83,7 +85,7 @@ export default function GerenciarEmpresas() {
 						listaEmpresas.map((empresa, index) => (
 							<CustomTableRow 
 								key={`${empresa.cnpj}`} id={index}
-								data={{'0': empresa.razaoSocial, '1': empresa.cnpj, '2': empresa.uFs.map((e) => e.sigla).join(', ')}}
+								data={{'0': empresa.razaoSocial, '1': formatCnpj(empresa.cnpj), '2': empresa.uFs.map((e) => e.sigla).join(', ')}}
 								onEditRow={() => {
 									// setEmpresaSelecionada(empresa.Cnpj)
 									setShowEmpresa({id: empresa.cnpj, readOnly: false})
@@ -107,4 +109,24 @@ export default function GerenciarEmpresas() {
 			<Footer/>
 		</div>
     )
+}
+
+export const formatCnpj = (input: string) => {
+	const cnpjNumeric = input.replace(/\D/g, '');
+
+	if (cnpjNumeric.length >= 13) {
+		return `${cnpjNumeric.slice(0, 2)}.${cnpjNumeric.slice(2, 5)}.${cnpjNumeric.slice(5, 8)}/${cnpjNumeric.slice(8, 12)}-${cnpjNumeric.slice(12)}`;
+	} 
+	else if (cnpjNumeric.length >= 9) {
+		return `${cnpjNumeric.slice(0, 2)}.${cnpjNumeric.slice(2, 5)}.${cnpjNumeric.slice(5, 8)}/${cnpjNumeric.slice(8)}`;
+	} 
+	else if (cnpjNumeric.length >= 6) {
+		return `${cnpjNumeric.slice(0, 2)}.${cnpjNumeric.slice(2, 5)}.${cnpjNumeric.slice(5)}`;
+	} 
+	else if (cnpjNumeric.length >= 3) {
+		return `${cnpjNumeric.slice(0, 2)}.${cnpjNumeric.slice(2)}`;
+	} 
+	else {
+		return cnpjNumeric;
+	}
 }

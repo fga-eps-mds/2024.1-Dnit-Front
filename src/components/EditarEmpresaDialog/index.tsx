@@ -4,6 +4,7 @@ import "./styles.css"
 import { fetchEmpresa, sendCadastroEmpresa, updateEmpresa } from "../../service/empresaApi";
 import { notification } from "antd";
 import { EmpresaModel, UFs } from "../../models/empresa";
+import { formatCnpj } from "../../pages/gerencia/GerenciarEmpresas";
 
 interface EditarEmpresasDialogProps {
 	id: string | null;
@@ -87,7 +88,7 @@ export default function EditarEmpresasDialog( { id, readOnly, closeDialog }: Edi
 				</div>
 				<div className="br-input edicao-empresa">
 					<label>CNPJ</label>
-					<input id="input-default" type={"text"} readOnly={id ? true : false} onChange={e => setCnpj(e.target.value)} defaultValue={id ? id : ""}/>
+					<input id="input-default" type={"text"} readOnly={id ? true : false} onChange={e => setCnpj(e.target.value.replace(/\D/g, ''))} value={formatCnpj(cnpj)} defaultValue={id ? formatCnpj(id) : ""}/>
 				</div>
 			</div>
 			{!readOnly &&
