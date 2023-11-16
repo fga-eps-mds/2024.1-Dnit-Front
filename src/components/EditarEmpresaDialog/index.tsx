@@ -9,7 +9,7 @@ import { formatCnpj } from "../../pages/gerencia/GerenciarEmpresas";
 interface EditarEmpresasDialogProps {
 	id: string | null;
 	readOnly: boolean;
-	closeDialog: () => void;
+	closeDialog: (saved: boolean) => void;
 }
 
 export default function EditarEmpresasDialog( { id, readOnly, closeDialog }: EditarEmpresasDialogProps ) {
@@ -48,7 +48,7 @@ export default function EditarEmpresasDialog( { id, readOnly, closeDialog }: Edi
 			sendCadastroEmpresa(empresa)
 				.then(e => {
 				notification.success({message: 'A empresa foi cadastrada com sucesso!'});
-				closeDialog();
+				closeDialog(true);
 			  })
 			  .catch(error => notificationApi.error({message: 'Falha no cadastro da empresa. ' + (error?.response?.data ?? ''), duration: 30}))
 			  .finally(() => setLoading(false));
@@ -58,7 +58,7 @@ export default function EditarEmpresasDialog( { id, readOnly, closeDialog }: Edi
 		updateEmpresa(id, empresa)
 		.then(e => {
 			notification.success({message: 'A empresa foi alterada com sucesso!'});
-			closeDialog();
+			closeDialog(true);
 		  })
 		  .catch(error => notificationApi.error({message: 'Falha na edição da empresa. ' + (error?.response?.data ?? ''), duration: 30}))
 		  .finally(() => setLoading(false));
@@ -77,7 +77,7 @@ export default function EditarEmpresasDialog( { id, readOnly, closeDialog }: Edi
 			<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
 				{id && <h4 className="text-center mt-1">{readOnly ? 'Visualizar Empresa' : 'Editar Empresa'}</h4>}
         		{!id && <h4 className="text-center mt-1">Cadastrar Empresa</h4>}
-				<button data-testid="botaoFechar" className="br-button close circle" type="button" aria-label="Close" onClick={() =>{ closeDialog() }}>
+				<button data-testid="botaoFechar" className="br-button close circle" type="button" aria-label="Close" onClick={() =>{ closeDialog(false) }}>
 					<i className="fas fa-times" aria-hidden="true"></i>
 				</button>
       		</div>
@@ -93,13 +93,13 @@ export default function EditarEmpresasDialog( { id, readOnly, closeDialog }: Edi
 			</div>
 			{!readOnly &&
 			(<div className="d-flex w-100 justify-content-end">
-        		<button data-testid="botaoCancelar" className="br-button secondary" type="button" onClick={() => {closeDialog()}}>Cancelar</button>
+        		<button data-testid="botaoCancelar" className="br-button secondary" type="button" onClick={() => {closeDialog(false)}}>Cancelar</button>
         		<button data-testid="botaoConfirmar" className="br-button primary" type="submit" onClick={salvarEmpresa}>Confirmar</button>
       		</div>)
 			}
 			{readOnly &&
 			(<div className="d-flex w-100 justify-content-end">
-				<button data-testid="botaoCancelar" className="br-button secondary" type="button" onClick={() => {closeDialog()}}>Voltar</button>
+				<button data-testid="botaoCancelar" className="br-button secondary" type="button" onClick={() => {closeDialog(false)}}>Voltar</button>
 			</div>)
 			}
 

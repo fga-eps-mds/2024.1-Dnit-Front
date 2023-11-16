@@ -52,7 +52,9 @@ export default function GerenciarEmpresas() {
 			.finally(() => setLoading(false));
 	}
 
-	
+	const onEmpresaChange = (changed: boolean) => {
+		if (changed) buscarEmpresas();
+	}
 
 	useEffect(() => {
 		buscarEmpresas();
@@ -68,8 +70,8 @@ export default function GerenciarEmpresas() {
     return (
 		<div className="App">
 			{notificationContextHandler}
-			{showEmpresa && <EditarEmpresasDialog id={showEmpresa.id} readOnly={showEmpresa.readOnly} closeDialog={() => setShowEmpresa(null)}/>}
-			{showDeleteEmpresa && <DeletarEmpresaDialog id={showDeleteEmpresa.id} nome={showDeleteEmpresa.nome} closeDialog={() => setShowDeleteEmpresa(null)}/>}
+			{showEmpresa && <EditarEmpresasDialog id={showEmpresa.id} readOnly={showEmpresa.readOnly} closeDialog={(salvou) => {setShowEmpresa(null); onEmpresaChange(salvou)}}/>}
+			{showDeleteEmpresa && <DeletarEmpresaDialog id={showDeleteEmpresa.id} nome={showDeleteEmpresa.nome} closeDialog={(deletou) => {setShowDeleteEmpresa(null); onEmpresaChange(deletou)}}/>}
 			<Header/>
 			<TrilhaDeNavegacao elementosLi={paginas}/>
 			<div className="d-flex flex-column m-5">

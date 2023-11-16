@@ -12,7 +12,7 @@ export interface DeletarEmpresaDialogArgs {
 interface DeletarEmpresaDialogProps {
     id: string;
     nome: string;
-    closeDialog: () => void;
+    closeDialog: (deleted: boolean) => void;
 }
 
 export default function DeletarEmpresaDialog( { id, nome, closeDialog }: DeletarEmpresaDialogProps) {
@@ -23,7 +23,7 @@ export default function DeletarEmpresaDialog( { id, nome, closeDialog }: Deletar
         deleteEmpresa(id)
         .then(() => {
             notification.success({ message: "Empresa deletada com sucesso" });
-            closeDialog();
+            closeDialog(true);
           })
         .catch((error) => {
             notification.error({
@@ -43,7 +43,7 @@ export default function DeletarEmpresaDialog( { id, nome, closeDialog }: Deletar
             A empresa <strong>{nome}</strong> é usada por X usuários.
           </p>
           <div className="d-flex w-100 justify-content-center">
-            <button className="br-button secondary" type="button" onClick={closeDialog}>
+            <button className="br-button secondary" type="button" onClick={() => closeDialog(false)}>
               Cancelar
             </button>
             <button className="br-button primary" type="button"onClick={deletarEmpresa}>
