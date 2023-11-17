@@ -39,7 +39,8 @@ export default function MultiSelect({ items, value, label, onChange, inputStyle,
     }
     else
     {
-      if (all !== -1) value = novaLista.filter(it => it.id !== "").map(it => it.id);
+      if (all !== -1) value = novaLista.filter(item => item.id !== "").map(item => item.id);
+
       onChange(itemIsSelected(itemId) ? 
         value.filter((id) => id !== itemId)
         : [...value, itemId]
@@ -48,18 +49,18 @@ export default function MultiSelect({ items, value, label, onChange, inputStyle,
   };
 
   const getRotulos = (ids: string[], items: MultiSelectOptions[]) => {
-    const rotulos = items.filter(it => ids.includes(it.id)).map(it => it.rotulo);
+    const rotulos = items.filter(item => ids.includes(item.id)).map(item => item.rotulo);
     return rotulos;
   }
 
   useEffect(() => {
 
-    if (filtrarTodos === true) { 
+    if (filtrarTodos) { 
       const concatLista = [{ id: "", rotulo: "Todos" }].concat(items); 
       setNovaLista(concatLista);
     }
     else
-      {setNovaLista(items); console.log(items);}
+      setNovaLista(items);
   }, [items])
 
   const wrapperRef = useRef<HTMLDivElement>(null);

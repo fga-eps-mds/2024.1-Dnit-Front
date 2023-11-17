@@ -5,18 +5,21 @@ import { fetchEmpresa, sendCadastroEmpresa, updateEmpresa } from "../../service/
 import { notification } from "antd";
 import { EmpresaModel, UFs } from "../../models/empresa";
 import { formatCnpj } from "../../pages/gerencia/GerenciarEmpresas";
+import MultiSelect from "../MultiSelect";
+import { FilterOptions } from "../../pages/gerencia/GerenciarUsuario";
 
 interface EditarEmpresasDialogProps {
 	id: string | null;
 	readOnly: boolean;
+	listaUfs: FilterOptions[];
 	closeDialog: (saved: boolean) => void;
 }
 
-export default function EditarEmpresasDialog( { id, readOnly, closeDialog }: EditarEmpresasDialogProps ) {
+export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDialog }: EditarEmpresasDialogProps ) {
 	const [notificationApi, contextHolder] = notification.useNotification();
 	const [razaoSocial, setRazaoSocial] = useState('');
 	const [cnpj, setCnpj] = useState('');
-	const [listaUfs, setListaUfs] = useState<UFs[]>([]);
+	const [UFs, setUFs] = useState<string[]>([]);
 	const [loading, setLoading] = useState(false);
 
 	async function buscarEmpresa(cnpj : string): Promise<EmpresaModel> {
@@ -24,10 +27,9 @@ export default function EditarEmpresasDialog( { id, readOnly, closeDialog }: Edi
 		const empresa = await fetchEmpresa(cnpj);
 		setRazaoSocial(empresa.razaoSocial);
 		setCnpj(empresa.cnpj);
-		setListaUfs(empresa.uFs);
+		setUFs(empresa.uFs.map(uf => uf.id.toString()));
 		setLoading(false);
 		return empresa;
-	
 	}
 
 	const salvarEmpresa = () => {
@@ -38,7 +40,7 @@ export default function EditarEmpresasDialog( { id, readOnly, closeDialog }: Edi
 		const empresa = {
 			Cnpj: cnpj.trim(),
 			RazaoSocial: razaoSocial.trim(),
-			UFs: listaUfs.map(u => u.id)
+			UFs: UFs.map(Number)
 		};
 
 		setLoading(true);
@@ -90,6 +92,9 @@ export default function EditarEmpresasDialog( { id, readOnly, closeDialog }: Edi
 					<label>CNPJ</label>
 					<input id="input-default" type={"text"} readOnly={id ? true : false} onChange={e => setCnpj(e.target.value.replace(/\D/g, ''))} 
 						value={formatCnpj(cnpj)} maxLength={18} defaultValue={id ? formatCnpj(id) : ""}/>
+				</div>
+				<div className="br-input edicao-empresa">
+					<MultiSelect items={listaUfs} value={UFs} label={"UF"} onChange={setUFs} dropdownStyle={{ marginLeft: "20px", width: "260px" }} />
 				</div>
 			</div>
 			{!readOnly &&

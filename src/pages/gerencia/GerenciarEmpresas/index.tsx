@@ -92,7 +92,7 @@ export default function GerenciarEmpresas() {
     return (
 		<div className="App">
 			{notificationContextHandler}
-			{showEmpresa && <EditarEmpresasDialog id={showEmpresa.id} readOnly={showEmpresa.readOnly} closeDialog={(salvou) => {setShowEmpresa(null); onEmpresaChange(salvou)}}/>}
+			{showEmpresa && <EditarEmpresasDialog id={showEmpresa.id} listaUfs={listaUfs} readOnly={showEmpresa.readOnly} closeDialog={(salvou) => {setShowEmpresa(null); onEmpresaChange(salvou)}}/>}
 			{showDeleteEmpresa && <DeletarEmpresaDialog id={showDeleteEmpresa.id} nome={showDeleteEmpresa.nome} closeDialog={(deletou) => {setShowDeleteEmpresa(null); onEmpresaChange(deletou)}}/>}
 			<Header/>
 			<TrilhaDeNavegacao elementosLi={paginas}/>
