@@ -66,13 +66,13 @@ export async function fetchUsuariosEmpresa(cnpj: string, params: ListarUsuariosQ
     }
 }
 
-export async function deleteUsuarioEmpresa(Cnpj: string, usuarioId: string) {
+export async function deleteUsuarioEmpresa(cnpj: string, usuarioid: string) {
     const url = `${URL.removerUsuarioEmpresaUrl}`;
     try {
         const response: AxiosResponse<ResponseStatus> = await axios.delete(url, {
             params: {
-                cnpj: Cnpj,
-                usuarioid: usuarioId,
+                cnpj,
+                usuarioid
             }
         })
         return response.data;

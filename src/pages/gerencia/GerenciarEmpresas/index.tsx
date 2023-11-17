@@ -14,6 +14,9 @@ import { Permissao } from "../../../models/auth";
 import InputFilter from "../../../components/InputFilter";
 import { ButtonComponent } from "../../../components/Button";
 import DeletarEmpresaDialog, { DeletarEmpresaDialogArgs } from "../../../components/DeletarEmpresaDialog";
+import { FilterOptions } from "../GerenciarUsuario";
+import { fetchUnidadeFederativa } from "../../../service/escolaApi";
+import MultiSelect from "../../../components/MultiSelect";
 
 interface EmpresaDialogArgs {
   id: string | null;
@@ -29,7 +32,8 @@ export default function GerenciarEmpresas() {
 	const [showDeleteEmpresa, setShowDeleteEmpresa] = useState<DeletarEmpresaDialogArgs | null>(null);
 	const [razaoSocial, setRazaoSocial] = useState('');
 	const [cnpj, setCnpj] = useState('');
-	const [UFs, setUFs] = useState([]);
+	const [UFs, setUFs] = useState<string[]>(['']);
+	const [listaUfs, setListaUfs] = useState<FilterOptions[]>([]);
 	const [tamanhoPagina, setTamanhoPagina] = useState(pagina.itemsPorPagina);
 	const [notificationApi, notificationContextHandler] = notification.useNotification();
 
@@ -57,6 +61,12 @@ export default function GerenciarEmpresas() {
 			.finally(() => setLoading(false));
 	}
 
+	async function fetchUf(): Promise<void> {
+		const listaUfs = await fetchUnidadeFederativa();
+		const novaUf = listaUfs.map((u) => ({ id: '' + u.id, rotulo: u.sigla }));
+		setListaUfs(novaUf);
+	}
+
 	const onEmpresaChange = (changed: boolean) => {
 		if (changed) buscarEmpresas(1);
 	}
@@ -66,11 +76,18 @@ export default function GerenciarEmpresas() {
 	  }, [razaoSocial, cnpj, UFs]);
 
 	useEffect(() => {
+		fetchUf();
+	}, []);
+
+	useEffect(() => {
 	if (!temPermissao(Permissao.EmpresaVisualizar)) {
 	  navigate("/");
 	}
 	}, []);
 
+	useEffect(() => {
+		console.log(UFs);
+	}, [UFs]);
 	
     return (
 		<div className="App">
@@ -83,7 +100,7 @@ export default function GerenciarEmpresas() {
 				<div className="d-flex justify-content-left align-items-center mr-5">
         			<InputFilter onChange={setRazaoSocial} dataTestId="filtroRazaoSocial" label="Razão Social" placeholder="Razão Social" />
 					<InputFilter onChange={setCnpj} dataTestId="filtroCnpj" label="CNPJ" placeholder="CNPJ" />
-					{/* <InputFilter onChange={setUFs} dataTestId="filtroRazaoSocial" label="Razão Social" placeholder="Razão Social" /> */}
+					<MultiSelect items={listaUfs} value={UFs} label={"UF:"} onChange={setUFs} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
 					{temPermissaoGerenciar.cadastrar && <ButtonComponent label="Cadastrar Empresa" buttonStyle="primary" onClick={() => setShowEmpresa({ id: null, readOnly: false })}></ButtonComponent>}
         		</div>
 				{listaEmpresas.length === 0 && <Table columsTitle={["Razão Social", "CNPJ", "UFs"]} initialItemsPerPage={10} title="Empresas Cadastradas"><></><></></Table>}
