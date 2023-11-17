@@ -88,7 +88,8 @@ export default function EditarEmpresasDialog( { id, readOnly, closeDialog }: Edi
 				</div>
 				<div className="br-input edicao-empresa">
 					<label>CNPJ</label>
-					<input id="input-default" type={"text"} readOnly={id ? true : false} onChange={e => setCnpj(e.target.value.replace(/\D/g, ''))} value={formatCnpj(cnpj)} defaultValue={id ? formatCnpj(id) : ""}/>
+					<input id="input-default" type={"text"} readOnly={id ? true : false} onChange={e => setCnpj(e.target.value.replace(/\D/g, ''))} 
+						value={formatCnpj(cnpj)} maxLength={18} defaultValue={id ? formatCnpj(id) : ""}/>
 				</div>
 			</div>
 			{!readOnly &&

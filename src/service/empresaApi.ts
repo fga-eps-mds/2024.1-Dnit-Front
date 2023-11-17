@@ -9,13 +9,14 @@ export async function sendCadastroEmpresa(data:DATA.CadastroEmpresaData):Promise
     return sendCadastros<DATA.CadastroEmpresaData>(URL.cadastrarEmpresaUrl, data);
 }
 
-export async function fetchEmpresas(pagina: number, tamanhoPagina: number, nome: string): Promise<ListaPaginada<EmpresaModel>> {
+export async function fetchEmpresas(pagina: number, tamanhoPagina: number, nome: string, cnpj: string): Promise<ListaPaginada<EmpresaModel>> {
     try {
         const response: AxiosResponse<ListaPaginada<EmpresaModel>> = await axios.get(URL.listarEmpresasUrl, {
             params: {
                 pageIndex: pagina,
                 pageSize: tamanhoPagina,
-                nome
+                nome,
+                cnpj
             }
         });
         return response.data;

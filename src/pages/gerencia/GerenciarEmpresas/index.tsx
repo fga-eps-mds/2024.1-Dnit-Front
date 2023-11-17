@@ -47,7 +47,7 @@ export default function GerenciarEmpresas() {
 	const buscarEmpresas = (proximaPagina: number, novoTamanhoPagina: number = tamanhoPagina) => {
 		setLoading(true);
 
-		fetchEmpresas(proximaPagina, novoTamanhoPagina, razaoSocial)
+		fetchEmpresas(proximaPagina, novoTamanhoPagina, razaoSocial, cnpj)
 			.then(pagina => {
 				setPagina(pagina)
 				setListaEmpresas(pagina.items)
@@ -82,7 +82,7 @@ export default function GerenciarEmpresas() {
 			<div className="d-flex flex-column m-5">
 				<div className="d-flex justify-content-left align-items-center mr-5">
         			<InputFilter onChange={setRazaoSocial} dataTestId="filtroRazaoSocial" label="Razão Social" placeholder="Razão Social" />
-					<InputFilter onChange={setCnpj} dataTestId="filtroCnpj" label="Cnpj" placeholder="Cnpj" />
+					<InputFilter onChange={setCnpj} dataTestId="filtroCnpj" label="CNPJ" placeholder="CNPJ" />
 					{/* <InputFilter onChange={setUFs} dataTestId="filtroRazaoSocial" label="Razão Social" placeholder="Razão Social" /> */}
 					{temPermissaoGerenciar.cadastrar && <ButtonComponent label="Cadastrar Empresa" buttonStyle="primary" onClick={() => setShowEmpresa({ id: null, readOnly: false })}></ButtonComponent>}
         		</div>

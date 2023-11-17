@@ -5,11 +5,11 @@ import { notification } from "antd";
 import "./styles.css"
 
 interface RemoverUsuarioEmpresaProps {
-    cnpj: string | undefined,
-    nomeEmpresa: string | undefined,
-    usuarioId: string,
-    nomeUsuario: string,
-    closeDialog: (removed: boolean) => void,
+    cnpj: string | undefined;
+    nomeEmpresa: string | undefined;
+    usuarioId: string;
+    nomeUsuario: string;
+    closeDialog: (removed: boolean) => void;
 }
 
 export default function RemoverUsuarioEmpresaDialog( { cnpj, nomeEmpresa, usuarioId, nomeUsuario, closeDialog }: RemoverUsuarioEmpresaProps) {
