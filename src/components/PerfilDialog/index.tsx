@@ -136,7 +136,7 @@ export default function PerfilDialog({ id, readOnly, closeDialog }: PerfilDialog
   };
 
   return (
-    <Modal className="dialog-create-perfil">
+    <Modal className="dialog-create-perfil" closeModal={() => closeDialog(null)}>
       {contextHolder}
       <div className="d-flex justify-content-between">
         {id && <h4 className="text-center mt-1">{readOnly ? 'Detalhes do Perfil' : 'Edição de Perfil'}</h4>}
@@ -152,7 +152,7 @@ export default function PerfilDialog({ id, readOnly, closeDialog }: PerfilDialog
           <section className="d-flex align-items-center w-100">
             <div className="input-label mt-2"><label className="mr-2">Perfil:</label></div>
             <div className="br-input small">
-              <input data-testid='perfil-nome' className="w-100" placeholder="Digite o nome" value={nome} onChange={e => setNome(e.target.value)} type="text" readOnly={!canEdit} style={{border: !canEdit? "none": ""}} />
+              <input data-testid='perfil-nome' className="w-100" placeholder="Digite o nome do perfil" value={nome} onChange={e => setNome(e.target.value)} type="text" readOnly={!canEdit} style={{border: !canEdit? "none": ""}} />
             </div>
           </section>
           <section className="mt-4">
