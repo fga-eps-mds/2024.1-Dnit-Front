@@ -4,7 +4,7 @@ import Header from "../../../components/Header";
 import Footer from "../../../components/Footer";
 import TrilhaDeNavegacao from "../../../components/Navegacao";
 import Table, { CustomTableRow } from "../../../components/Table";
-import { EmpresaModel } from "../../../models/empresa";
+import { EmpresaModel, ListaPaginada } from "../../../models/empresa";
 import EditarEmpresasDialog from "../../../components/EditarEmpresaDialog";
 import { fetchEmpresas } from "../../../service/empresaApi";
 import { notification } from "antd";
@@ -23,13 +23,14 @@ interface EmpresaDialogArgs {
 export default function GerenciarEmpresas() {
     const paginas = [{nome: "Gerenciar Empresas", link: "/gerenciarEmpresas"}];
 	const [loading, setLoading] = useState(false);
-    const [listaEmpresas, setListaEmpresas] = useState<EmpresaModel[]>([]);
+	const [pagina, setPagina] = useState<ListaPaginada<EmpresaModel>>({items: [], pagina: 1, itemsPorPagina: 10, total: 0, totalPaginas: 0});
+    const [listaEmpresas, setListaEmpresas] = useState<EmpresaModel[]>(pagina.items);
 	const [showEmpresa, setShowEmpresa] = useState<EmpresaDialogArgs | null>(null);
 	const [showDeleteEmpresa, setShowDeleteEmpresa] = useState<DeletarEmpresaDialogArgs | null>(null);
 	const [razaoSocial, setRazaoSocial] = useState('');
 	const [cnpj, setCnpj] = useState('');
 	const [UFs, setUFs] = useState([]);
-	const [tamanhoPagina, setTamanhoPagina] = useState(20);
+	const [tamanhoPagina, setTamanhoPagina] = useState(pagina.itemsPorPagina);
 	const [notificationApi, notificationContextHandler] = notification.useNotification();
 
 	const navigate = useNavigate();
@@ -43,21 +44,25 @@ export default function GerenciarEmpresas() {
 		editar: temPermissao(Permissao.EmpresaEditar)
 	  });
 
-	const buscarEmpresas = () => {
+	const buscarEmpresas = (proximaPagina: number, novoTamanhoPagina: number = tamanhoPagina) => {
 		setLoading(true);
 
-		fetchEmpresas(1, tamanhoPagina, razaoSocial)
-			.then(pagina => setListaEmpresas(pagina.items))
+		fetchEmpresas(proximaPagina, novoTamanhoPagina, razaoSocial)
+			.then(pagina => {
+				setPagina(pagina)
+				setListaEmpresas(pagina.items)
+				setTamanhoPagina(pagina.itemsPorPagina)
+			})
 			.catch(error => notificationApi.error({ message: 'Falha na listagem de empresas. ' + (error?.response?.data || '') }))
 			.finally(() => setLoading(false));
 	}
 
 	const onEmpresaChange = (changed: boolean) => {
-		if (changed) buscarEmpresas();
+		if (changed) buscarEmpresas(1);
 	}
 
 	useEffect(() => {
-		buscarEmpresas();
+		buscarEmpresas(1);
 	  }, [razaoSocial, cnpj, UFs]);
 
 	useEffect(() => {
@@ -82,7 +87,27 @@ export default function GerenciarEmpresas() {
 					{temPermissaoGerenciar.cadastrar && <ButtonComponent label="Cadastrar Empresa" buttonStyle="primary" onClick={() => setShowEmpresa({ id: null, readOnly: false })}></ButtonComponent>}
         		</div>
 				{listaEmpresas.length === 0 && <Table columsTitle={["Razão Social", "CNPJ", "UFs"]} initialItemsPerPage={10} title="Empresas Cadastradas"><></><></></Table>}
-				<Table title="Empresas Cadastradas" initialItemsPerPage={10} columsTitle={["Razão Social", "CNPJ", "UFs"]}>
+				<Table 
+					title="Empresas Cadastradas"
+					columsTitle={["Razão Social", "CNPJ", "UFs"]}
+					totalPages={pagina.totalPaginas}
+					totalItems={pagina.total}
+					initialItemsPerPage={pagina.itemsPorPagina}
+					onNextPage={() => {
+						if (pagina.pagina === pagina.totalPaginas) return;
+						buscarEmpresas(pagina.pagina + 1);
+					}}
+					onPreviousPage={() => {
+						if (pagina.pagina === 1) return;
+						buscarEmpresas(pagina.pagina - 1);
+					}}
+					onPageResize={(newItensPerPage) => {
+						buscarEmpresas(pagina.pagina, newItensPerPage);
+					}}
+					onPageSelect={(newSelectedPage) => {
+						buscarEmpresas(newSelectedPage);
+					}}
+				>
 					{
 						listaEmpresas.map((empresa, index) => (
 							<CustomTableRow 

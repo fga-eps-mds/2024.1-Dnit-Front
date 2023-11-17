@@ -72,7 +72,7 @@ export default function EditarEmpresasDialog( { id, readOnly, closeDialog }: Edi
 
 	return (
 		
-		<Modal className="modal-title">
+		<Modal className="modal-title" closeModal={() => {}}>
 			{contextHolder}
 			<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
 				{id && <h4 className="text-center mt-1">{readOnly ? 'Visualizar Empresa' : 'Editar Empresa'}</h4>}

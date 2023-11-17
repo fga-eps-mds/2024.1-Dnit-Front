@@ -35,7 +35,7 @@ export default function DeletarEmpresaDialog( { id, nome, closeDialog }: Deletar
     }
 
     return (
-        <Modal className="delete-empresa">
+        <Modal className="delete-empresa" closeModal={() => {}}>
           <p>
             <strong>Tem certeza que deseja excluir essa empresa?</strong>
           </p>

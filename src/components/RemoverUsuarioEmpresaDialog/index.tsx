@@ -34,7 +34,7 @@ export default function RemoverUsuarioEmpresaDialog( { cnpj, nomeEmpresa, usuari
     }
 
     return (
-        <Modal className="delete-usuario">
+        <Modal className="delete-usuario" closeModal={() => {}}>
           <p>
             <strong>Tem certeza que deseja remover esse usuário da empresa?</strong>
           </p>
