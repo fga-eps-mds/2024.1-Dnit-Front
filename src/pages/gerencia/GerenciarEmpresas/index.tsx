@@ -45,7 +45,8 @@ export default function GerenciarEmpresas() {
 		cadastrar: temPermissao(Permissao.EmpresaCadastrar),
 		visualizar: temPermissao(Permissao.EmpresaVisualizar),
 		remover: temPermissao(Permissao.EmpresaRemover),
-		editar: temPermissao(Permissao.EmpresaEditar)
+		editar: temPermissao(Permissao.EmpresaEditar),
+		visualizarUsuarios: temPermissao(Permissao.EmpresaVisualizarUsuarios)
 	  });
 
 	const buscarEmpresas = (proximaPagina: number, novoTamanhoPagina: number = tamanhoPagina) => {
@@ -144,7 +145,10 @@ export default function GerenciarEmpresas() {
 								onUsersRow={() => {
 									navigate(`/gerenciarUsuariosEmpresa/${empresa.cnpj}`);
 								}}
-								hideUsersIcon = {false}
+								hideUsersIcon = {!temPermissaoGerenciar.visualizarUsuarios}
+								hideEyeIcon = {!temPermissaoGerenciar.visualizar}
+								hideTrashIcon = {!temPermissaoGerenciar.remover}
+								hideEditIcon={!temPermissaoGerenciar.editar}
 							/>
 						))
 					}

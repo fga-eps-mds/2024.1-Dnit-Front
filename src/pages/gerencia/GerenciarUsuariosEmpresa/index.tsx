@@ -1,5 +1,5 @@
 import { notification } from "antd";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UsuarioModel } from "../../../models/usuario";
 import Header from "../../../components/Header";
 import Table, { CustomTableRow } from "../../../components/Table";
@@ -14,6 +14,8 @@ import { fetchUnidadeFederativa } from "../../../service/escolaApi";
 import { fetchPerfis } from "../../../service/usuarioApi";
 import Select from "../../../components/Select";
 import RemoverUsuarioEmpresaDialog from "../../../components/RemoverUsuarioEmpresaDialog";
+import { AuthContext } from "../../../provider/Autenticacao";
+import { Permissao } from "../../../models/auth";
 
 interface RemoverUsuarioEmpresaArgs {
   cnpj: string | undefined,
@@ -36,6 +38,7 @@ export default function GerenciarUsuariosEmpresa() {
     const [perfil, setPerfil] = useState('');
     const [listaUfs, setListaUfs] = useState<FilterOptions[]>([]);
     const [listaPerfis, setListaPerfis] = useState<FilterOptions[]>([]);
+    const { temPermissao } = useContext(AuthContext);
     
     const buscarUsuariosEmpresa = () => {
         setLoading(true);
@@ -100,9 +103,10 @@ export default function GerenciarUsuariosEmpresa() {
               {
                 listaUsuarios.map((usuario, index) =>
                   <CustomTableRow key={`${usuario.id}-${index}`} id={index}
-                    data={{ '0': usuario.nome, '1': `${usuario.perfil.nome}`, '2': `${procuraRotuloUf(usuario)}`, '3': `${usuario.email}`}}
+                    data={{ '0': usuario.nome, '1': `${temPermissao(Permissao.PerfilVisualizar) ? usuario.perfil.nome : ""}`, '2': `${procuraRotuloUf(usuario)}`, '3': `${usuario.email}`}}
                     hideEditIcon={true}
                     hideEyeIcon={true}
+                    hideTrashIcon={!temPermissao(Permissao.EmpresaGerenciarUsuarios)}
                     onDeleteRow={() => setShowRemover({
                       cnpj: cnpj, nomeEmpresa: usuario.empresa?.razaoSocial, nomeUsuario: usuario.nome, usuarioId: usuario.id
                     })}

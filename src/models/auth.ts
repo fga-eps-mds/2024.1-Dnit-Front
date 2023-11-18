@@ -27,6 +27,8 @@ export enum Permissao {
   EmpresaVisualizar = "EmpresaVisualizar",
   EmpresaEditar = "EmpresaEditar",
   EmpresaRemover = "EmpresaRemover",
+  EmpresaGerenciarUsuarios = "EmpresaGerenciarUsuarios",
+  EmpresaVisualizarUsuarios = "EmpresaVisualizarUsuarios",
 }
 
 export enum TipoPerfil {

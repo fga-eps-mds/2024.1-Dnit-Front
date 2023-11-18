@@ -16,10 +16,10 @@ interface MultiSelectProps {
   onChange: (id: string[]) => void;
   filtrarTodos?: boolean;
   definePlaceholder?: string;
-  
+  readOnly?: boolean;
 }
 
-export default function MultiSelect({ items, value, label, onChange, inputStyle, dropdownStyle, buttonStyle, filtrarTodos, definePlaceholder}: MultiSelectProps) {
+export default function MultiSelect({ items, value, label, onChange, inputStyle, dropdownStyle, buttonStyle, filtrarTodos, definePlaceholder, readOnly}: MultiSelectProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [novaLista, setNovaLista] = useState<MultiSelectOptions[]>([]);
 
@@ -84,10 +84,10 @@ export default function MultiSelect({ items, value, label, onChange, inputStyle,
       <div className="br-input ">
         <label className="profile-type-label ml-2" htmlFor="select-multtiple" ><p style={{ marginBottom: "4px" }}><strong>{label}</strong></p></label>
         <div className="br-input large input-button">
-          <input id="select-multtiple" type="text" placeholder={definePlaceholder} value={getRotulos(value, novaLista).join(', ')} readOnly style={inputStyle} />
-          <button data-testid={`${label}customSelect`} className="br-button" type="button" aria-label="Exibir lista" tabIndex={-1} data-trigger="data-trigger" onClick={toggleDropdown} style={buttonStyle}>
+          <input id="select-multtiple" type="text" placeholder={definePlaceholder} value={getRotulos(value, novaLista).join(', ')} style={inputStyle} readOnly={readOnly} />
+          {!readOnly && <button data-testid={`${label}customSelect`} className="br-button" type="button" aria-label="Exibir lista" tabIndex={-1} data-trigger="data-trigger" onClick={toggleDropdown} style={buttonStyle}>
             <i className="fas fa-angle-down" aria-hidden="true"></i>
-          </button>
+          </button>}
         </div>
       </div>
       {isOpen &&

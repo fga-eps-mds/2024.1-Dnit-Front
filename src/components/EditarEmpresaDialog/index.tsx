@@ -94,7 +94,7 @@ export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDia
 						value={formatCnpj(cnpj)} maxLength={18} defaultValue={id ? formatCnpj(id) : ""}/>
 				</div>
 				<div className="br-input edicao-empresa">
-					<MultiSelect items={listaUfs} value={UFs} label={"UF"} onChange={setUFs} dropdownStyle={{ marginLeft: "20px", width: "260px" }} />
+					<MultiSelect items={listaUfs} value={UFs} label={"UF"} onChange={setUFs} dropdownStyle={{ marginLeft: "20px", width: "260px" }} readOnly={readOnly} />
 				</div>
 			</div>
 			{!readOnly &&

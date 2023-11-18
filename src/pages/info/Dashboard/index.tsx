@@ -60,7 +60,7 @@ export default function Dashboard() {
       setPodeCadastrarRodovias(temPermissao(Permissao.RodoviaCadastrar));
       setPodeGerenciarUsuario(temPermissao(Permissao.UsuarioVisualizar));
       setPodeGerenciarPerfis(temPermissao(Permissao.PerfilVisualizar));
-      setPodeGerenciarEmpresas(temPermissao(Permissao.EmpresaCadastrar));
+      setPodeGerenciarEmpresas(temPermissao(Permissao.EmpresaVisualizar));
     });
   }, []);
 
