@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import "./styles.css";
-import {EtapasDeEnsinoData, RanqueInfo, Escola} from '../../models/service';
+import {EtapasDeEnsinoData, RanqueInfo} from '../../models/service';
 import {
   fetchEtapasDeEnsino,
   fetchMunicipio,
@@ -166,7 +166,7 @@ function Ranque() {
                     '3': formatEtapaEnsino(e.escola.etapaEnsino),
                     '4': e.escola.uf?.sigla || '',
                     '5': e.escola.municipio?.nome || '',
-                    '6': e.escola.superintendencia.uf || '' ,
+                    '6': e.escola.superintendencia?.uf || '' ,
                     '7': formataCustoLogistico(e.escola.distanciaSuperintendencia),
                   }}
                   hideTrashIcon={true}

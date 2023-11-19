@@ -189,7 +189,7 @@ export interface CalcularUpsResponse {
 }
 
 export interface UfModel {
-  if: number;
+  id: number;
   sigla: string;
   nome: string;
 }
@@ -215,41 +215,4 @@ export interface RanqueInfo {
   pontuacao: number;
   posicao: number;
   fatores: Fatores[];
-}
-
-export interface Escola {
-  idEscola: string;
-  codigoEscola: number;
-  nomeEscola: string;
-  idRede: number;
-  descricaoRede: string;
-  cep: string;
-  idUf: number;
-  siglaUf: string;
-  endereco: string;
-  idMunicipio: number;
-  nomeMunicipio: string;
-  idLocalizacao: number;
-  descricaoLocalizacao: string;
-  longitude: string;
-  latitude: string;
-  idEtapasDeEnsino: number;
-  etapasEnsino: EtapasDeEnsinoData[];
-  numeroTotalDeAlunos: number;
-  idSituacao: number;
-  descricaoSituacao: string;
-  idPorte: number;
-  descricaoPorte: string;
-  telefone: string;
-  numeroTotalDeDocentes: number;
-  observacao: string;
-  uf: number;
-  descricaoUf: string;
-  descricaoEtapasEnsino: string;
-  rede: number;
-  porte: number;
-  localizacao: number;
-  situacao: string;
-  distanciaSuperintendencia: number;
-  superintendenciaId: number;
 }
