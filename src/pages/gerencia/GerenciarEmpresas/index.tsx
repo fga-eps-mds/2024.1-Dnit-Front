@@ -82,7 +82,7 @@ export default function GerenciarEmpresas() {
 
 	useEffect(() => {
 	if (!temPermissao(Permissao.EmpresaVisualizar)) {
-	  navigate("/");
+	  navigate("/dashboard");
 	}
 	}, []);
 

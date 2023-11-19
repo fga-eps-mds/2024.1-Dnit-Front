@@ -158,7 +158,7 @@ export default function Dashboard() {
   return (
     <div className="App">
       <Header />
-      <div className="Main-content">
+      <div className="Main-content" data-testid="dashboard">
         <TrilhaDeNavegacao elementosLi={paginas} />
         <Collapse
           defaultActiveKey={["1", "2", "3"]}

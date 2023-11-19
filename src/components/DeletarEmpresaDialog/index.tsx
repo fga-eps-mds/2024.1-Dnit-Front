@@ -35,7 +35,7 @@ export default function DeletarEmpresaDialog( { id, nome, closeDialog }: Deletar
     }
 
     return (
-        <Modal className="delete-empresa" closeModal={() => {}}>
+        <Modal className="delete-empresa" closeModal={() => { closeDialog(false) }}>
           <p>
             <strong>Tem certeza que deseja excluir essa empresa?</strong>
           </p>
@@ -43,10 +43,10 @@ export default function DeletarEmpresaDialog( { id, nome, closeDialog }: Deletar
             A empresa <strong>{nome}</strong> será excluída para sempre.
           </p>
           <div className="d-flex w-100 justify-content-center">
-            <button className="br-button secondary" type="button" onClick={() => closeDialog(false)}>
+            <button className="br-button secondary" type="button" onClick={() => closeDialog(false)} data-testid="botaoCancelar">
               Cancelar
             </button>
-            <button className="br-button primary" type="button"onClick={deletarEmpresa}>
+            <button className="br-button primary" type="button"onClick={deletarEmpresa} data-testid="botaoConfirmar">
               Confirmar
             </button>
           </div>

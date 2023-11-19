@@ -49,7 +49,7 @@ export function CustomTableRow({
       <td>
         <div className="icon-row">
           {!hideUsersIcon && (
-            <i data-testId={`table-row-edit-${id}`}
+            <i data-testid={`table-row-seeuser-${id}`}
               className="fas fa-user"
               aria-hidden="true"
               onClick={() => onUsersRow(id)}

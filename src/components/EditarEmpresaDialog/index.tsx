@@ -27,7 +27,7 @@ export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDia
 		const empresa = await fetchEmpresa(cnpj);
 		setRazaoSocial(empresa.razaoSocial);
 		setCnpj(empresa.cnpj);
-		setUFs(empresa.uFs.map(uf => uf.id.toString()));
+		setUFs(empresa.uFs?.map(uf => uf.id.toString()));
 		setLoading(false);
 		return empresa;
 	}
@@ -74,7 +74,7 @@ export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDia
 
 	return (
 		
-		<Modal className="modal-title" closeModal={() => {}}>
+		<Modal className="modal-title" closeModal={() => { closeDialog(false) }}>
 			{contextHolder}
 			<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
 				{id && <h4 className="text-center mt-1">{readOnly ? 'Visualizar Empresa' : 'Editar Empresa'}</h4>}
@@ -86,12 +86,12 @@ export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDia
 			<div style={ {height: "inherit"} }>
 				<div className="br-input edicao-empresa">
 					<label>Razão Social</label>
-					<input id="input-default" type={"text"} readOnly={readOnly} onChange={e => setRazaoSocial(e.target.value)} defaultValue={razaoSocial}/>
+					<input id="input-default" data-testid="inputRazaoSocial" type={"text"} readOnly={readOnly} onChange={e => setRazaoSocial(e.target.value)} defaultValue={razaoSocial}/>
 				</div>
 				<div className="br-input edicao-empresa">
 					<label>CNPJ</label>
 					<input id="input-default" type={"text"} readOnly={id ? true : false} onChange={e => setCnpj(e.target.value.replace(/\D/g, ''))} 
-						value={formatCnpj(cnpj)} maxLength={18} defaultValue={id ? formatCnpj(id) : ""}/>
+						value={formatCnpj(cnpj)} maxLength={18} data-testid="inputCnpj" defaultValue={id ? formatCnpj(id) : ""}/>
 				</div>
 				<div className="br-input edicao-empresa">
 					<MultiSelect items={listaUfs} value={UFs} label={"UF"} onChange={setUFs} dropdownStyle={{ marginLeft: "20px", width: "260px" }} readOnly={readOnly} />

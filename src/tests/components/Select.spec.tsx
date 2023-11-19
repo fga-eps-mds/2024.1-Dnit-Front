@@ -48,7 +48,7 @@ describe("Testes para o componente Select", () => {
     const opcao = screen.getByText("test1");
     fireEvent.click(opcao);
 
-    expect(onChangeMock).toHaveBeenCalledWith("1");
+    expect(onChangeMock).toHaveBeenCalledWith("1", "test1");
 
     expect(screen.queryByText('test1')).not.toBeInTheDocument();
   });
