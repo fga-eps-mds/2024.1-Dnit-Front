@@ -11,7 +11,7 @@ export enum Permissao {
   
   UpsCalcularSinistro = "UpsCalcularSinistro",
   UpsCalcularEscola = "UpsCalcularEscola",
-  RanqueVisualizar = "UpsVisualizar",
+  RanqueVisualizar = "RanqueVisualizar",
 
   UsuarioCadastrar = "UsuarioCadastrar",
   UsuarioVisualizar = "UsuarioVisualizar",
