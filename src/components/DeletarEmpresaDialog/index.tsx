@@ -40,7 +40,7 @@ export default function DeletarEmpresaDialog( { id, nome, closeDialog }: Deletar
             <strong>Tem certeza que deseja excluir essa empresa?</strong>
           </p>
           <p>
-            A empresa <strong>{nome}</strong> é usada por X usuários.
+            A empresa <strong>{nome}</strong> será excluída para sempre.
           </p>
           <div className="d-flex w-100 justify-content-center">
             <button className="br-button secondary" type="button" onClick={() => closeDialog(false)}>
