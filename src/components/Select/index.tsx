@@ -6,19 +6,20 @@ interface SelectOptions {
   rotulo: string;
 }
 export interface SelectProps {
+  inputValue?: string;
   items: { id: string, rotulo: string }[];
   value: string; //Valor selecionado atualmente
   label?: string; //Titulo do dropdown
   inputStyle?: object;
   dropdownStyle?: object;
   buttonStyle?: object;
-  onChange: (id: string) => void;
+  onChange: (id: string, rotuloAtual?: string) => void;
   filtrarTodos?: boolean;
   definePlaceholder?: string;
-  
+  inputReadOnly?: boolean;
 }
 
-export default function Select({ items, value, label, onChange, inputStyle, dropdownStyle, buttonStyle, filtrarTodos, definePlaceholder }: SelectProps) {
+export default function Select({ inputValue, items, value, label, onChange, inputStyle, dropdownStyle, buttonStyle, filtrarTodos, definePlaceholder, inputReadOnly=true }: SelectProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [novaLista, setNovaLista] = useState<SelectOptions[]>([]);
 
@@ -26,8 +27,8 @@ export default function Select({ items, value, label, onChange, inputStyle, drop
     setIsOpen(!isOpen);
   };
 
-  const handleItemClick = (item: string) => {
-    onChange(item);
+  const handleItemClick = (item: { id: string, rotulo: string }) => {
+    onChange(item.id, item.rotulo);
     setIsOpen(false);
   };
 
@@ -41,6 +42,7 @@ export default function Select({ items, value, label, onChange, inputStyle, drop
     if (filtrarTodos === true) { 
       const concatLista = [{ id: "", rotulo: "Todos" }].concat(items); 
       setNovaLista(concatLista);
+      onChange("", "Todos")
     }
     else
       setNovaLista(items);
@@ -67,7 +69,8 @@ export default function Select({ items, value, label, onChange, inputStyle, drop
       <div className="br-input ">
         <label className="profile-type-label ml-2" htmlFor="select-simple" ><p style={{ marginBottom: "4px" }}><strong>{label}</strong></p></label>
         <div className="br-input large input-button">
-          <input id="select-simple" type="text" placeholder={definePlaceholder} value={getRotuloById(value, novaLista)} readOnly style={inputStyle} />
+          {inputReadOnly && <input id="select-simple" type="text" placeholder={definePlaceholder} value={getRotuloById(value, novaLista)} readOnly style={inputStyle} />}
+          {!inputReadOnly && <input id="select-simple" type="text" placeholder={definePlaceholder} onChange={e => onChange("", e.target.value)} value={inputValue} style={inputStyle} readOnly={inputReadOnly} />}
           <button data-testid={`${label}customSelect`} className="br-button" type="button" aria-label="Exibir lista" tabIndex={-1} data-trigger="data-trigger" onClick={toggleDropdown} style={buttonStyle}>
             <i className="fas fa-angle-down" aria-hidden="true"></i>
           </button>
@@ -76,7 +79,7 @@ export default function Select({ items, value, label, onChange, inputStyle, drop
       {isOpen &&
         <div className="br-list2" style={dropdownStyle} tabIndex={0}>
           {novaLista.map((item, index) => (
-            <div key={index} className="br-item" tabIndex={-1} onClick={() => handleItemClick(item.id)} onKeyDown={() => { }}>
+            <div key={index} className="br-item" tabIndex={-1} onClick={() => handleItemClick(item)} onKeyDown={() => { }}>
               <div className="br-radio">
                 <input id={`rb${index}`} type="radio" name="estados-simples" value={item.rotulo} checked={value === item.id} onChange={() => { }} />
                 <label htmlFor={`rb${index}`}>{item.rotulo}</label>
