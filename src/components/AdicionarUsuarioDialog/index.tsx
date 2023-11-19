@@ -70,13 +70,13 @@ export default function AdicionarUsuarioDialog( { cnpj, closeDialog }: Adicionar
     return (
         <Modal className="adicionar-usuario-empresa" closeModal={() => {}}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <h4 className="text-center mt-1"><strong>Adicionar Usuário - {nomeEmpresa}</strong></h4>
+                <h4 className="text-center mt-1">Adicionar Usuário - {nomeEmpresa}</h4>
             </div>
             <Select items={listaUsuarios} value={selectedId} label={"Usuários"} onChange={(inputValueId, inputValueRotulo) => {
                 setSelectedId(inputValueId);
                 setCurrentInputValue(getRotuloById(inputValueId, inputValueRotulo));
                 setCurrentInputRotulo(inputValueRotulo || "");
-            }} inputValue={currentInputValue} inputReadOnly={false} dropdownStyle={{ marginLeft: "0px", width: "290px" }}
+            }} inputValue={currentInputValue} inputReadOnly={false} dropdownStyle={{ marginLeft: "0px", width: "280px" }}
             />
           <div className="d-flex w-100 justify-content-center">
             <button className="br-button secondary" type="button" onClick={() => closeDialog(false)}>

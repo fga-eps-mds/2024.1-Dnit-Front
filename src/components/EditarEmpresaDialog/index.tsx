@@ -74,7 +74,7 @@ export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDia
 
 	return (
 		
-		<Modal className="modal-title" closeModal={() => { closeDialog(false) }}>
+		<Modal className="edicao-empresa" closeModal={() => { closeDialog(false) }}>
 			{contextHolder}
 			<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
 				{id && <h4 className="text-center mt-1">{readOnly ? 'Visualizar Empresa' : 'Editar Empresa'}</h4>}
@@ -93,9 +93,8 @@ export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDia
 					<input id="input-default" type={"text"} readOnly={id ? true : false} onChange={e => setCnpj(e.target.value.replace(/\D/g, ''))} 
 						value={formatCnpj(cnpj)} maxLength={18} data-testid="inputCnpj" defaultValue={id ? formatCnpj(id) : ""}/>
 				</div>
-				<div className="br-input edicao-empresa">
-					<MultiSelect items={listaUfs} value={UFs} label={"UF"} onChange={setUFs} dropdownStyle={{ marginLeft: "20px", width: "260px" }} readOnly={readOnly} />
-				</div>
+				<MultiSelect items={listaUfs} value={UFs} label={"UFs"} labelStyle={{display: "inline", fontSize: "14px", marginLeft: "0px !important"}} onChange={setUFs} 
+						dropdownStyle={{ marginLeft: "0px", width: "280px" }} readOnly={readOnly} />
 			</div>
 			{!readOnly &&
 			(<div className="d-flex w-100 justify-content-end">
