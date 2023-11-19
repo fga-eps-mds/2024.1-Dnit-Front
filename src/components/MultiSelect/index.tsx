@@ -96,7 +96,7 @@ export default function MultiSelect({ items, value, label, onChange, inputStyle,
           {novaLista.map((item, index) => (
             <div key={index} className="br-item" tabIndex={-1} data-all="data-all" onKeyDown={() => { }}>
               <div className="br-checkbox">
-                <input id={`cbs${index}`} type="checkbox" name="estados-multtiple" value={item.rotulo} checked={itemIsSelected("") || itemIsSelected(item.id)} 
+                <input id={`cbs${index}`} data-testid={`cbs${index}`} type="checkbox" name="estados-multtiple" value={item.rotulo} checked={itemIsSelected("") || itemIsSelected(item.id)} 
                   onClick={() => handleItemClick(item.id)} onChange={() => { }} />
                 <label htmlFor={`cbs${index}`}>{item.rotulo}</label>
               </div>
