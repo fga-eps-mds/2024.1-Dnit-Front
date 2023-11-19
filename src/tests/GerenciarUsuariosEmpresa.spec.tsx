@@ -41,7 +41,110 @@ describe("Gerenciar usuários de empresa", () => {
 
         const screen = setup()
 
-        await waitFor(() => expect(screen.getByText(usuarios[0].nome)).toBeInTheDocument);
+        await waitFor(() => expect(screen.getByText(usuarios[0].nome)).toBeInTheDocument)
+    })
 
+    it("Deve abrir modal de cadastrar usuários e confirmar", async () => {
+        autenticar(
+            Permissao.PerfilVisualizar,
+            Permissao.EmpresaVisualizarUsuarios,
+            Permissao.EmpresaGerenciarUsuarios
+        )
+
+        const screen = setup()
+
+        await waitFor(() => expect(screen.getByText(usuarios[0].nome)).toBeInTheDocument)
+        const button = screen.getByText("Adicionar Usuário")
+        await waitFor(() => expect(button).toBeInTheDocument)
+
+        act(() => {
+            button.click()
+        })
+
+        await waitFor(() => expect(screen.getByTestId("overlay")))
+        const select = screen.getByTestId("UsuárioscustomSelect")
+        const selectFirstItem = document.querySelector("#rb0")
+
+        act(() => {
+            select.click()
+        })
+
+        await waitFor(() => expect(selectFirstItem).toBeInTheDocument)
+        act(() => {
+            screen.getByTestId("botao-cadastrar").click()
+        })
+    })
+    
+    it("Deve abrir modal de cadastrar usuários e cancelar", async () => {
+        autenticar(
+            Permissao.PerfilVisualizar,
+            Permissao.EmpresaVisualizarUsuarios,
+            Permissao.EmpresaGerenciarUsuarios
+        )
+
+        const screen = setup()
+
+        await waitFor(() => expect(screen.getByText(usuarios[0].nome)).toBeInTheDocument)
+        const button = screen.getByText("Adicionar Usuário")
+        await waitFor(() => expect(button).toBeInTheDocument)
+
+        act(() => {
+            button.click()
+        })
+
+        await waitFor(() => expect(screen.getByTestId("overlay")));
+        act(() => {
+            screen.getByTestId("botao-cancelar").click()
+        })
+    })
+
+    it("Deve abrir o modal de remover usuario e confirmar", async () => {
+        autenticar(
+            Permissao.PerfilVisualizar,
+            Permissao.EmpresaVisualizarUsuarios,
+            Permissao.EmpresaGerenciarUsuarios
+        )
+
+        const screen = setup()
+
+        await waitFor(() => expect(screen.getByText(usuarios[0].nome)).toBeInTheDocument)
+        const button = screen.getByTestId("table-row-delete-0")
+        await waitFor(() => expect(button).toBeInTheDocument)
+
+        act(() => {
+            button.click()
+        })
+
+        await waitFor(() => expect(screen.getByTestId("overlay")));
+
+        const buttonConfirmar = screen.getByTestId("botao-confirmar")
+        act(() => {
+            buttonConfirmar.click()
+        })
+    })
+
+    it("Deve abrir o modal de remover usuario e cancelar", async () => {
+        autenticar(
+            Permissao.PerfilVisualizar,
+            Permissao.EmpresaVisualizarUsuarios,
+            Permissao.EmpresaGerenciarUsuarios
+        )
+
+        const screen = setup()
+
+        await waitFor(() => expect(screen.getByText(usuarios[0].nome)).toBeInTheDocument)
+        const button = screen.getByTestId("table-row-delete-0")
+        await waitFor(() => expect(button).toBeInTheDocument)
+
+        act(() => {
+            button.click()
+        })
+
+        await waitFor(() => expect(screen.getByTestId("overlay")));
+
+        const buttonConfirmar = screen.getByTestId("botao-cancelar")
+        act(() => {
+            buttonConfirmar.click()
+        })
     })
 })

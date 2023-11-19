@@ -79,10 +79,10 @@ export default function AdicionarUsuarioDialog( { cnpj, closeDialog }: Adicionar
             }} inputValue={currentInputValue} inputReadOnly={false} dropdownStyle={{ marginLeft: "0px", width: "280px" }}
             />
           <div className="d-flex w-100 justify-content-center">
-            <button className="br-button secondary" type="button" onClick={() => closeDialog(false)}>
+            <button className="br-button secondary" data-testid="botao-cancelar" type="button" onClick={() => closeDialog(false)}>
               Cancelar
             </button>
-            <button className="br-button primary" type="button"onClick={() => adicionarUsuario(selectedId)}>
+            <button className="br-button primary" data-testid="botao-cadastrar" type="button"onClick={() => adicionarUsuario(selectedId)}>
               Adicionar
             </button>
           </div>

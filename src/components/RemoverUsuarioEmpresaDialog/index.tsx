@@ -42,10 +42,10 @@ export default function RemoverUsuarioEmpresaDialog( { cnpj, nomeEmpresa, usuari
             O usuário <strong>{nomeUsuario}</strong> será removido da empresa <strong>{nomeEmpresa}</strong>.
           </p>
           <div className="d-flex w-100 justify-content-center">
-            <button className="br-button secondary" type="button" onClick={() => closeDialog(false)}>
+            <button className="br-button secondary" data-testid="botao-confirmar" type="button" onClick={() => closeDialog(false)}>
               Cancelar
             </button>
-            <button className="br-button primary" type="button"onClick={removerUsuario}>
+            <button className="br-button primary" data-testid="botao-cancelar" type="button"onClick={removerUsuario}>
               Confirmar
             </button>
           </div>

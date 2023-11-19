@@ -1,5 +1,5 @@
 import { rest } from "msw";
-import { listarEmpresasUrl, cadastrarEmpresaUrl, excluirEmpresaUrl, editarEmpresaUrl, listarUsuariosEmpresaUrl, visualizarEmpresaUrl } from "../../../consts/service";
+import { listarEmpresasUrl, cadastrarEmpresaUrl, excluirEmpresaUrl, editarEmpresaUrl, listarUsuariosEmpresaUrl, visualizarEmpresaUrl, adicionarUsuarioEmpresaUrl, removerUsuarioEmpresaUrl } from "../../../consts/service";
 import { empresas } from "../../stub/empresaModelos";
 import { usuarios } from "../../stub/usuarioModelos";
 
@@ -72,13 +72,33 @@ const listarUsuariosEmpresa = rest.get(
     }
 )
 
+const adicionarUsuarioEmpresaRequest = rest.post(
+    adicionarUsuarioEmpresaUrl,
+    (_req, res, ctx) => {
+        return res(
+            ctx.status(200)
+        )
+    }
+)
+
+const removerUsuarioEmpresaRequest = rest.delete(
+    removerUsuarioEmpresaUrl,
+    (_req, res, ctx) => {
+        return res(
+            ctx.status(200)
+        )
+    }
+)
+
 const empresaRequests = [
     listarEmpresasRequest, 
     cadastrarEmpresaRequest,
     obterEmpresaRequest, 
     deletarEmpresaRequest, 
     editarEmpresaRequest,
-    listarUsuariosEmpresa
+    listarUsuariosEmpresa,
+    adicionarUsuarioEmpresaRequest,
+    removerUsuarioEmpresaRequest
 ]
 
 export default empresaRequests
