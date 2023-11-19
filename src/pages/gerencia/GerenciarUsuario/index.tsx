@@ -68,8 +68,8 @@ export default function GerenciarUsuario() {
 
   const buscarUsuarios = (pagina: number, itemsPorPagina: number) => {
     setLoading(true);
-
-    fetchUsuarios<ListaPaginada>({ pagina: pagina, itemsPorPagina: tamanhoPagina, nome: nome, ufLotacao: uf, perfilId: perfil, municipioId: municipio, empresa: empresa})
+    
+    fetchUsuarios<ListaPaginada>({ pagina: pagina, itemsPorPagina: itemsPorPagina, nome: nome, ufLotacao: uf, perfilId: perfil, municipioId: municipio, empresa: empresa})
       .then(lista => {
         setPagina(lista.pagina)
         setListaUsuarios(lista.items)
@@ -184,10 +184,10 @@ export default function GerenciarUsuario() {
             buscarUsuarios(pagina - 1, tamanhoPagina)
           }}
           onPageResize={(newItensPerPage) => {
-            buscarUsuarios(pagina, newItensPerPage)
+            setTamanhoPagina(newItensPerPage)
           }}
           onPageSelect={(newSelectedPage) => {
-            buscarUsuarios(newSelectedPage, tamanhoPagina)
+            setPagina(newSelectedPage)
           }}
         >
           {listaUsuarios.map((usuario, index) =>
