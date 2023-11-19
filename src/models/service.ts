@@ -184,14 +184,13 @@ export interface CalcularUpsResponse {
   upsGeral: number;
 }
 
-export interface CadastroEmpresaData {
+export interface SalvarEmpresaData {
   Cnpj: string;
   RazaoSocial: string;
   UFs: number[];
 }
 
-export interface EditarEmpresaData {
-  Cnpj: string;
-  RazaoSocial: string;
-  UFs: number[];
+export interface GerenciarUsuarioEmpresaData {
+  cnpj: string;
+  usuarioid: string;
 }

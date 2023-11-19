@@ -16,12 +16,18 @@ import Select from "../../../components/Select";
 import RemoverUsuarioEmpresaDialog from "../../../components/RemoverUsuarioEmpresaDialog";
 import { AuthContext } from "../../../provider/Autenticacao";
 import { Permissao } from "../../../models/auth";
+import { ButtonComponent } from "../../../components/Button";
+import AdicionarUsuarioDialog from "../../../components/AdicionarUsuarioDialog";
 
 interface RemoverUsuarioEmpresaArgs {
-  cnpj: string | undefined,
-  nomeEmpresa: string | undefined,
-  nomeUsuario: string,
-  usuarioId: string,
+  cnpj: string | undefined;
+  nomeEmpresa: string | undefined;
+  nomeUsuario: string;
+  usuarioId: string;
+}
+
+interface AdicionarUsuarioEmpresaArgs {
+  cnpj: string | undefined;
 }
 
 export default function GerenciarUsuariosEmpresa() {
@@ -32,6 +38,7 @@ export default function GerenciarUsuariosEmpresa() {
     const [tamanhoPagina, setTamanhoPagina] = useState(20);
     const [loading, setLoading] = useState(false);
     const [showRemover, setShowRemover] = useState<RemoverUsuarioEmpresaArgs | null>(null);
+    const [showAdicionar, setShowAdicionar] = useState<AdicionarUsuarioEmpresaArgs | null>(null);
     const [listaUsuarios, setListaUsuarios] = useState<UsuarioModel[]>([]);
     const [nome, setNome] = useState('');
     const [uf, setUf] = useState('');
@@ -87,8 +94,9 @@ export default function GerenciarUsuariosEmpresa() {
     return (
         <div className="App">
           {notificationContextHandler}
-          {showRemover && <RemoverUsuarioEmpresaDialog cnpj={showRemover.cnpj} usuarioId={showRemover.usuarioId} 
+          {showRemover && <RemoverUsuarioEmpresaDialog cnpj={showRemover.cnpj} usuarioid={showRemover.usuarioId} 
             nomeEmpresa={showRemover.nomeEmpresa} nomeUsuario={showRemover.nomeUsuario} closeDialog={(removed) => {setShowRemover(null); onUsuarioChange(removed)}}/>}
+          {showAdicionar && <AdicionarUsuarioDialog cnpj={showAdicionar.cnpj} closeDialog={(added) => {setShowAdicionar(null); onUsuarioChange(added)}}/>}
           <Header />
           <TrilhaDeNavegacao elementosLi={paginas} />
           <div className="d-flex flex-column m-5">
@@ -96,6 +104,7 @@ export default function GerenciarUsuariosEmpresa() {
                 <InputFilter onChange={setNome} dataTestId="filtroNome" label="Nome" placeholder="Nome"/>
                 <Select items={listaUfs} value={uf} label={"UF:"} onChange={setUf} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true}/>
                 <Select items={listaPerfis} value={perfil} label={"Perfil:"} onChange={setPerfil} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true}/>
+                {temPermissao(Permissao.EmpresaGerenciarUsuarios) && <ButtonComponent label="Adicionar Usuário" buttonStyle="primary" onClick={() => setShowAdicionar({cnpj})}></ButtonComponent>}
             </div>
             {listaUsuarios.length === 0 && <Table columsTitle={['Nome', 'Tipo de Perfil', 'UF', 'E-mail']} initialItemsPerPage={10} title="Usuários cadastrados"><></><></></Table>}
     

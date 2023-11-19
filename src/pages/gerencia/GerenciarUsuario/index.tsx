@@ -23,7 +23,7 @@ interface EditarTipoPerfilArgs {
   readOnly: boolean;
 }
 
-interface ListaPaginada {
+export interface ListaPaginada {
   pagina: number;
   itemsPorPagina: number;
   total: number;

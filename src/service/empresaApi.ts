@@ -5,8 +5,8 @@ import { ResponseStatus, fetchDados, sendCadastros} from "./apiUtils";
 import { EmpresaModel, ListaPaginada } from "../models/empresa";
 import { ListarUsuariosQueryParams, UsuarioModel } from "../models/usuario";
 
-export async function sendCadastroEmpresa(data:DATA.CadastroEmpresaData):Promise<ResponseStatus>{
-    return sendCadastros<DATA.CadastroEmpresaData>(URL.cadastrarEmpresaUrl, data);
+export async function sendCadastroEmpresa(data:DATA.SalvarEmpresaData):Promise<ResponseStatus>{
+    return sendCadastros<DATA.SalvarEmpresaData>(URL.cadastrarEmpresaUrl, data);
 }
 
 export async function fetchEmpresas(pagina: number, tamanhoPagina: number, nome: string, cnpj: string): Promise<ListaPaginada<EmpresaModel>> {
@@ -31,7 +31,7 @@ export async function fetchEmpresa(cnpj: string): Promise<EmpresaModel> {
     return fetchDados<EmpresaModel>(url);
 }
 
-export async function updateEmpresa(cnpj: string, empresa: DATA.EditarEmpresaData): Promise<EmpresaModel> {
+export async function updateEmpresa(cnpj: string, empresa: DATA.SalvarEmpresaData): Promise<EmpresaModel> {
     const url = `${URL.editarEmpresaUrl}/${cnpj}`;
     try {
         const response: AxiosResponse<EmpresaModel> = await axios.put(url, empresa);
@@ -66,17 +66,26 @@ export async function fetchUsuariosEmpresa(cnpj: string, params: ListarUsuariosQ
     }
 }
 
-export async function deleteUsuarioEmpresa(cnpj: string, usuarioid: string) {
+export async function deleteUsuarioEmpresa(params: DATA.GerenciarUsuarioEmpresaData) : Promise<ResponseStatus> {
     const url = `${URL.removerUsuarioEmpresaUrl}`;
     try {
         const response: AxiosResponse<ResponseStatus> = await axios.delete(url, {
-            params: {
-                cnpj,
-                usuarioid
-            }
-        })
+            params
+        });
         return response.data;
     } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+export async function adicionarUsuarioEmpresa(params: DATA.GerenciarUsuarioEmpresaData) : Promise<ResponseStatus>{
+    const url = `${URL.adicionarUsuarioEmpresaUrl}`;
+    try {
+        const response: AxiosResponse<ResponseStatus> = await axios.put(url, null, {params});
+        return response.data;
+    }
+    catch (error) {
         console.log(error);
         throw error;
     }

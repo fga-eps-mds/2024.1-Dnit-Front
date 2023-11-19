@@ -7,18 +7,18 @@ import "./styles.css"
 interface RemoverUsuarioEmpresaProps {
     cnpj: string | undefined;
     nomeEmpresa: string | undefined;
-    usuarioId: string;
+    usuarioid: string;
     nomeUsuario: string;
     closeDialog: (removed: boolean) => void;
 }
 
-export default function RemoverUsuarioEmpresaDialog( { cnpj, nomeEmpresa, usuarioId, nomeUsuario, closeDialog }: RemoverUsuarioEmpresaProps) {
+export default function RemoverUsuarioEmpresaDialog( { cnpj, nomeEmpresa, usuarioid, nomeUsuario, closeDialog }: RemoverUsuarioEmpresaProps) {
     const [loading, setLoading] = useState(false);
 
     const removerUsuario = () => {
         setLoading(true);
         if (cnpj) {
-            deleteUsuarioEmpresa(cnpj, usuarioId)
+            deleteUsuarioEmpresa({cnpj, usuarioid})
             .then(() => {
                 notification.success({ message: "O usuário foi removido da empresa com sucesso." });
                 closeDialog(true);
