@@ -20,20 +20,24 @@ interface CustomTableRowsProps {
   hideEditIcon?: boolean;
   hideEyeIcon?: boolean;
   hideTrashIcon?: boolean;
+  hideUsersIcon?: boolean;
   onDeleteRow?: (rowIndex: number) => void;
   onEditRow?: (rowIndex: number) => void;
   onDetailRow?: (rowIndex: number) => void;
+  onUsersRow?: (rowIndex: number) => void;
 }
 
 export function CustomTableRow({
   data,
   id,
-  onDeleteRow = () => { },
-  onEditRow = () => { },
-  onDetailRow = () => { },
+  onDeleteRow = () => {},
+  onEditRow = () => {},
+  onDetailRow = () => {},
+  onUsersRow = () => {},
   hideEditIcon = false,
   hideEyeIcon = false,
   hideTrashIcon = false,
+  hideUsersIcon = true
 }: CustomTableRowsProps) {
   const columns = Object.keys(data);
 
@@ -44,6 +48,13 @@ export function CustomTableRow({
       ))}
       <td>
         <div className="icon-row">
+          {!hideUsersIcon && (
+            <i data-testid={`table-row-seeuser-${id}`}
+              className="fas fa-user"
+              aria-hidden="true"
+              onClick={() => onUsersRow(id)}
+            />
+          )}
           {!hideEditIcon && (
             <i data-testid={`table-row-edit-${id}`}
               className="fas fa-edit"

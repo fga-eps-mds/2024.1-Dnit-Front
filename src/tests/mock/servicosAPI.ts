@@ -1,6 +1,7 @@
 import { rest } from "msw";
 import { setupServer } from "msw/node";
 import { atualizarTipoPerfil, atualizarTokenUrl, cadastrarPerfilUrl, excluiPerfil, listarEscolasRanque, listarPerfis, listarPermissoesCategoria, listarUsuarioPermissoes, listarUsuarios, municipioURL, obterPerfil, ranqueamentoProcessamento, unidadesFederativasURL, urlAPIEscolas, urlAPIUps } from "../../consts/service";
+import empresaRequests from "./empresa/API";
 import { Permissao, TipoPerfil } from "../../models/auth";
 import { usuarios } from "../stub/usuarioModelos";
 import { ranqueData } from "../stub/ranqueModelos";
@@ -799,6 +800,7 @@ const server = setupServer(
       "items": usuarios
     }
   ))),
+  ...empresaRequests,
   rest.get(listarEscolasRanque, (_, res, ctx) => res(
     ctx.status(200),
     ctx.json(ranqueData)

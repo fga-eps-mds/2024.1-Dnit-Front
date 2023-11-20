@@ -23,7 +23,13 @@ export enum Permissao {
 
   SinistroCadastrar = "SinistroCadastrar",
 
+  EmpresaGerenciar = "EmpresaGerenciar",
   EmpresaCadastrar = "EmpresaCadastrar",
+  EmpresaVisualizar = "EmpresaVisualizar",
+  EmpresaEditar = "EmpresaEditar",
+  EmpresaRemover = "EmpresaRemover",
+  EmpresaGerenciarUsuarios = "EmpresaGerenciarUsuarios",
+  EmpresaVisualizarUsuarios = "EmpresaVisualizarUsuarios",
 }
 
 export enum TipoPerfil {

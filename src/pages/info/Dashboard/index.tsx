@@ -43,7 +43,7 @@ export default function Dashboard() {
   const [podeGerenciarPerfis, setPodeGerenciarPerfis] = useState(
     temPermissao(Permissao.PerfilVisualizar)
   );
-  const [podeCadastrarEmpresa, setPodeCadastrarEmpresa] = useState(
+  const [podeGerenciarEmpresas, setPodeGerenciarEmpresas] = useState(
     temPermissao(Permissao.EmpresaCadastrar)
   );
   const [podeGerenciarUsuario, setPodeGerenciarUsuario] = useState(
@@ -61,7 +61,7 @@ export default function Dashboard() {
       setPodeCadastrarRodovias(temPermissao(Permissao.RodoviaCadastrar));
       setPodeGerenciarUsuario(temPermissao(Permissao.UsuarioVisualizar));
       setPodeGerenciarPerfis(temPermissao(Permissao.PerfilVisualizar));
-      setPodeCadastrarEmpresa(temPermissao(Permissao.EmpresaCadastrar));
+      setPodeGerenciarEmpresas(temPermissao(Permissao.EmpresaVisualizar));
     });
   }, []);
 
@@ -126,10 +126,10 @@ export default function Dashboard() {
       label: "Ferramentas Administrativas",
       children: (
         <div className="collapse-item">
-          {podeCadastrarEmpresa && (
-            <Card className="disabled">
+          {podeGerenciarEmpresas && (
+            <Card className="card" onClick={() => navigate("/gerenciarEmpresas")}>
               <FileTextOutlined className="icon" />
-              <p className="text">Cadastrar empresas</p>
+              <p className="text">Gerenciar Empresas</p>
             </Card>
           )}
           {podeGerenciarUsuario &&
@@ -151,6 +151,7 @@ export default function Dashboard() {
               <p className="text">Gerenciar Perfis</p>
             </Card>
           )}
+          {}
         </div>
       ),
     },
@@ -158,7 +159,7 @@ export default function Dashboard() {
   return (
     <div className="App">
       <Header />
-      <div className="Main-content">
+      <div className="Main-content" data-testid="dashboard">
         <TrilhaDeNavegacao elementosLi={paginas} />
         <Collapse
           defaultActiveKey={["1", "2", "3"]}

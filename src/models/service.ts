@@ -188,6 +188,16 @@ export interface CalcularUpsResponse {
   upsGeral: number;
 }
 
+export interface SalvarEmpresaData {
+  Cnpj: string;
+  RazaoSocial: string;
+  UFs: number[];
+}
+
+export interface GerenciarUsuarioEmpresaData {
+  cnpj: string;
+  usuarioid: string;
+}
 export interface UfModel {
   id: number;
   sigla: string;
