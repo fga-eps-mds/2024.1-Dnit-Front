@@ -50,11 +50,29 @@ export async function update<T>(url: string, data: T): Promise<ResponseStatus>{
     }
 }
 
-export async function fetchDados<T>(url: string): Promise<T>{
-    try{
-        const response: AxiosResponse<T> = await axios.get(url);
+export function formatParams(params: any) {
+    if (!params) {
+        return null;
+    }
+    return Object.entries(params).flatMap(([key, value]) => {
+        if (Array.isArray(value)) {
+            return value.map((v, index) => [`${key}[${index}]`, v]);
+        }
+        return [[key, value]];
+    }).reduce((p, [key, value]) => (p[key] = value, p), {} as any);
+    // returns {
+    //      arg: value,
+    //      array[0]: value01,
+    //      array[1]: value02,
+    //      ...
+    // }
+}
+
+export async function fetchDados<T>(url: string, params: any = null): Promise<T> {
+    try {
+        const response: AxiosResponse<T> = await axios.get(url, { params: formatParams(params) });
         return response.data;
-    } catch(error){
+    } catch (error) {
         console.log(error);
         throw error;
     }
