@@ -79,7 +79,7 @@ const ModalRanqueEscola: React.FC<ModalProps> = ({ escolaId, onClose, onCreateAc
                             <Label>Código: {escolaSelecionada.codigo}</Label>
                         </div>
                         <div className='col-12 col-md-6'>
-                            <Label>Telefone: {escolaSelecionada.telefone}</Label>
+                            <Label>Telefone: {escolaSelecionada.telefone.replace(/^(\d{2})(\d{4})(\d{4})/gm, "($1) $2-$3")}</Label>
                         </div>
                     </div>
                     <div className='row mb-2'>
@@ -104,7 +104,7 @@ const ModalRanqueEscola: React.FC<ModalProps> = ({ escolaId, onClose, onCreateAc
                         <div className='d-flex flex-column'>
                             <Label><strong>Endereço</strong></Label>
                             <Label>{escolaSelecionada.endereco}</Label>
-                            <Label>Cep: {escolaSelecionada.cep}</Label>
+                            <Label>Cep: {escolaSelecionada.cep.replace(/^(\d{5})(\d{3})$/gm, "$1-$2")}</Label>
                             <div className='row'>
                                 <div className='col-12 col-md-6'>
                                     <Label>Estado: {escolaSelecionada.uf?.sigla}</Label>
@@ -115,14 +115,12 @@ const ModalRanqueEscola: React.FC<ModalProps> = ({ escolaId, onClose, onCreateAc
                             </div>
                         </div>
                     </div>
-
-                    <div>
-                        <hr />
+                    <hr />
+                    <div className='d-flex flex-column '>
                         <Label><strong>Superintendência</strong></Label>
                         <Label>Distância: {escolaSelecionada.distanciaSuperintendencia?.toFixed(2)} Km</Label>
-                        <Label>
-                            Endereço: {superintendenciaSelecionada?.endereco} - {superintendenciaSelecionada?.cep}
-                        </Label>
+                        <Label>Endereço: {superintendenciaSelecionada?.endereco}</Label>
+                        <Label>Cep: {superintendenciaSelecionada?.cep}</Label>
                         <Label>UF: {superintendenciaSelecionada?.uf}</Label>
                     </div>
                 </div>
