@@ -8,6 +8,7 @@ import { EscolaRanqueDetalhes } from '../../models/ranque';
 import ReactLoading from "react-loading";
 import { Superintendencia } from '../../models/service';
 import { formataCustoLogistico } from '../../utils/utils';
+import "./index.css";
 
 interface ModalProps {
     onClose: () => void;
@@ -60,7 +61,7 @@ const ModalRanqueEscola: React.FC<ModalProps> = ({ escolaId, onClose, onCreateAc
     }
 
     return (
-        <Modal className="default" closeModal={() => onClose()}>
+        <Modal className="default escola-ranque-modal" closeModal={() => onClose()}>
             <div className="d-flex flex-column">
                 <h4 className="text-center mt-1">Detalhes da Escola</h4>
                 <div className='d-flex flex-column '>
@@ -126,11 +127,11 @@ const ModalRanqueEscola: React.FC<ModalProps> = ({ escolaId, onClose, onCreateAc
                 </div>
             </div>
             <br />
-            <div className="d-flex w-100 justify-content-end">
+            <div className="d-flex w-100 justify-content-end mb-2">
                 <button className="br-button secondary mr-3" type="button" onClick={() => onClose()}>
                     Fechar
                 </button>
-                <button className="br-button primary mr-3" type="button" onClick={() => { onCreateAcao() }}>
+                <button className="br-button primary mr-3" type="button" onClick={() => { onCreateAcao() }} disabled>
                     Criar Ação
                 </button>
             </div>
