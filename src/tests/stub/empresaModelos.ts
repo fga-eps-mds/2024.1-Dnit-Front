@@ -1,5 +1,4 @@
 import { EmpresaModel } from "../../models/empresa";
-import { UsuarioModel } from "../../models/usuario";
 
 export const empresas: EmpresaModel[] = [
     {

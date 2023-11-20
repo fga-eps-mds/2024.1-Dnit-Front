@@ -35,7 +35,6 @@ export default function GerenciarUsuariosEmpresa() {
     const paginas = [{nome: "Gerenciar Empresas", link: "/gerenciarEmpresas"}, 
         {nome: "Usuarios", link: "/gerenciarUsuariosEmpresa"}];
     const [notificationApi, notificationContextHandler] = notification.useNotification();
-    const [tamanhoPagina, setTamanhoPagina] = useState(20);
     const [loading, setLoading] = useState(false);
     const [showRemover, setShowRemover] = useState<RemoverUsuarioEmpresaArgs | null>(null);
     const [showAdicionar, setShowAdicionar] = useState<AdicionarUsuarioEmpresaArgs | null>(null);
@@ -46,6 +45,7 @@ export default function GerenciarUsuariosEmpresa() {
     const [listaUfs, setListaUfs] = useState<FilterOptions[]>([]);
     const [listaPerfis, setListaPerfis] = useState<FilterOptions[]>([]);
     const { temPermissao } = useContext(AuthContext);
+    const tamanhoPagina = 20;
     
     const buscarUsuariosEmpresa = () => {
         setLoading(true);

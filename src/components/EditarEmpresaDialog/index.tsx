@@ -3,16 +3,16 @@ import Modal from "../Modal";
 import "./styles.css"
 import { fetchEmpresa, sendCadastroEmpresa, updateEmpresa } from "../../service/empresaApi";
 import { notification } from "antd";
-import { EmpresaModel, UFs } from "../../models/empresa";
+import { EmpresaModel } from "../../models/empresa";
 import { formatCnpj } from "../../pages/gerencia/GerenciarEmpresas";
 import MultiSelect from "../MultiSelect";
 import { FilterOptions } from "../../pages/gerencia/GerenciarUsuario";
 
 interface EditarEmpresasDialogProps {
-	id: string | null;
-	readOnly: boolean;
-	listaUfs: FilterOptions[];
-	closeDialog: (saved: boolean) => void;
+	readonly id: string | null;
+	readonly readOnly: boolean;
+	readonly listaUfs: FilterOptions[];
+	readonly closeDialog: (saved: boolean) => void;
 }
 
 export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDialog }: EditarEmpresasDialogProps ) {
@@ -20,15 +20,12 @@ export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDia
 	const [razaoSocial, setRazaoSocial] = useState('');
 	const [cnpj, setCnpj] = useState('');
 	const [UFs, setUFs] = useState<string[]>([]);
-	const [loading, setLoading] = useState(false);
 
 	async function buscarEmpresa(cnpj : string): Promise<EmpresaModel> {
-		setLoading(true);
 		const empresa = await fetchEmpresa(cnpj);
 		setRazaoSocial(empresa.razaoSocial);
 		setCnpj(empresa.cnpj);
 		setUFs(empresa.uFs?.map(uf => uf.id.toString()));
-		setLoading(false);
 		return empresa;
 	}
 
@@ -42,8 +39,6 @@ export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDia
 			RazaoSocial: razaoSocial.trim(),
 			UFs: UFs.map(Number)
 		};
-
-		setLoading(true);
 		
 		if (!id)
 		{
@@ -53,7 +48,6 @@ export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDia
 				closeDialog(true);
 			  })
 			  .catch(error => notificationApi.error({message: 'Falha no cadastro da empresa. ' + (error?.response?.data ?? ''), duration: 30}))
-			  .finally(() => setLoading(false));
 			return;
 		}
 		
@@ -63,7 +57,6 @@ export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDia
 			closeDialog(true);
 		  })
 		  .catch(error => notificationApi.error({message: 'Falha na edição da empresa. ' + (error?.response?.data ?? ''), duration: 30}))
-		  .finally(() => setLoading(false));
 	}
 
 	useEffect(() => {
@@ -90,7 +83,7 @@ export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDia
 				</div>
 				<div className="br-input edicao-empresa">
 					<label>CNPJ</label>
-					<input id="input-default" type={"text"} readOnly={id ? true : false} onChange={e => setCnpj(e.target.value.replace(/\D/g, ''))} 
+					<input id="input-default" type={"text"} readOnly={Boolean(id)} onChange={e => setCnpj(e.target.value.replace(/\D/g, ''))} 
 						value={formatCnpj(cnpj)} maxLength={18} data-testid="inputCnpj" defaultValue={id ? formatCnpj(id) : ""}/>
 				</div>
 				<MultiSelect items={listaUfs} value={UFs} label={"UFs"} labelStyle={{display: "inline", fontSize: "14px", marginLeft: "0px !important"}} onChange={setUFs} 

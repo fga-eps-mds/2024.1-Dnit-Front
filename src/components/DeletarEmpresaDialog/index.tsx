@@ -10,16 +10,13 @@ export interface DeletarEmpresaDialogArgs {
 }
 
 interface DeletarEmpresaDialogProps {
-    id: string;
-    nome: string;
-    closeDialog: (deleted: boolean) => void;
+    readonly id: string;
+    readonly nome: string;
+    readonly closeDialog: (deleted: boolean) => void;
 }
 
 export default function DeletarEmpresaDialog( { id, nome, closeDialog }: DeletarEmpresaDialogProps) {
-    const [loading, setLoading] = useState(false);
-
     const deletarEmpresa = () => {
-        setLoading(true);
         deleteEmpresa(id)
         .then(() => {
             notification.success({ message: "Empresa deletada com sucesso" });
@@ -31,7 +28,6 @@ export default function DeletarEmpresaDialog( { id, nome, closeDialog }: Deletar
                 "Falha na exclusão do perfil. " + (error?.response?.data ?? ""),
             });
           })
-          .finally(() => setLoading(false));
     }
 
     return (

@@ -25,7 +25,6 @@ interface EmpresaDialogArgs {
 
 export default function GerenciarEmpresas() {
     const paginas = [{nome: "Gerenciar Empresas", link: "/gerenciarEmpresas"}];
-	const [loading, setLoading] = useState(false);
 	const [pagina, setPagina] = useState<ListaPaginada<EmpresaModel>>({items: [], pagina: 1, itemsPorPagina: 10, total: 0, totalPaginas: 0});
     const [listaEmpresas, setListaEmpresas] = useState<EmpresaModel[]>(pagina.items);
 	const [showEmpresa, setShowEmpresa] = useState<EmpresaDialogArgs | null>(null);
@@ -41,21 +40,19 @@ export default function GerenciarEmpresas() {
 
 	const { temPermissao } = useContext(AuthContext);
 	
-	const [temPermissaoGerenciar, setTemPermissaoGerenciar] = useState({
+	const temPermissaoGerenciar = {
 		cadastrar: temPermissao(Permissao.EmpresaCadastrar),
 		visualizar: temPermissao(Permissao.EmpresaVisualizar),
 		remover: temPermissao(Permissao.EmpresaRemover),
 		editar: temPermissao(Permissao.EmpresaEditar),
 		visualizarUsuarios: temPermissao(Permissao.EmpresaVisualizarUsuarios)
-	  });
+	}
 
 	const ufParams = () => {
 		return UFs.join(",");
 	}
 
 	const buscarEmpresas = (proximaPagina: number, novoTamanhoPagina: number = tamanhoPagina) => {
-		setLoading(true);
-
 		fetchEmpresas(proximaPagina, novoTamanhoPagina, razaoSocial, cnpj, ufParams())
 			.then(pagina => {
 				setPagina(pagina)
@@ -63,7 +60,6 @@ export default function GerenciarEmpresas() {
 				setTamanhoPagina(pagina.itemsPorPagina)
 			})
 			.catch(error => notificationApi.error({ message: 'Falha na listagem de empresas. ' + (error?.response?.data || '') }))
-			.finally(() => setLoading(false));
 	}
 
 	async function fetchUf(): Promise<void> {

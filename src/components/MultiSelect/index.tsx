@@ -7,17 +7,17 @@ interface MultiSelectOptions {
 }
 
 interface MultiSelectProps {
-  items: MultiSelectOptions[];
-  value: string[];
-  label?: string;
-  inputStyle?: object;
-  dropdownStyle?: object;
-  buttonStyle?: object;
-  labelStyle?:object;
-  onChange: (id: string[]) => void;
-  filtrarTodos?: boolean;
-  definePlaceholder?: string;
-  readOnly?: boolean;
+  readonly items: MultiSelectOptions[];
+  readonly value: string[];
+  readonly label?: string;
+  readonly inputStyle?: object;
+  readonly dropdownStyle?: object;
+  readonly buttonStyle?: object;
+  readonly labelStyle?:object;
+  readonly onChange: (id: string[]) => void;
+  readonly filtrarTodos?: boolean;
+  readonly definePlaceholder?: string;
+  readonly readOnly?: boolean;
 }
 
 export default function MultiSelect({ items, value, label, onChange, inputStyle, dropdownStyle, buttonStyle, labelStyle, filtrarTodos, definePlaceholder, readOnly}: MultiSelectProps) {

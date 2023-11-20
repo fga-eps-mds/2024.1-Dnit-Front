@@ -12,17 +12,17 @@ export interface SelectItem {
 }
 
 export interface SelectProps {
-  inputValue?: string;
-  items: SelectItem[];
-  value: string; //Valor selecionado atualmente
-  label?: string; //Titulo do dropdown
-  inputStyle?: object;
-  dropdownStyle?: object;
-  buttonStyle?: object;
-  onChange: (id: string, rotuloAtual?: string) => void;
-  filtrarTodos?: boolean;
-  definePlaceholder?: string;
-  inputReadOnly?: boolean;
+  readonly inputValue?: string;
+  readonly items: SelectItem[];
+  readonly value: string; //Valor selecionado atualmente
+  readonly label?: string; //Titulo do dropdown
+  readonly inputStyle?: object;
+  readonly dropdownStyle?: object;
+  readonly buttonStyle?: object;
+  readonly onChange: (id: string, rotuloAtual?: string) => void;
+  readonly filtrarTodos?: boolean;
+  readonly definePlaceholder?: string;
+  readonly inputReadOnly?: boolean;
 }
 
 export default function Select({ inputValue, items, value, label, onChange, inputStyle, dropdownStyle, buttonStyle, filtrarTodos, definePlaceholder, inputReadOnly=true }: SelectProps) {

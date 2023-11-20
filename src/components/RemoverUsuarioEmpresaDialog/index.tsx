@@ -1,22 +1,18 @@
-import { useState } from "react";
 import Modal from "../Modal";
 import { deleteUsuarioEmpresa } from "../../service/empresaApi";
 import { notification } from "antd";
 import "./styles.css"
 
 interface RemoverUsuarioEmpresaProps {
-    cnpj: string | undefined;
-    nomeEmpresa: string | undefined;
-    usuarioid: string;
-    nomeUsuario: string;
-    closeDialog: (removed: boolean) => void;
+    readonly cnpj: string | undefined;
+    readonly nomeEmpresa: string | undefined;
+    readonly usuarioid: string;
+    readonly nomeUsuario: string;
+    readonly closeDialog: (removed: boolean) => void;
 }
 
 export default function RemoverUsuarioEmpresaDialog( { cnpj, nomeEmpresa, usuarioid, nomeUsuario, closeDialog }: RemoverUsuarioEmpresaProps) {
-    const [loading, setLoading] = useState(false);
-
     const removerUsuario = () => {
-        setLoading(true);
         if (cnpj) {
             deleteUsuarioEmpresa({cnpj, usuarioid})
             .then(() => {
@@ -30,7 +26,6 @@ export default function RemoverUsuarioEmpresaDialog( { cnpj, nomeEmpresa, usuari
                 });
             })
         }
-        setLoading(false);
     }
 
     return (
