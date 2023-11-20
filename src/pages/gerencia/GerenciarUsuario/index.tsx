@@ -31,7 +31,7 @@ export interface ListaPaginada {
   items: UsuarioModel[];
 }
 
-interface FilterOptions {
+export interface FilterOptions {
   id: string;
   rotulo: string;
 }
