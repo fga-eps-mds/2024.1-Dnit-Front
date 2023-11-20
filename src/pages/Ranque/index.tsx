@@ -1,9 +1,13 @@
 import { useState, useEffect, useContext } from 'react';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import "./index.css";
-import { fetchEtapasDeEnsino, fetchMunicipio, fetchUnidadeFederativa } from '../../service/escolaApi';
-import { EtapasDeEnsinoData } from '../../models/service';
+import "./styles.css";
+import {EtapasDeEnsinoData, RanqueInfo} from '../../models/service';
+import {
+  fetchEtapasDeEnsino,
+  fetchMunicipio,
+  fetchUnidadeFederativa
+} from '../../service/escolaApi';
 import TrilhaDeNavegacao from '../../components/Navegacao';
 import ReactLoading from 'react-loading';
 import Table, { CustomTableRow } from '../../components/Table';
@@ -16,6 +20,7 @@ import ModalRanqueEscola from '../../components/EscolaRanqueModal';
 import { AuthContext } from '../../provider/Autenticacao';
 import { Permissao } from '../../models/auth';
 import { useNavigate } from 'react-router-dom';
+import { formataCustoLogistico } from '../../utils/utils';
 
 
 function Ranque() {
@@ -32,11 +37,10 @@ function Ranque() {
   const paginas = [{ nome: "Logout", link: "/login" }];
   const [loading, setLoading] = useState(true);
   const [escolas, setEscolas] = useState<ListaPaginada<EscolaRanqueData> | null>(null);
-  const colunas = ['Posição', 'Pontuação', 'Escola', 'Etapas de Ensino', 'UF', 'Município'];
+  const colunas = ['Posição', 'Pontuação', 'Escola', 'Etapas de Ensino', 'UF', 'Município', 'UF Superintendência', 'Custo Logístico'];
 
-  const [paginacao, setPaginacao] = useState({ pagina: 1, tamanhoPagina: 10, });
+  const [paginacao, setPaginacao] = useState({pagina: 1, tamanhoPagina: 10,});
   const [notificationApi, notificationContextHandler] = notification.useNotification();
-
   const [escolaAtual, setEscolaAtual] = useState<EscolaRanqueData | null>();
 
   const navigate = useNavigate();
@@ -90,14 +94,15 @@ function Ranque() {
       })
       .finally(() => setLoading(false));
   }, [nome, uf, municipio, etapa, paginacao]);
+  
 
-  const formatEtapaEnsino = (etapaEnsino: EtapasDeEnsinoData[], max = 2) => {
-    if (!etapaEnsino) {
-      return '';
+    const formatEtapaEnsino = (etapaEnsino: EtapasDeEnsinoData[], max = 2) => {
+        if (!etapaEnsino) {
+            return '';
+        }
+        return `${etapaEnsino.map(etapa => etapa.descricao).slice(0, max).join(', ')}${etapaEnsino.length > max ? '...' : ''}`;
     }
-    return `${etapaEnsino.map(etapa => etapa.descricao).slice(0, max).join(', ')}${etapaEnsino.length > max ? '...' : ''}`;
-  }
-
+    
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     const padZeros = (n: number) => n.toString().padStart(2, '0');
@@ -160,7 +165,9 @@ function Ranque() {
                     '2': e.escola.nome,
                     '3': formatEtapaEnsino(e.escola.etapaEnsino),
                     '4': e.escola.uf?.sigla || '',
-                    '5': e.escola.municipio?.nome || ''
+                    '5': e.escola.municipio?.nome || '',
+                    '6': e.escola.superintendencia?.uf || '' ,
+                    '7': formataCustoLogistico(e.escola.distanciaSuperintendencia),
                   }}
                   hideTrashIcon={true}
                   hideEditIcon={true}
@@ -172,7 +179,7 @@ function Ranque() {
         }
 
         {loading && <div className="d-flex justify-content-center w-100 m-5"><ReactLoading type="spinningBubbles" color="#000000" /></div>}
-      </div>
+        </div>
       <Footer />
     </div>
   );

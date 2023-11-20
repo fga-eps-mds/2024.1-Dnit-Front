@@ -6,13 +6,13 @@ import { ExcessoesApi } from "./excessoes";
 export interface ResponseStatus { status: number }
 
 export async function sendCadastros<T>(url: string, data: T): Promise<ResponseStatus> {
-    try {
+    try{
         const response: AxiosResponse<ResponseStatus> = await axios.post(
             url, data
         );
         return response.data;
     }
-    catch (error) {
+    catch(error){
         console.log(error);
         throw error;
     }
@@ -44,7 +44,7 @@ export async function update<T>(url: string, data: T): Promise<ResponseStatus>{
             url, data
         );
         return response.data
-    } catch (error) {
+    } catch (error){
         console.log(error);
         throw error;
     }
@@ -78,7 +78,7 @@ export async function fetchDados<T>(url: string, params: any = null): Promise<T>
     }
 }
 
-export async function fetchCEP(cep: string): Promise<DATA.ViaCEPData> {
+export async function fetchCEP(cep: string): Promise<DATA.ViaCEPData>{
     const url = `${URL.urlAPIViaCEP}/${cep}/json`;
     return fetchDados<DATA.ViaCEPData>(url);
 }

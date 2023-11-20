@@ -116,6 +116,8 @@ export interface EscolaData {
   telefone: string;
   numeroTotalDeDocentes: number;
   observacao: string;
+  distanciaSuperintendencia: number;
+  superintendenciaId: number;
 }
 
 export interface FiltroEscolaData {
@@ -184,4 +186,33 @@ export interface CalcularUpsResponse {
   ups2021: number;
   ups2022: number;
   upsGeral: number;
+}
+
+export interface UfModel {
+  id: number;
+  sigla: string;
+  nome: string;
+}
+
+export interface Superintendencia{
+  id: number;
+  endereco: string;
+  cep: string;
+  latitude: string;
+  longitude: string;
+  uf: number;
+  siglaUf: string;
+}
+
+export interface Fatores {
+  nome: string;
+  peso: number;
+  valor: number;
+}
+
+export interface RanqueInfo {
+  ranqueId: number;
+  pontuacao: number;
+  posicao: number;
+  fatores: Fatores[];
 }

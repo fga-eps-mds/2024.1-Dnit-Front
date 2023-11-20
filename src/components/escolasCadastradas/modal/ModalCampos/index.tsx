@@ -1,10 +1,11 @@
 import { Select } from "antd";
-import { ChangeEvent, useState } from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 import { useSelectedValue } from "../../../../context/Situacao";
-import { EscolaData, SituacaoData } from "../../../../models/service";
-import {fetchSituacao} from "../../../../service/escolaApi";
+import {EscolaData, SituacaoData, Superintendencia} from "../../../../models/service";
+import {fetchSituacao, fetchSuperintendenciaData} from "../../../../service/escolaApi";
 import {fetchEtapasDeEnsino} from "../../../../service/escolaApi";
 import MenuSuspenso from "../../MenuSuspenso";
+import {formataCustoLogistico} from "../../../../utils/utils";
 
 interface ModalCamposEscolaProps {
   data: EscolaData;
@@ -42,7 +43,16 @@ const ModalCampos = ({
   const [novaObs, setNovaObs] = useState(data?.observacao);
 
   const ultimaAtualizacao = new Date();
-
+ 
+  const [superintendenciaSelecionada, setSuperintendenciaSelecionada] = useState<Superintendencia | undefined>();
+  const fetchSuperintendenciaSelecionada = async () => {
+    const superintendencia = await fetchSuperintendenciaData(data.superintendenciaId);
+    setSuperintendenciaSelecionada(superintendencia);
+  }
+  useEffect(()=>{
+    fetchSuperintendenciaSelecionada();
+  }, []);
+  
   const chamarSituacao = async () => {
     const situacoes = await fetchSituacao();
     setSituacoes(situacoes);
@@ -185,6 +195,7 @@ const ModalCampos = ({
             placeholder={data.cep}
             disabled
           />
+          
           <div className="br-select">
             <label htmlFor="select-multtiple">Etapas de Ensino</label>
             <Select
@@ -200,6 +211,33 @@ const ModalCampos = ({
             />
           </div>
         </div>
+        
+        <label htmlFor="input-default">CEP Superintendência</label>
+        <div className="input-group">
+          <div className="input-icon">
+            <i className="fas fa-thumbtack" aria-hidden="true"></i>
+          </div>
+          <input
+              id="input-default"
+              type="text"
+              placeholder={superintendenciaSelecionada?.cep}
+              disabled
+          />
+        </div>
+
+        <label htmlFor="input-default">Endereço Superintendência</label>
+        <div className="input-group">
+          <div className="input-icon">
+            <i className="fas fa-home" aria-hidden="true"></i>
+          </div>
+          <input
+              id="input-default"
+              type="text"
+              placeholder={superintendenciaSelecionada?.endereco}
+              disabled
+          />
+        </div>
+        
       </div>
       <div className="br-input">
         <div className="input-default">
@@ -325,6 +363,16 @@ const ModalCampos = ({
             type="text"
             placeholder={ultimaAtualizacao.toLocaleDateString()}
             disabled
+          />
+        </div>
+
+        <label htmlFor="input-default">Custo Logístico</label>
+        <div className="input-group">
+          <input
+              id="input-default"
+              type="text"
+              placeholder={formataCustoLogistico(data.distanciaSuperintendencia)}
+              disabled
           />
         </div>
       </div>
