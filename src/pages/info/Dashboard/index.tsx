@@ -5,6 +5,7 @@ import {
 } from "@ant-design/icons";
 import IconGerenciarPerfis from "../../../assets/icones/GerenciarPerfis.svg";
 import IconGerenciarUsuarios from "../../../assets/icones/GerenciarUsuarios.svg";
+import RankingEscolas from "../../../assets/icones/RankingEscolas.svg";
 import { Card, Collapse, CollapseProps } from "antd";
 import { useNavigate } from "react-router";
 import Header from "../../../components/Header";
@@ -81,7 +82,7 @@ export default function Dashboard() {
           )}
           {podeVisualizarRanque && (
             <Card className="card" onClick={() => navigate("/ranque")}>
-              <FileTextOutlined className="icon" />
+              <img src={RankingEscolas} alt="ícone gerenciar usuarios"/>
               <p className="text">Ranking de escolas</p>
             </Card>
           )}
