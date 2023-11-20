@@ -73,6 +73,8 @@ describe("Gerenciar usuários de empresa", () => {
         act(() => {
             screen.getByTestId("botao-cadastrar").click()
         })
+
+        await waitFor(() => expect(screen.getByTestId("overlay")).not.toBeInTheDocument)
     })
     
     it("Deve abrir modal de cadastrar usuários e cancelar", async () => {

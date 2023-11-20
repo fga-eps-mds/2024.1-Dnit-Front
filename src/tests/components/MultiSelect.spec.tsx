@@ -1,14 +1,7 @@
 /* eslint-disable testing-library/no-unnecessary-act */
 /* eslint-disable testing-library/render-result-naming-convention */
-import { render, waitFor, act, fireEvent } from "@testing-library/react";
-// import { Permissao } from "../models/auth";
-// import { autenticar } from "./mock/autenticacao";
+import { render, waitFor, act } from "@testing-library/react";
 import server from "../mock/servicosAPI";
-// import { MemoryRouter, Route, Routes } from "react-router-dom";
-// import { AuthProvider } from "../provider/Autenticacao";
-// import GerenciarUsuariosEmpresa from "../pages/gerencia/GerenciarUsuariosEmpresa";
-// import { empresas } from "./stub/empresaModelos";
-// import { usuarios } from "./stub/usuarioModelos";
 import MultiSelect from "../../components/MultiSelect";
 
 beforeAll(() => server.listen());
@@ -43,8 +36,6 @@ describe("Testes para o componente MultiSelect", () => {
                 onChange={(_id) => {}}
                 value={[testItems[0].id, testItems[1].id]}
                 label="MultiSelect"
-                // definePlaceholder=""
-                // labelStyle={{display: "inline", fontSize: "14px", marginLeft: "0px !important"}}
             />
         )
 
@@ -59,8 +50,6 @@ describe("Testes para o componente MultiSelect", () => {
                 value={[testItems[0].id, testItems[1].id]}
                 label="MultiSelect"
                 filtrarTodos={true}
-                // definePlaceholder=""
-                // labelStyle={{display: "inline", fontSize: "14px", marginLeft: "0px !important"}}
             />
         )
 
@@ -74,8 +63,6 @@ describe("Testes para o componente MultiSelect", () => {
                 onChange={(_id) => {}}
                 value={[testItems[0].id, testItems[1].id]}
                 label="MultiSelect"
-                // definePlaceholder=""
-                // labelStyle={{display: "inline", fontSize: "14px", marginLeft: "0px !important"}}
             />
         )
 
@@ -93,8 +80,6 @@ describe("Testes para o componente MultiSelect", () => {
                 value={[testItems[0].id, testItems[1].id]}
                 label="MultiSelect"
                 filtrarTodos={true}
-                // definePlaceholder=""
-                // labelStyle={{display: "inline", fontSize: "14px", marginLeft: "0px !important"}}
             />
         )
 
@@ -116,9 +101,6 @@ describe("Testes para o componente MultiSelect", () => {
                 onChange={(_id) => {}}
                 value={[]}
                 label="MultiSelect"
-                // filtrarTodos={true}
-                // definePlaceholder=""
-                // labelStyle={{display: "inline", fontSize: "14px", marginLeft: "0px !important"}}
             />
         )
 
@@ -141,8 +123,6 @@ describe("Testes para o componente MultiSelect", () => {
                 value={[testItems[0].id, testItems[1].id]}
                 label="MultiSelect"
                 filtrarTodos={true}
-                // definePlaceholder=""
-                // labelStyle={{display: "inline", fontSize: "14px", marginLeft: "0px !important"}}
             />
         )
 

@@ -49,10 +49,14 @@ export default function GerenciarEmpresas() {
 		visualizarUsuarios: temPermissao(Permissao.EmpresaVisualizarUsuarios)
 	  });
 
+	const ufParams = () => {
+		return UFs.join(",");
+	}
+
 	const buscarEmpresas = (proximaPagina: number, novoTamanhoPagina: number = tamanhoPagina) => {
 		setLoading(true);
 
-		fetchEmpresas(proximaPagina, novoTamanhoPagina, razaoSocial, cnpj)
+		fetchEmpresas(proximaPagina, novoTamanhoPagina, razaoSocial, cnpj, ufParams())
 			.then(pagina => {
 				setPagina(pagina)
 				setListaEmpresas(pagina.items)
@@ -85,10 +89,6 @@ export default function GerenciarEmpresas() {
 	  navigate("/dashboard");
 	}
 	}, []);
-
-	useEffect(() => {
-		console.log(UFs);
-	}, [UFs]);
 	
     return (
 		<div className="App">
