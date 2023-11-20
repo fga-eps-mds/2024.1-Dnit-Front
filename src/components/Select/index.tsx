@@ -5,9 +5,15 @@ interface SelectOptions {
   id: string;
   rotulo: string;
 }
+
+export interface SelectItem {
+  id: string;
+  rotulo: string;
+}
+
 export interface SelectProps {
   inputValue?: string;
-  items: { id: string, rotulo: string }[];
+  items: SelectItem[];
   value: string; //Valor selecionado atualmente
   label?: string; //Titulo do dropdown
   inputStyle?: object;
@@ -27,12 +33,12 @@ export default function Select({ inputValue, items, value, label, onChange, inpu
     setIsOpen(!isOpen);
   };
 
-  const handleItemClick = (item: { id: string, rotulo: string }) => {
+  const handleItemClick = (item: SelectItem) => {
     onChange(item.id, item.rotulo);
     setIsOpen(false);
   };
 
-  const getRotuloById = (id: string, items: { id: string, rotulo: string }[]): string => {
+  const getRotuloById = (id: string, items: SelectItem[]): string => {
     const item = items.find(item => item.id === id);
     return item ? item.rotulo : '';
   };
@@ -79,7 +85,7 @@ export default function Select({ inputValue, items, value, label, onChange, inpu
       {isOpen &&
         <div className="br-list2" style={dropdownStyle} tabIndex={0}>
           {novaLista.map((item, index) => (
-            <div key={index} className="br-item" tabIndex={-1} onClick={() => handleItemClick(item)} onKeyDown={() => { }}>
+            <div key={index} data-testId={`${label}${index}`} className="br-item" tabIndex={-1} onClick={() => handleItemClick(item)} onKeyDown={() => { }}>
               <div className="br-radio">
                 <input id={`rb${index}`} type="radio" name="estados-simples" value={item.rotulo} checked={value === item.id} onChange={() => { }} />
                 <label htmlFor={`rb${index}`}>{item.rotulo}</label>

@@ -31,7 +31,7 @@ export interface ListaPaginada {
   items: UsuarioModel[];
 }
 
-export interface FilterOptions {
+interface FilterOptions {
   id: string;
   rotulo: string;
 }
@@ -152,7 +152,6 @@ export default function GerenciarUsuario() {
       <TrilhaDeNavegacao elementosLi={paginas} />
       <div className="d-flex flex-column m-5">
         <div className="d-flex justify-content-left align-items-center mr-5">
-          {/* <FiltroNome onNomeChange={setNome} /> */}
           <InputFilter onChange={setNome} dataTestId="filtroNome" label="Nome" placeholder="Nome"/>
           <InputFilter onChange={setEmpresa} dataTestId="empresaNome" label="Empresa" placeholder="Nome da Empresa"/>
           <Select items={listaUfs} value={uf} label={"UF:"} onChange={setUF} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
