@@ -10,7 +10,7 @@ import InputFilter from "../../../components/InputFilter";
 import ReactLoading from "react-loading";
 import { useParams } from "react-router-dom";
 import { FilterOptions } from "../GerenciarUsuario";
-import { fetchUnidadeFederativa } from "../../../service/escolaApi";
+import { fetchMunicipio, fetchUnidadeFederativa } from "../../../service/escolaApi";
 import { fetchPerfis } from "../../../service/usuarioApi";
 import Select from "../../../components/Select";
 import RemoverUsuarioEmpresaDialog from "../../../components/RemoverUsuarioEmpresaDialog";
@@ -51,6 +51,12 @@ export default function GerenciarSolicitacoes() {
         setListaUfs(novaUf);
     }
 
+    async function fetchMunicipios(): Promise<void> {
+        const listaMunicipios = await fetchMunicipio(Number(uf));
+        const novoMunicipio = listaMunicipios.map((u) => ({ id: '' + u.id, rotulo: u.nome }));
+        setListaMunicipios(novoMunicipio);
+      }
+
     function procuraRotuloMunicipio(usuario: UsuarioModel) {
         return usuario.municipio === null || usuario.municipio?.nome === "undefined" ? "Não Cadastrado" : usuario.municipio?.nome;
     }
@@ -65,6 +71,10 @@ export default function GerenciarSolicitacoes() {
     }, [escola, uf, pagina, tamanhoPagina]);
 
     useEffect(() => {
+        fetchMunicipios();
+      }, [uf]);
+
+    useEffect(() => {
         fetchUf();
     }, []);
 
@@ -74,7 +84,7 @@ export default function GerenciarSolicitacoes() {
             <Header />
             <TrilhaDeNavegacao elementosLi={paginas} />
             <div className="d-flex flex-column m-5">
-                <div className="d-flex justify-content-between align-items-center mr-5">
+                <div className="d-flex justify-content-left align-items-center mr-5">
                     <InputFilter onChange={setEscola} dataTestId="filtroEscola" label="Escola" placeholder="Escola" />
                     <Select items={listaUfs} value={uf} label={"UF:"} onChange={setUf} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
                     <Select items={listaMunicipios} value={municipio} label={"Municipios:"} onChange={setMunicipio} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
