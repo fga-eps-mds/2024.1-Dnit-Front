@@ -99,7 +99,6 @@ export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDia
 	}, [id]);
 
 	return (
-		
 		<Modal className="edicao-empresa" closeModal={() => { closeDialog(false) }}>
 			{contextHolder}
 			<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -111,7 +110,7 @@ export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDia
       		</div>
 			<div style={ {height: "inherit"} }>
 				<div className="br-input edicao-empresa">
-					<label>Razão Social</label>
+					<label className={readOnly ? "" : "required-label"}>Razão Social</label>
 					<input id="input-default" data-testid="inputRazaoSocial" type={"text"} readOnly={readOnly}
 						onChange={e => setRazaoSocial(e.target.value)} value={razaoSocial}/>
 					<div className="erro">
@@ -119,7 +118,7 @@ export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDia
 					</div>
 				</div>
 				<div className="br-input edicao-empresa">
-					<label>CNPJ</label>
+					<label className={readOnly ? "" : "required-label"}>CNPJ</label>
 					<input id="input-default" type={"text"} readOnly={Boolean(id)} onChange={e => setCnpj(e.target.value.replace(/\D/g, ''))} 
 						value={formatCnpj(cnpj)} maxLength={18} data-testid="inputCnpj" defaultValue={id ? formatCnpj(id) : ""}/>
 					<div className="erro">
@@ -127,7 +126,7 @@ export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDia
 					</div>	
 				</div>
 				<MultiSelect items={listaUfs} value={UFs} label={"UFs"} labelStyle={{display: "inline", fontSize: "14px", marginLeft: "0px !important"}} onChange={setUFs} 
-						dropdownStyle={{ marginLeft: "0px", width: "280px" }} readOnly={readOnly} errorMessage={errors.UFs}/>
+						dropdownStyle={{ marginLeft: "0px", width: "280px" }} readOnly={readOnly} errorMessage={errors.UFs} required={!readOnly}/>
 			</div>
 			{!readOnly &&
 			(<div className="d-flex w-100 justify-content-end">
