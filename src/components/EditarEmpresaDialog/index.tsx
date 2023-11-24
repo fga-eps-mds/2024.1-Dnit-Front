@@ -34,8 +34,7 @@ export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDia
 		return empresa;
 	}
 
-	const salvarEmpresa = async () => {
-		console.log(razaoSocial);
+	const salvarEmpresa = () => {
 		let valido = validarRazaoSocial(razaoSocial);
 		valido = validarCNPJ(cnpj) && valido;
 		valido = validarUFs(UFs) && valido;
