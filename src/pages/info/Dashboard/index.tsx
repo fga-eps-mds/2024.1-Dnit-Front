@@ -28,6 +28,9 @@ export default function Dashboard() {
   const [podeVisualizarEscola, setPodeVisualizarEscola] = useState(
     temPermissao(Permissao.EscolaVisualizar)
   );
+  const [podeVisualizarAcoes, setPodeVisualizarAcoes] = useState(
+    temPermissao(Permissao.UsuarioVisualizar)
+  );
   const [podeVisualizarRanque, setPodeVisualizarRanque] = useState(
     temPermissao(Permissao.RanqueVisualizar)
   );
@@ -83,6 +86,13 @@ export default function Dashboard() {
               <p data-testid='visualizar-escola-option' className="text">Visualizar Escolas</p>
             </Card>
           )}
+          {
+            podeVisualizarAcoes && 
+            <Card className="card" onClick={() => navigate("/visualizarAcoes")}>
+              <img className="text" src="" alt="Ícone visualizar usuarios" />
+              <p className="text">Visualizar Ações</p>
+            </Card>
+          }
           {podeVisualizarRanque && (
             <Card className="card" onClick={() => navigate("/ranque")}>
               <img src={RankingEscolas} alt="ícone gerenciar usuarios"/>
