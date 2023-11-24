@@ -5,6 +5,7 @@ import {
 } from "@ant-design/icons";
 import IconGerenciarPerfis from "../../../assets/icones/GerenciarPerfis.svg";
 import IconGerenciarUsuarios from "../../../assets/icones/GerenciarUsuarios.svg";
+import IconPlay from "../../../assets/icones/iconePlay.svg"
 import RankingEscolas from "../../../assets/icones/RankingEscolas.svg";
 import { Card, Collapse, CollapseProps } from "antd";
 import { useNavigate } from "react-router";
@@ -89,7 +90,7 @@ export default function Dashboard() {
           {
             podeVisualizarAcoes && 
             <Card className="card" onClick={() => navigate("/visualizarAcoes")}>
-              <img className="text" src="" alt="Ícone visualizar usuarios" />
+              <img className="iconPerfis" src={IconPlay} alt="ícone visualizar acoes" />
               <p className="text">Visualizar Ações</p>
             </Card>
           }
