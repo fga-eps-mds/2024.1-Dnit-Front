@@ -36,6 +36,7 @@ function App() {
           <Route path="/escolas-cadastradas" element={<EscolasCadastradas />} />
           <Route path="/cadastrarRodovias" element={<CadastrarRodovias />} />
           <Route path="/solicitacoes" element={<GerenciarSolicitacoes />} />
+          <Route path="/ranque" element={<Ranque />} />
           <Route path="/gerenciarUsuario" element={<GerenciarUsuario />}/>
           <Route path="/gerenciarUsuario" element={<GerenciarUsuario />}/>
           <Route path="/gerenciarPerfis" element={<GerenciarPerfis />} />
