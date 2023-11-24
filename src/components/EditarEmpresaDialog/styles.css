@@ -1,7 +1,8 @@
+.edicao-empresa .br-modal-body {
+	overflow: hidden;
+}
+
 .edicao-empresa {
-	.br-modal-body {
-		overflow: hidden;
-	}
 	display: block !important;
 }
 
@@ -14,4 +15,13 @@
 .br-modal-body .br-select .br-input {
 	padding: 0px;
 	margin: 0px;
+}
+
+.br-modal-body .erro {
+	height: 20px;
+}
+
+.br-modal-body .erro p {
+	color: red;
+	font-size: 0.8rem;
 }

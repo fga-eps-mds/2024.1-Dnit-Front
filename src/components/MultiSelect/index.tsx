@@ -18,9 +18,10 @@ interface MultiSelectProps {
   readonly filtrarTodos?: boolean;
   readonly definePlaceholder?: string;
   readonly readOnly?: boolean;
+  readonly errorMessage?: string;
 }
 
-export default function MultiSelect({ items, value, label, onChange, inputStyle, dropdownStyle, buttonStyle, labelStyle, filtrarTodos, definePlaceholder, readOnly}: MultiSelectProps) {
+export default function MultiSelect({ items, value, label, onChange, inputStyle, dropdownStyle, buttonStyle, labelStyle, filtrarTodos, definePlaceholder, readOnly, errorMessage}: MultiSelectProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [novaLista, setNovaLista] = useState<MultiSelectOptions[]>([]);
 
@@ -90,6 +91,10 @@ export default function MultiSelect({ items, value, label, onChange, inputStyle,
             <i className="fas fa-angle-down" aria-hidden="true"></i>
           </button>}
         </div>
+        {errorMessage &&
+        <div className="erro">
+            <p>{errorMessage}</p>
+        </div>}
       </div>
       {isOpen &&
         <div className="br-list2" style={dropdownStyle} tabIndex={0}>

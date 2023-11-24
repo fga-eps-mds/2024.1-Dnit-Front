@@ -20,6 +20,11 @@ export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDia
 	const [razaoSocial, setRazaoSocial] = useState('');
 	const [cnpj, setCnpj] = useState('');
 	const [UFs, setUFs] = useState<string[]>([]);
+	const [errors, setErrors] = useState({
+		RazaoSocial: "",
+		CNPJ: "",
+		UFs: ""
+	});
 
 	async function buscarEmpresa(cnpj : string): Promise<EmpresaModel> {
 		const empresa = await fetchEmpresa(cnpj);
@@ -29,10 +34,13 @@ export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDia
 		return empresa;
 	}
 
-	const salvarEmpresa = () => {
-		if (!razaoSocial.trim()) {
-			return;
-		}
+	const salvarEmpresa = async () => {
+		console.log(razaoSocial);
+		let valido = validarRazaoSocial(razaoSocial);
+		valido = validarCNPJ(cnpj) && valido;
+		valido = validarUFs(UFs) && valido;
+
+		if (!valido) return;
 
 		const empresa = {
 			Cnpj: cnpj.trim(),
@@ -59,6 +67,32 @@ export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDia
 		  .catch(error => notificationApi.error({message: 'Falha na edição da empresa. ' + (error?.response?.data ?? ''), duration: 30}))
 	}
 
+	const validarRazaoSocial = (value: string) : boolean => {
+		const message = value.trim() === "" ? "Este campo é obrigatório." : "";
+
+		setErrors((prevErrors) => ({ ...prevErrors, RazaoSocial: message}));
+
+		return !Boolean(message);
+	}
+	
+	const validarCNPJ = (value: string) : boolean => {
+		// Adicionar algoritmo de verificação de CNPJ
+		const message = value.length !== 14 ? (value.length === 0 ? "Este campo é obrigatório." :
+			"O CNPJ deve conter 14 dígitos.") : "";
+
+		setErrors((prevErrors) => ({ ...prevErrors, CNPJ: message }));
+
+		return !Boolean(message);
+	}
+
+	const validarUFs = (value: string[]) : boolean => {
+		const message = value.length === 0 ? "Selecione uma ou mais UFs." : "";
+
+		setErrors((prevErrors) => ({ ...prevErrors, UFs: message }));
+
+		return !Boolean(message);
+	}
+
 	useEffect(() => {
 		if (id) {
 			buscarEmpresa(id);
@@ -79,15 +113,22 @@ export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDia
 			<div style={ {height: "inherit"} }>
 				<div className="br-input edicao-empresa">
 					<label>Razão Social</label>
-					<input id="input-default" data-testid="inputRazaoSocial" type={"text"} readOnly={readOnly} onChange={e => setRazaoSocial(e.target.value)} defaultValue={razaoSocial}/>
+					<input id="input-default" data-testid="inputRazaoSocial" type={"text"} readOnly={readOnly}
+						onChange={e => setRazaoSocial(e.target.value)} value={razaoSocial}/>
+					<div className="erro">
+						{errors.RazaoSocial && <p>{errors.RazaoSocial}</p>}
+					</div>
 				</div>
 				<div className="br-input edicao-empresa">
 					<label>CNPJ</label>
 					<input id="input-default" type={"text"} readOnly={Boolean(id)} onChange={e => setCnpj(e.target.value.replace(/\D/g, ''))} 
 						value={formatCnpj(cnpj)} maxLength={18} data-testid="inputCnpj" defaultValue={id ? formatCnpj(id) : ""}/>
+					<div className="erro">
+						{errors.CNPJ && <p>{errors.CNPJ}</p>}
+					</div>	
 				</div>
 				<MultiSelect items={listaUfs} value={UFs} label={"UFs"} labelStyle={{display: "inline", fontSize: "14px", marginLeft: "0px !important"}} onChange={setUFs} 
-						dropdownStyle={{ marginLeft: "0px", width: "280px" }} readOnly={readOnly} />
+						dropdownStyle={{ marginLeft: "0px", width: "280px" }} readOnly={readOnly} errorMessage={errors.UFs}/>
 			</div>
 			{!readOnly &&
 			(<div className="d-flex w-100 justify-content-end">
@@ -100,7 +141,6 @@ export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDia
 				<button data-testid="botaoCancelar" className="br-button secondary" type="button" onClick={() => {closeDialog(false)}}>Voltar</button>
 			</div>)
 			}
-
 		</Modal>
 	)
 }
