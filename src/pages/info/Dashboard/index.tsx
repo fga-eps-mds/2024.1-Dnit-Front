@@ -63,6 +63,7 @@ export default function Dashboard() {
       setPermissoes(permissoes);
 
       setPodeVisualizarEscola(temPermissao(Permissao.EscolaVisualizar));
+      setPodeVisualizarAcoes(temPermissao(Permissao.UsuarioVisualizar));
       setPodeVisualizarRanque(temPermissao(Permissao.RanqueVisualizar));
       setPodeCadastrarEscola(temPermissao(Permissao.EscolaCadastrar));
       setPodeCadastrarSinistro(temPermissao(Permissao.SinistroCadastrar));
@@ -70,6 +71,7 @@ export default function Dashboard() {
       setPodeGerenciarUsuario(temPermissao(Permissao.UsuarioVisualizar));
       setPodeGerenciarPerfis(temPermissao(Permissao.PerfilVisualizar));
       setPodeGerenciarEmpresas(temPermissao(Permissao.EmpresaVisualizar));
+      setPodeGerenciarAcoes(temPermissao(Permissao.UsuarioVisualizar));
     });
   }, []);
 
