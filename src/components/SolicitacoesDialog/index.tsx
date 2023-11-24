@@ -115,7 +115,6 @@ const SolitacoesDialog: React.FC<ModalProps> = ({ escolaId, onClose, onCreateAca
                         <div className='d-flex flex-column'>
                             <Label>Nome do Solicitante: Fulano</Label>
                             <Label>Vinculo com a Escola: Professor</Label>
-                            <Label>Nome do Solicitante: Fulano</Label>
                             <Label>e-mail: fulano@gmail.com</Label>
                             <Label>Telefone: {"619944888".replace(/^(\d{2})(\d{4})(\d{4})/gm, "($1) $2-$3")}</Label>
                             <Label>Observações: Sem pensar conquistamos o mundo geral e construímos o nosso pequeno

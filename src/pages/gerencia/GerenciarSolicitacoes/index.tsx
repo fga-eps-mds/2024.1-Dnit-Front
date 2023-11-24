@@ -31,20 +31,30 @@ export default function GerenciarSolicitacoes() {
   const [escola, setEscola] = useState('');
   const [uf, setUf] = useState('');
   const [municipio, setMunicipio] = useState('');
+  const [qtdAlunos, setQtdAlunos] = useState('');
   const [listaUfs, setListaUfs] = useState<FilterOptions[]>([]);
   const [listaMunicipios, setListaMunicipios] = useState<FilterOptions[]>([]);
+  const [listaQtdAlunos] = useState<FilterOptions[]> ([
+    { id: '1', rotulo: 'Até 50' },
+    { id: '2', rotulo: 'Entre 51 e 200' },
+    { id: '3', rotulo: 'Entre 201 e 500' },
+    { id: '4', rotulo: 'Entre 501 e 1000' },
+    { id: '5', rotulo: 'Mais que 1001' }
+  ]);
   const { temPermissao } = useContext(AuthContext);
   const [pagina, setPagina] = useState(1);
   const [totalPaginas, setTotalPaginas] = useState(1);
   const [tamanhoPagina, setTamanhoPagina] = useState(10);
   const [solicitacaoAtual, setSolicitacaoAtual] = useState<SolicitacoesData | null>();
 
+  
+
   const buscarSolicitacoes = (proximaPagina: number, novoTamanhoPagina: number = tamanhoPagina) => {
     // fetchSolicitacaoAcoes(proximaPagina, novoTamanhoPagina, escola, uf, municipio)
     // 	.then(pagina => {
     // 		setPagina(pagina)
     // 		setListaSolicitacoes(pagina.items)
-          // setTotalPaginas(pagina.totalPaginas)
+    // setTotalPaginas(pagina.totalPaginas)
     // 		setTamanhoPagina(pagina.itemsPorPagina)
     // 	})
     // 	.catch(error => notificationApi.error({ message: 'Falha na listagem de solicitacoes. ' + (error?.response?.data || '') }))
@@ -73,7 +83,7 @@ export default function GerenciarSolicitacoes() {
 
   useEffect(() => {
     buscarSolicitacoes(pagina, tamanhoPagina);
-  }, [escola, uf, pagina, tamanhoPagina]);
+  }, [escola, uf, qtdAlunos, pagina, tamanhoPagina]);
 
   useEffect(() => {
     fetchMunicipios();
@@ -87,11 +97,12 @@ export default function GerenciarSolicitacoes() {
     <div className="App">
       {notificationContextHandler}
       <Header />
-      {<SolicitacoesDialog onClose={() => { setSolicitacaoAtual(null) }} onCreateAcao={() => { }} />}
+      {solicitacaoAtual != null && <SolicitacoesDialog onClose={() => { setSolicitacaoAtual(null) }} onCreateAcao={() => { }} />}
       <TrilhaDeNavegacao elementosLi={paginas} />
       <div className="d-flex flex-column m-5">
         <div className="d-flex justify-content-left align-items-center mr-5">
           <InputFilter onChange={setEscola} dataTestId="filtroEscola" label="Escola" placeholder="Escola" />
+          <Select items={listaQtdAlunos} value={qtdAlunos} label={"Qtd. Alunos:"} onChange={setQtdAlunos} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
           <Select items={listaUfs} value={uf} label={"UF:"} onChange={setUf} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
           <Select items={listaMunicipios} value={municipio} label={"Municipios:"} onChange={setMunicipio} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
         </div>
@@ -99,7 +110,7 @@ export default function GerenciarSolicitacoes() {
 
         <Table
           columsTitle={['Escola', 'Qtd. de Alunos', 'UF', 'Municipio']}
-          initialItemsPerPage={tamanhoPagina} 
+          initialItemsPerPage={tamanhoPagina}
           title="Soliciatações de Ações"
           totalPages={totalPaginas}
           totalItems={100}
@@ -117,7 +128,7 @@ export default function GerenciarSolicitacoes() {
           onPageSelect={(newSelectedPage) => {
             setPagina(newSelectedPage)
           }}
-          >
+        >
           {
             listaSolicitacoes.map((solicitacao, index) =>
               <CustomTableRow key={`${solicitacao.id}-${index}`} id={index}
