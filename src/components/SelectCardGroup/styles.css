@@ -20,7 +20,13 @@
 }
 
 .card-title {
-    font-size: 19.17;
+    font-size: 1.1981rem;
+    color: white;
+    font-weight: bold;
+}
+
+.card-title-sm {
+    font-size: 0.8856rem;
     color: white;
     font-weight: bold;
 }
@@ -36,4 +42,10 @@
     color: white;
     font-weight: 600;
     font-size: 0.875rem;
+}
+
+.card-info-item-sm {
+    color: white;
+    font-weight: 600;
+    font-size: 0.75rem;
 }

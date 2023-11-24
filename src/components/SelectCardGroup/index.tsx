@@ -2,22 +2,27 @@ import { useState } from "react";
 import "./styles.css";
 
 export interface SelectCardProps {
-  readonly id: number;
-  readonly title: string;
-  readonly info: string[];
+  readonly cardData: SelectCardData;
   readonly selected?: boolean;
+  readonly isSmallCard: boolean;
   readonly onClick: (id: number) => void;
 }
 
 export interface SelectCardGroupProps {
-  readonly cardsData: {
-    readonly id: number;
-    readonly title: string;
-    readonly info: string[];
-  }[];
+  readonly cardsData: SelectCardData[];
+  readonly isSmallCard?: boolean;
 }
 
-export default function SelectCardGroup({ cardsData }: SelectCardGroupProps) {
+export interface SelectCardData {
+  readonly id: number;
+  readonly title: string;
+  readonly info: string[];
+}
+
+export default function SelectCardGroup({
+  cardsData,
+  isSmallCard = false,
+}: SelectCardGroupProps) {
   const [selectedCard, setSelectedCard] = useState(cardsData[0].id);
 
   const handleCardClick = (cardId: number) => {
@@ -28,9 +33,10 @@ export default function SelectCardGroup({ cardsData }: SelectCardGroupProps) {
     <div className="select-cards-group">
       {cardsData.map((card) => (
         <SelectCard
-          {...card}
+          cardData={card}
           selected={selectedCard === card.id}
           onClick={handleCardClick}
+          isSmallCard={isSmallCard}
         />
       ))}
     </div>
@@ -38,21 +44,26 @@ export default function SelectCardGroup({ cardsData }: SelectCardGroupProps) {
 }
 
 export function SelectCard({
-  id,
-  title,
-  info,
+  cardData,
   selected = false,
+  isSmallCard = false,
   onClick,
 }: SelectCardProps) {
   return (
     <div
       className={selected ? "select-card selected" : "select-card"}
-      onClick={() => onClick(id)}
+      onClick={() => onClick(cardData.id)}
     >
-      <p className="card-title">{title}</p>
+      <p className={isSmallCard ? "card-title-sm" : "card-title"}>
+        {cardData.title}
+      </p>
       <div className="card-info">
-        {info.map((item) => (
-          <span className="card-info-item">{item}</span>
+        {cardData.info.map((item) => (
+          <span
+            className={isSmallCard ? "card-info-item-sm" : "card-info-item"}
+          >
+            {item}
+          </span>
         ))}
       </div>
     </div>
