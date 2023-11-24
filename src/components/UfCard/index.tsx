@@ -1,6 +1,6 @@
 import "./styles.css";
 
-export interface SelectCardGroupProps {
+export interface UfCardGroupProps {
   readonly cardsData: UfCardProps[];
 }
 
@@ -9,7 +9,7 @@ export interface UfCardProps {
   readonly info: string;
 }
 
-export default function UfCardGroup({ cardsData }: SelectCardGroupProps) {
+export default function UfCardGroup({ cardsData }: UfCardGroupProps) {
   return (
     <div className="select-cards-group">
       {cardsData.map((card) => (
