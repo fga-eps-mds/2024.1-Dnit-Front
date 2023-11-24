@@ -6,6 +6,7 @@ import {
 import IconGerenciarPerfis from "../../../assets/icones/GerenciarPerfis.svg";
 import IconGerenciarUsuarios from "../../../assets/icones/GerenciarUsuarios.svg";
 import IconPlay from "../../../assets/icones/iconePlay.svg"
+import IconGerenciarAcoes from "../../../assets/icones/iconeGerenciarAcoes.svg"
 import RankingEscolas from "../../../assets/icones/RankingEscolas.svg";
 import { Card, Collapse, CollapseProps } from "antd";
 import { useNavigate } from "react-router";
@@ -169,8 +170,8 @@ export default function Dashboard() {
             podeGerenciarAcoes &&
             <Card className="card" onClick={() => navigate("/gerenciarAcoes")}>
               <img 
-              className="text"
-              src={IconGerenciarUsuarios} 
+              className="iconPerfis"
+              src={IconGerenciarAcoes} 
               alt="Ícone gerenciar ações" 
               />
               <p className="text">
