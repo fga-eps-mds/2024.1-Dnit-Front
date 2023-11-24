@@ -18,6 +18,7 @@ import { AuthContext, configuraAutenticacaoAxios } from "./provider/Autenticacao
 import "./styles/App.css";
 import GerenciarUsuariosEmpresa from "./pages/gerencia/GerenciarUsuariosEmpresa";
 import Ranque from "./pages/Ranque";
+import GerenciarAcoes from "./pages/gerencia/GerenciarAcoes";
 
 function App() {
   const { getAuth } = useContext(AuthContext);
@@ -39,6 +40,7 @@ function App() {
           <Route path="/gerenciarPerfis" element={<GerenciarPerfis />} />
           <Route path="/gerenciarEmpresas" element={<GerenciarEmpresas/>}/>
           <Route path="/gerenciarUsuariosEmpresa/:cnpj" element={<GerenciarUsuariosEmpresa/>}/>
+          <Route path="/gerenciarAcoes" element={<GerenciarAcoes/>}/>
         </>
       ) : (
         <>
