@@ -49,6 +49,9 @@ export default function Dashboard() {
   const [podeGerenciarUsuario, setPodeGerenciarUsuario] = useState(
     temPermissao(Permissao.UsuarioVisualizar)
   );
+  const [podeGerenciarAcoes, setPodeGerenciarAcoes] = useState(
+    temPermissao(Permissao.UsuarioVisualizar)
+  )
 
   useEffect(() => {
     fetchPermissoesDoUsuario().then((permissoes) => {
@@ -151,7 +154,19 @@ export default function Dashboard() {
               <p className="text">Gerenciar Perfis</p>
             </Card>
           )}
-          {}
+          {
+            podeGerenciarAcoes &&
+            <Card className="card" onClick={() => navigate("/gerenciarAcoes")}>
+              <img 
+              className="text"
+              src={IconGerenciarUsuarios} 
+              alt="Ícone gerenciar ações" 
+              />
+              <p className="text">
+                Gerenciar Ações
+              </p>
+            </Card>
+          }
         </div>
       ),
     },
