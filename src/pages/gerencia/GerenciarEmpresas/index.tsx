@@ -97,13 +97,13 @@ export default function GerenciarEmpresas() {
 				<div className="d-flex justify-content-left align-items-center mr-5">
         			<InputFilter onChange={setRazaoSocial} dataTestId="filtroRazaoSocial" label="Razão Social" placeholder="Razão Social" />
 					<InputFilter onChange={setCnpj} dataTestId="filtroCnpj" label="CNPJ" placeholder="CNPJ" />
-					<MultiSelect items={listaUfs} value={UFs} label={"UF:"} onChange={setUFs} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
+					<MultiSelect items={listaUfs} value={UFs} label={"UFs. de atuação:"} onChange={setUFs} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
 					{temPermissaoGerenciar.cadastrar && <ButtonComponent label="Cadastrar Empresa" buttonStyle="primary" onClick={() => setShowEmpresa({ id: null, readOnly: false })}></ButtonComponent>}
         		</div>
 				{listaEmpresas.length === 0 && <Table columsTitle={["Razão Social", "CNPJ", "UFs"]} initialItemsPerPage={10} title="Empresas Cadastradas"><></><></></Table>}
 				<Table 
 					title="Empresas Cadastradas"
-					columsTitle={["Razão Social", "CNPJ", "UFs"]}
+					columsTitle={["Razão Social", "CNPJ", "UFs. de atuação"]}
 					totalPages={pagina.totalPaginas}
 					totalItems={pagina.total}
 					initialItemsPerPage={pagina.itemsPorPagina}

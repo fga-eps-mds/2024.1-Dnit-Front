@@ -148,7 +148,7 @@ export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDia
 						{errors.CNPJ && <p>{errors.CNPJ}</p>}
 					</div>	
 				</div>
-				<MultiSelect items={listaUfs} value={UFs} label={"UFs"} labelStyle={{display: "inline", fontSize: "14px", marginLeft: "0px !important"}} onChange={setUFs} 
+				<MultiSelect items={listaUfs} value={UFs} label={"UFs. de atuação"} labelStyle={{display: "inline", fontSize: "14px", marginLeft: "0px !important"}} onChange={setUFs} 
 						dropdownStyle={{ marginLeft: "0px", width: "280px" }} readOnly={readOnly} errorMessage={errors.UFs} required={!readOnly}/>
 			</div>
 			{!readOnly &&
