@@ -26,6 +26,7 @@ export default function MultiSelect({ items, value, label, onChange, inputStyle,
     filtrarTodos, definePlaceholder, readOnly, errorMessage, required }: MultiSelectProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [novaLista, setNovaLista] = useState<MultiSelectOptions[]>([]);
+  const checkAll: boolean = items.length === value.length;
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -36,15 +37,20 @@ export default function MultiSelect({ items, value, label, onChange, inputStyle,
   }
 
   const handleItemClick = (itemId: string) => {
-    const all = value.findIndex(id => id === "");
     if (itemId === "") {
-      if (all !== -1) onChange([]);
-      else onChange([""]);
+      if (checkAll) {
+        onChange([]);
+      }
+      else {
+        onChange(novaLista.map(item => item.id).filter(id => id !== ""));
+      }
     }
     else
     {
-      if (all !== -1) value = novaLista.filter(item => item.id !== "").map(item => item.id);
-
+      if (filtrarTodos && checkAll) {
+        value = novaLista.map(item => item.id).filter(id => id !== "");
+      }
+      
       onChange(itemIsSelected(itemId) ? 
         value.filter((id) => id !== itemId)
         : [...value, itemId]
@@ -52,19 +58,20 @@ export default function MultiSelect({ items, value, label, onChange, inputStyle,
     }
   };
 
-  const getRotulos = (ids: string[], items: MultiSelectOptions[]) => {
-    const rotulos = items.filter(item => ids.includes(item.id)).map(item => item.rotulo);
+  const getRotulos = (ids: string[], lista: MultiSelectOptions[]) => {
+    if (checkAll) return ["Todos"];
+    const rotulos = lista.filter(item => ids.includes(item.id)).map(item => item.rotulo);
     return rotulos;
   }
 
   useEffect(() => {
-
     if (filtrarTodos) { 
       const concatLista = [{ id: "", rotulo: "Todos" }].concat(items); 
       setNovaLista(concatLista);
     }
-    else
+    else {
       setNovaLista(items);
+    }
   }, [items])
 
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -103,7 +110,7 @@ export default function MultiSelect({ items, value, label, onChange, inputStyle,
           {novaLista.map((item, index) => (
             <div key={index} className="br-item" tabIndex={-1} data-all="data-all" onKeyDown={() => { }}>
               <div className="br-checkbox">
-                <input id={`cbs${index}`} data-testid={`cbs${index}`} type="checkbox" name="estados-multtiple" value={item.rotulo} checked={itemIsSelected("") || itemIsSelected(item.id)} 
+                <input id={`cbs${index}`} data-testid={`cbs${index}`} type="checkbox" name="estados-multtiple" value={item.rotulo} checked={checkAll || itemIsSelected(item.id)} 
                   onClick={() => handleItemClick(item.id)} onChange={() => { }} />
                 <label htmlFor={`cbs${index}`}>{item.rotulo}</label>
               </div>
