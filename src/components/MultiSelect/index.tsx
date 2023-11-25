@@ -42,15 +42,11 @@ export default function MultiSelect({ items, value, label, onChange, inputStyle,
         onChange([]);
       }
       else {
-        onChange(novaLista.map(item => item.id).filter(id => id !== ""));
+        onChange(items.map(item => item.id));
       }
     }
     else
     {
-      if (filtrarTodos && checkAll) {
-        value = novaLista.map(item => item.id).filter(id => id !== "");
-      }
-      
       onChange(itemIsSelected(itemId) ? 
         value.filter((id) => id !== itemId)
         : [...value, itemId]
