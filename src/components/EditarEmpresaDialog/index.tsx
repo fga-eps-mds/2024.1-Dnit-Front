@@ -75,14 +75,37 @@ export default function EditarEmpresasDialog( { id, readOnly, listaUfs, closeDia
 	}
 	
 	const validarCNPJ = (value: string) : boolean => {
-		// Adicionar algoritmo de verificação de CNPJ
 		const message = value.length !== 14 ? (value.length === 0 ? "Este campo é obrigatório." :
-			"O CNPJ deve conter 14 dígitos.") : "";
+			"O CNPJ deve conter 14 dígitos.") : verificarCNPJ(value) ? "" : "Esse CNPJ é inválido. Verifique os dígitos e tente novamente.";
 
 		setErrors((prevErrors) => ({ ...prevErrors, CNPJ: message }));
 
 		return !Boolean(message);
 	}
+
+	const verificarCNPJ = (value: string): boolean => {
+		const numeros = value.split('').map(Number);
+		if (numeros.every(num => num === numeros[0])) return false;
+
+		const tam = value.length - 2;
+	  
+		const digitoVerificador1 = calcularDigitosVerificadores(numeros, tam);
+		const digitoVerificador2 = calcularDigitosVerificadores(numeros, tam + 1);
+	  
+		return digitoVerificador1 === numeros[12] && digitoVerificador2 === numeros[13];
+	};
+
+	const calcularDigitosVerificadores = (value: number[], tam: number): number => {
+		let pos = tam - 7;
+		let sum = 0;
+	  
+		for (let i = tam; i >= 1; i--) {
+		  sum += value[tam - i] * pos--;
+		  if (pos < 2) pos = 9;
+		}
+	  
+		return sum % 11 < 2 ? 0 : 11 - (sum % 11);
+	};
 
 	const validarUFs = (value: string[]) : boolean => {
 		const message = value.length === 0 ? "Selecione uma ou mais UFs." : "";
