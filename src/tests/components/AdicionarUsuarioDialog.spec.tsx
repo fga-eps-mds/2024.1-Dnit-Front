@@ -20,7 +20,7 @@ describe("Testes para o componente AdicionarUsuarioDialog", () => {
             />
         )
 
-        expect(screen.getByText("Usuários")).toBeInTheDocument();
+        expect(screen.getByText("Selecionar Usuários")).toBeInTheDocument();
     })
 
 })
