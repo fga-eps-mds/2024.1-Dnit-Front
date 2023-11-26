@@ -13,16 +13,22 @@ interface AdicionarUsuarioDialogProps {
     readonly closeDialog: (added: boolean) => void;
 }
 
+interface UsuarioItem {
+    readonly id: string;
+    readonly rotulo: string;
+}
+
 export default function AdicionarUsuarioDialog({ cnpj, nomeEmpresa, closeDialog }: AdicionarUsuarioDialogProps) {
     const [currentInputValue, setCurrentInputValue] = useState<string>("")
     const [currentInputRotulo, setCurrentInputRotulo] = useState<string>("")
-    const [selectedId, setSelectedId] = useState('');
+    const [selectedItems, setSelectedItems] = useState<UsuarioItem[]>([]);
     const [listaUsuarios, setListaUsuarios] = useState<FilterOptions[]>([]);
 
     const buscarUsuarios = async () => {
         fetchUsuarios<ListaPaginada>({pagina: 1, itemsPorPagina: 15, nome: currentInputRotulo})
             .then(lista => {
-                setListaUsuarios(lista.items.filter(user => user.empresa?.cnpj !== cnpj)
+                setListaUsuarios(lista.items
+                    .filter(user => user.empresa?.cnpj !== cnpj && !selectedItems.some(u => u.id === user.id))
                     .map((user) => ({ id: user.id, rotulo: user.nome + " - " + user.email})));
             })
             .catch(error => {
@@ -31,17 +37,24 @@ export default function AdicionarUsuarioDialog({ cnpj, nomeEmpresa, closeDialog 
             })
     }
 
-    const adicionarUsuario = (usuarioid: string) => {
-        if (!cnpj || !usuarioid) return;
-        adicionarUsuarioEmpresa({cnpj, usuarioid})
-            .then(() => {
-                notification.success({message: "Usuário adicionado com sucesso."});
-                closeDialog(true);
-            })
-            .catch((error) => {
-                notification.error({message: "Falha ao adicionar o usuário." + 
+    const adicionarUsuarios = async (usuarioids: UsuarioItem[]) => {
+        if (!cnpj || usuarioids.length === 0) return;
+
+        let errorUsers = [];
+        for (let i = 0; i < usuarioids.length; i++) {
+            try {
+                await adicionarUsuarioEmpresa({cnpj, usuarioid: usuarioids[i].id});
+            }
+            catch (error: any) {
+                errorUsers.push(usuarioids[i].rotulo)
+                notification.error({message: `Falha ao adicionar o usuário ${usuarioids[i].rotulo}.` + 
                     (error?.response?.data ?? "")});
-            })
+            }
+        }
+        if (errorUsers.length === 0) {
+            notification.success({message: "Usuários adicionados com sucesso."});
+        }
+        closeDialog(true);
     }
 
     const getRotuloById = (id: string, rotulo?: string): string => {
@@ -51,24 +64,48 @@ export default function AdicionarUsuarioDialog({ cnpj, nomeEmpresa, closeDialog 
 
     useEffect(() => {
         buscarUsuarios();
-    }, [currentInputValue]);
+    }, [currentInputValue, selectedItems]);
 
     return (
         <Modal className="adicionar-usuario-empresa" closeModal={() => {}}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <h4 className="text-center mt-1">Adicionar Usuário - {nomeEmpresa}</h4>
+                <h4 className="text-center mt-1">Adicionar Usuários - {nomeEmpresa}</h4>
             </div>
-            <Select items={listaUsuarios} value={selectedId} label={"Usuários"} onChange={(inputValueId, inputValueRotulo) => {
-                setSelectedId(inputValueId);
-                setCurrentInputValue(getRotuloById(inputValueId, inputValueRotulo));
-                setCurrentInputRotulo(inputValueRotulo ?? "");
+            <Select items={listaUsuarios} value={""} label={"Selecionar Usuários"} onChange={(inputValueId, inputValueRotulo) => {
+                if (inputValueId === "" && inputValueRotulo) {
+                    setCurrentInputValue(getRotuloById(inputValueId, inputValueRotulo));
+                    setCurrentInputRotulo(inputValueRotulo ?? "");
+                    return;
+                }
+                if (selectedItems.map(item => item.id).includes(inputValueId)) {
+                    return;
+                }
+                const newSelectedItems = inputValueId && inputValueRotulo ? [...selectedItems, {id: inputValueId, rotulo: inputValueRotulo}] : selectedItems;
+                setSelectedItems(newSelectedItems);
+                setCurrentInputValue("");
+                setCurrentInputRotulo("");
+                
             }} inputValue={currentInputValue} inputReadOnly={false} dropdownStyle={{ marginLeft: "0px", width: "280px" }}
             />
+            <p className="usuarios-selecionados">Usuários selecionados:</p>
+            <ul>
+                {
+                    selectedItems.map((item, index) => {
+                        return (
+                            <li>
+                                <div>{item.rotulo}</div>
+                                <i className="fas fa-close" onClick={() => setSelectedItems(selectedItems.filter(it => it.id !== item.id))}></i>
+                            </li>
+                        )
+                    })
+                }
+            </ul>
+            
           <div className="d-flex w-100 justify-content-center">
             <button className="br-button secondary" data-testid="botao-cancelar" type="button" onClick={() => closeDialog(false)}>
               Cancelar
             </button>
-            <button className="br-button primary" data-testid="botao-cadastrar" type="button"onClick={() => adicionarUsuario(selectedId)}>
+            <button className="br-button primary" data-testid="botao-cadastrar" type="button"onClick={() => adicionarUsuarios(selectedItems)}>
               Adicionar
             </button>
           </div>
