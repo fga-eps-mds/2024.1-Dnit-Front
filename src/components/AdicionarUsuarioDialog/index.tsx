@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Modal from "../Modal";
-import { adicionarUsuarioEmpresa, fetchEmpresa } from "../../service/empresaApi";
+import { adicionarUsuarioEmpresa } from "../../service/empresaApi";
 import { notification } from "antd";
 import { fetchUsuarios } from "../../service/usuarioApi";
 import { FilterOptions, ListaPaginada } from "../../pages/gerencia/GerenciarUsuario";
@@ -9,14 +9,14 @@ import "./styles.css"
 
 interface AdicionarUsuarioDialogProps {
     readonly cnpj: string | undefined;
+    readonly nomeEmpresa: string | undefined;
     readonly closeDialog: (added: boolean) => void;
 }
 
-export default function AdicionarUsuarioDialog({ cnpj, closeDialog }: AdicionarUsuarioDialogProps) {
+export default function AdicionarUsuarioDialog({ cnpj, nomeEmpresa, closeDialog }: AdicionarUsuarioDialogProps) {
     const [currentInputValue, setCurrentInputValue] = useState<string>("")
     const [currentInputRotulo, setCurrentInputRotulo] = useState<string>("")
     const [selectedId, setSelectedId] = useState('');
-    const [nomeEmpresa, setNomeEmpresa] = useState('');
     const [listaUsuarios, setListaUsuarios] = useState<FilterOptions[]>([]);
 
     const buscarUsuarios = async () => {
@@ -44,13 +44,6 @@ export default function AdicionarUsuarioDialog({ cnpj, closeDialog }: AdicionarU
             })
     }
 
-    async function buscarEmpresa(cnpj : string | undefined) {
-        if (cnpj) {
-		    const empresa = await fetchEmpresa(cnpj);
-		    setNomeEmpresa(empresa.razaoSocial);
-        }
-	}
-
     const getRotuloById = (id: string, rotulo?: string): string => {
         const item = listaUsuarios.find(item => item.id === id);
         return item ? item.rotulo : rotulo ?? "";
@@ -58,7 +51,6 @@ export default function AdicionarUsuarioDialog({ cnpj, closeDialog }: AdicionarU
 
     useEffect(() => {
         buscarUsuarios();
-        buscarEmpresa(cnpj);
     }, [currentInputValue]);
 
     return (

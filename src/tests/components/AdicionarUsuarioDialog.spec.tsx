@@ -15,6 +15,7 @@ describe("Testes para o componente AdicionarUsuarioDialog", () => {
         const screen = render(
             <AdicionarUsuarioDialog 
                 closeDialog={() => {}}
+                nomeEmpresa={empresas[0].razaoSocial}
                 cnpj={empresas[0].cnpj}
             />
         )
