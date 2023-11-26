@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
+import { ButtonComponent } from "../../components/Button";
 import "./styles.css";
 import {EtapasDeEnsinoData, RanqueInfo} from '../../models/service';
 import {
@@ -42,6 +43,16 @@ function Ranque() {
   const [paginacao, setPaginacao] = useState({pagina: 1, tamanhoPagina: 10,});
   const [notificationApi, notificationContextHandler] = notification.useNotification();
   const [escolaAtual, setEscolaAtual] = useState<EscolaRanqueData | null>();
+
+  const [showExportModal, setShowExportModal] = useState(false);
+
+  const openExportModal = () => {
+    setShowExportModal(true);
+  };
+
+  const closeExportModal = () => {
+    setShowExportModal(false);
+  };
 
   const navigate = useNavigate();
   const { temPermissao } = useContext(AuthContext);
@@ -180,6 +191,10 @@ function Ranque() {
 
         {loading && <div className="d-flex justify-content-center w-100 m-5"><ReactLoading type="spinningBubbles" color="#000000" /></div>}
         </div>
+        <button className="br-button primary mr-3" type="button" onClick={() => { onCreateAcao() }} disabled>
+                    Exportar Dados
+                </button>
+
       <Footer />
     </div>
   );
