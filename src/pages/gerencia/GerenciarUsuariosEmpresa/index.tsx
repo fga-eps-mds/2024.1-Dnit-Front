@@ -48,25 +48,18 @@ export default function GerenciarUsuariosEmpresa() {
     const tamanhoPagina = 20;
     
     const buscarUsuariosEmpresa = () => {
-        setLoading(true);
-        
         if (cnpj) {
+            setLoading(true);
             fetchUsuariosEmpresa(cnpj, {pagina: 1, itemsPorPagina: tamanhoPagina, nome: nome, ufLotacao: uf, perfilId: perfil})
             .then(u => setListaUsuarios(u.items))
             .catch(error => notificationApi.error({ message: 'Falha na listagem de usuários. ' + (error?.response?.data || '') }))
             .finally(() => setLoading(false));
         }
-        else
-        {
-            setLoading(false);
-        }
     }
 
-    async function buscarEmpresa(cnpj : string | undefined) {
-      if (cnpj) {
+    async function buscarEmpresa(cnpj : string) {
         const empresa = await fetchEmpresa(cnpj);
         setNomeEmpresa(empresa.razaoSocial);
-      }
     }
 
     async function fetchUf(): Promise<void> {
@@ -99,8 +92,10 @@ export default function GerenciarUsuariosEmpresa() {
     }, []);
 
     useEffect(() => {
-      buscarEmpresa(cnpj);
-    }, [cnpj]);
+      if (cnpj) {
+        buscarEmpresa(cnpj);
+      }
+    }, []);
 
     return (
         <div className="App">
