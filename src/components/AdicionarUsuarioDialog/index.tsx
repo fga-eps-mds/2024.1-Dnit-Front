@@ -67,24 +67,20 @@ export default function AdicionarUsuarioDialog({ cnpj, nomeEmpresa, closeDialog 
     }, [currentInputValue, selectedItems]);
 
     return (
-        <Modal className="adicionar-usuario-empresa" closeModal={() => {}}>
+        <Modal className="adicionar-usuario-empresa" closeModal={() => {closeDialog(false)}}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <h4 className="text-center mt-1">Adicionar Usuários - {nomeEmpresa}</h4>
             </div>
-            <Select items={listaUsuarios} value={""} label={"Selecionar Usuários"} onChange={(inputValueId, inputValueRotulo) => {
+            <Select items={listaUsuarios} value={""} label={"Selecionar Usuários"} onChange={(inputValueId, inputValueRotulo="") => {
                 if (inputValueId === "" && inputValueRotulo) {
                     setCurrentInputValue(getRotuloById(inputValueId, inputValueRotulo));
-                    setCurrentInputRotulo(inputValueRotulo ?? "");
-                    return;
-                }
-                if (selectedItems.map(item => item.id).includes(inputValueId)) {
+                    setCurrentInputRotulo(inputValueRotulo);
                     return;
                 }
                 const newSelectedItems = inputValueId && inputValueRotulo ? [...selectedItems, {id: inputValueId, rotulo: inputValueRotulo}] : selectedItems;
                 setSelectedItems(newSelectedItems);
                 setCurrentInputValue("");
                 setCurrentInputRotulo("");
-                
             }} inputValue={currentInputValue} inputReadOnly={false} dropdownStyle={{ marginLeft: "0px", width: "280px" }}
             />
             <p className="usuarios-selecionados">Usuários selecionados:</p>
@@ -92,9 +88,9 @@ export default function AdicionarUsuarioDialog({ cnpj, nomeEmpresa, closeDialog 
                 {
                     selectedItems.map((item, index) => {
                         return (
-                            <li>
+                            <li data-testid={`usuarioadicionar${index}`}>
                                 <div>{item.rotulo}</div>
-                                <i className="fas fa-close" onClick={() => setSelectedItems(selectedItems.filter(it => it.id !== item.id))}></i>
+                                <i className="fas fa-close" aria-hidden={true} data-testid={`usuarioadicionarcancelar${index}`} onClick={() => setSelectedItems(selectedItems.filter(it => it.id !== item.id))}></i>
                             </li>
                         )
                     })
