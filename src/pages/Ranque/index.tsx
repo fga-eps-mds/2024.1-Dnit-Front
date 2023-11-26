@@ -57,6 +57,14 @@ function Ranque() {
   const navigate = useNavigate();
   const { temPermissao } = useContext(AuthContext);
 
+  	const temPermissaoGerenciar = {
+		cadastrar: temPermissao(Permissao.EmpresaCadastrar),
+		visualizar: temPermissao(Permissao.EmpresaVisualizar),
+		remover: temPermissao(Permissao.EmpresaRemover),
+		editar: temPermissao(Permissao.EmpresaEditar),
+		visualizarUsuarios: temPermissao(Permissao.EmpresaVisualizarUsuarios)
+	}
+
   useEffect(() => {
     if (!temPermissao(Permissao.RanqueVisualizar)) {
       navigate("/");
@@ -189,12 +197,13 @@ function Ranque() {
           </Table>
         }
 
+        <div style={{marginLeft: '82%', float: 'right', width: 'auto'}}>
+          {<ButtonComponent label="Exportar Dados" buttonStyle="primary"></ButtonComponent >}
+        </div>
+
         {loading && <div className="d-flex justify-content-center w-100 m-5"><ReactLoading type="spinningBubbles" color="#000000" /></div>}
         </div>
-        <button className="br-button primary mr-3" type="button" onClick={() => { onCreateAcao() }} disabled>
-                    Exportar Dados
-                </button>
-
+        
       <Footer />
     </div>
   );
