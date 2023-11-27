@@ -29,6 +29,41 @@ interface FilterOptions{
   intervalos: string | null;
 }
 
+interface PlanejamentoData {
+  id?: string;
+}
+
+const dados: PlanejamentoArgs[] = [{
+  nome: 'PLANEJAMENTO CENTRO OESTE', 
+  periodo: '10 JAN - 30 OUT',
+  qtd: 1000,
+  responsavel: "Wellington Guimarães"
+},
+{
+  nome: 'PLANEJAMENTO NORTE', 
+  periodo: '10 ABR - 20 JUL',
+  qtd: 2400,
+  responsavel: "Ronaldo Marques"
+},
+{
+  nome: 'PLANEJAMENTO SUL', 
+  periodo: '15 MAR - 7 NOV',
+  qtd:  489,
+  responsavel: "Julio Pellizon"
+},
+{
+  nome: 'PLANEJAMENTO NORDESTE', 
+  periodo: '10 FEV - 27 JUN',
+  qtd: 2900,
+  responsavel: "Nayara Azevedo"
+},
+{
+  nome: 'PLANEJAMENTO SUDESTE', 
+  periodo: '10 AGO - 12 DEZ',
+  qtd: 500,
+  responsavel: "Julieta Vieira"
+}]
+
 export default function GerenciarAcoes() {
   const paginas = [ { nome: "Gerenciar Ações", link: "/gerenciarAcoes"}];
   const [notificationApi, notificationContextHandler] = notification.useNotification();
@@ -39,6 +74,8 @@ export default function GerenciarAcoes() {
   const [pagina, setPagina] = useState<ListaPaginada<any>>({items: [], pagina: 1, itemsPorPagina: 10, total: 0, totalPaginas: 0})  
   const [planejamento, setPlanejamento] = useState<PlanejamentoMacroModel[]>([]);
   
+  const planejamentos = dados;
+  const colunas = ['Nome', 'Período', 'Quantidade de Ações', 'Responsável']
   const [showDeletePlanejamento, setShowDeletePlanejamento] = useState<PlanejamentoArgs | null>(null)
 
   const [nome, setNome] = useState("");
@@ -65,16 +102,26 @@ export default function GerenciarAcoes() {
         <InputFilter onChange={setResponsavel} label="Responsável" />
         {possuiPermissao && <ButtonComponent label="Criar Novo Planejamento" buttonStyle="primary" onClick={() => navigate("/")}></ButtonComponent>}
       </div>
-      {planejamento.length === 0 && 
-      <Table 
-        columsTitle={["Nome", "Período", "Quantidade de Ações", "Responsável"]}
-        initialItemsPerPage={10}
-        title="Planejamentos Macro Cadastrados"
-        totalItems={planejamento.length}
-      >
-        <></><></>
+      <Table
+        columsTitle={colunas}
+        title="" initialItemsPerPage={10} 
+        totalItems={planejamentos.length}>
+        {
+          dados.map((e, index) =>
+            <CustomTableRow
+              key={e.nome}
+              id={index}
+              data={{
+                '0': e.nome, 
+                '1': `${e.periodo}`,
+                '2': `${e.qtd}`,
+                '3': e.responsavel
+              }}
+            />
+
+          )
+        }
       </Table>
-      }
       {loading && <div className="d-flex justify-content-center w-100 m-5"><ReactLoading type="spinningBubbles" color="#000000" /></div>}
     </div>
     <Footer/>
