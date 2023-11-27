@@ -10,8 +10,6 @@
 
 .adicionar-usuario-empresa ul {
     width: 400px;
-    /* position: absolute; */
-    /* margin-top: 150px; */
     padding-left: 20px;
     overflow-y: auto;
     min-height: 250px;

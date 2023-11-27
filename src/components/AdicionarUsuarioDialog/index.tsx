@@ -41,13 +41,13 @@ export default function AdicionarUsuarioDialog({ cnpj, nomeEmpresa, closeDialog 
         if (!cnpj || usuarioids.length === 0) return;
 
         let errorUsers = [];
-        for (let i = 0; i < usuarioids.length; i++) {
+        for (let item of usuarioids) {
             try {
-                await adicionarUsuarioEmpresa({cnpj, usuarioid: usuarioids[i].id});
+                await adicionarUsuarioEmpresa({cnpj, usuarioid: item.id});
             }
             catch (error: any) {
-                errorUsers.push(usuarioids[i].rotulo)
-                notification.error({message: `Falha ao adicionar o usuário ${usuarioids[i].rotulo}.` + 
+                errorUsers.push(item.rotulo)
+                notification.error({message: `Falha ao adicionar o usuário ${item.rotulo}.` + 
                     (error?.response?.data ?? "")});
             }
         }
@@ -88,7 +88,7 @@ export default function AdicionarUsuarioDialog({ cnpj, nomeEmpresa, closeDialog 
                 {
                     selectedItems.map((item, index) => {
                         return (
-                            <li data-testid={`usuarioadicionar${index}`}>
+                            <li key={`${item.id}`} data-testid={`usuarioadicionar${index}`}>
                                 <div>{item.rotulo}</div>
                                 <i className="fas fa-close" aria-hidden={true} data-testid={`usuarioadicionarcancelar${index}`} onClick={() => setSelectedItems(selectedItems.filter(it => it.id !== item.id))}></i>
                             </li>
