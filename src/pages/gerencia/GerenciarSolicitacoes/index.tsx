@@ -74,13 +74,10 @@ export default function GerenciarSolicitacoes() {
     setListaMunicipios(novoMunicipio);
   }
 
-  function procuraRotuloMunicipio(usuario: UsuarioModel) {
-    return usuario.municipio === null || usuario.municipio?.nome === "undefined" ? "Não Cadastrado" : usuario.municipio?.nome;
-  }
+  // function procuraRotuloMunicipio(usuario: UsuarioModel) {
+  //   return usuario.municipio === null || usuario.municipio?.nome === "undefined" ? "Não Cadastrado" : usuario.municipio?.nome;
+  // }
 
-  function procuraRotuloUf(solicitacao: SolicitacoesData) {
-    return listaUfs.find((uf) => uf.id === '' + solicitacao.escola.idUf)?.rotulo;
-  }
 
   function atualizaFiltroAlunos(qtdAlunos: string){
     //TODO: switch case para cobrir as opçoes do filtro
@@ -104,7 +101,7 @@ export default function GerenciarSolicitacoes() {
     <div className="App">
       {notificationContextHandler}
       <Header />
-      {solicitacaoAtual != null && <SolicitacoesDialog onClose={() => { setSolicitacaoAtual(null) }} onCreateAcao={() => { }} />}
+      {solicitacaoAtual != null && <SolicitacoesDialog escolaSelecionada={solicitacaoAtual} onClose={() => { setSolicitacaoAtual(null) }} onCreateAcao={() => { }} />}
       <TrilhaDeNavegacao elementosLi={paginas} />
       <div className="d-flex flex-column m-5">
         <div className="d-flex justify-content-left align-items-center mr-5">
@@ -113,10 +110,10 @@ export default function GerenciarSolicitacoes() {
           <Select items={listaUfs} value={uf} label={"UF:"} onChange={setUf} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
           <Select items={listaMunicipios} value={municipio} label={"Municipios:"} onChange={setMunicipio} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
         </div>
-        {listaSolicitacoes.length === 0 && <Table columsTitle={['Escola', 'Qtd. de Alunos', 'UF', 'Municipio']} initialItemsPerPage={10} title="Usuários cadastrados"><></><></></Table>}
+        {listaSolicitacoes.length === 0 && <Table columsTitle={['Escola', 'Qtd. de Alunos', 'UF', 'Municipio', 'Custo Logístico']} initialItemsPerPage={10} title="Usuários cadastrados"><></><></></Table>}
 
         <Table
-          columsTitle={['Escola', 'Qtd. de Alunos', 'UF', 'Municipio']}
+          columsTitle={['Escola', 'Qtd. de Alunos', 'UF', 'Municipio', 'Custo Logístico']}
           initialItemsPerPage={tamanhoPagina}
           title="Soliciatações de Ações"
           totalPages={totalPaginas}
@@ -140,13 +137,15 @@ export default function GerenciarSolicitacoes() {
             listaSolicitacoes.map((solicitacao, index) =>
               <CustomTableRow key={`${solicitacao.id}-${index}`} id={index}
                 data={{
-                  '0': solicitacao.escola.nomeEscola,
-                  '1': `${solicitacao.escola.numeroTotalDeAlunos}`,
-                  '2': `${solicitacao.escola.siglaUf}`,
-                  '3': `${solicitacao.escola.nomeMunicipio}`
+                  '0': solicitacao.escola?.nomeEscola || 'nada',
+                  '1': solicitacao.escola?.numeroTotalDeAlunos !== undefined ? `${solicitacao.escola.numeroTotalDeAlunos}` : '0',
+                  '2': solicitacao.escola?.siglaUf !== undefined ? `${solicitacao.escola?.siglaUf}` : 'UF',
+                  '3': solicitacao.escola?.idMunicipio !== undefined ? `${solicitacao.escola?.idMunicipio}` : 'Municipio',
+                  '4': "Escola não Cadastrada"
                 }}
                 hideEyeIcon={false}
-                hideTrashIcon={false}
+                hideTrashIcon={true}
+                hideEditIcon={true}
                 onDeleteRow={() => { }}
                 onDetailRow={_ => setSolicitacaoAtual(solicitacao)}
               />

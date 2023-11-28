@@ -10,11 +10,14 @@ export interface ListaPaginada<T> {
 
 export interface SolicitacoesData{
     id: string;
-    escola: EscolaData;
-    solicitante: string;
-    vinculo: string;
-    e_mail: string;
-    tefelone: string;
-    observações?: string;
+    escola?: EscolaData;
+    escolaId: string;
+    escolaCadastrada: boolean;
+    nomeSolicitante: string;
+    //vinculo: string;
+    email: string;
+    telefone: string;
+    observacoes?: string;
+    dataRealizadaUtc: string;
 
 }

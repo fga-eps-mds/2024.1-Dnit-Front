@@ -9,11 +9,12 @@ import ReactLoading from "react-loading";
 import { Superintendencia } from '../../models/service';
 import { formataCustoLogistico } from '../../utils/utils';
 import "./index.css";
+import { SolicitacoesData } from '../../models/solicitacoes';
 
 interface ModalProps {
     onClose: () => void;
     onCreateAcao: () => void;
-    escolaId?: string;
+    escolaSelecionada?: SolicitacoesData
 }
 
 interface LabelProps {
@@ -27,9 +28,8 @@ function Label({ children, className }: LabelProps) {
     </label>)
 }
 
-const SolitacoesDialog: React.FC<ModalProps> = ({ escolaId, onClose, onCreateAcao }) => {
+const SolitacoesDialog: React.FC<ModalProps> = ({ escolaSelecionada, onClose, onCreateAcao }) => {
 
-    const [escolaSelecionada, setEscolaSelecionada] = useState<EscolaRanqueDetalhes | null>(null);
     const [superintendenciaSelecionada, setSuperintendenciaSelecionada] = useState<Superintendencia | undefined>();
 
     const fetchSuperintendenciaSelecionada = async (superintendenciaId?: number) => {
@@ -37,17 +37,7 @@ const SolitacoesDialog: React.FC<ModalProps> = ({ escolaId, onClose, onCreateAca
         setSuperintendenciaSelecionada(superintendencia);
     }
 
-    // useEffect(() => {
-    //     fetchEscolaRanque(escolaId)
-    //         .then((escola) => {
-    //             setEscolaSelecionada(escola);
-    //             fetchSuperintendenciaSelecionada(escola.superintendencia?.id);
-    //         }
-    //         )
-
-    // }, []);
-
-
+    
     // if (!escolaSelecionada) {
     //     return (
     //         <Modal className="modal-title" closeModal={() => onClose()}>
@@ -65,46 +55,46 @@ const SolitacoesDialog: React.FC<ModalProps> = ({ escolaId, onClose, onCreateAca
             <div className="d-flex flex-column">
                 <h4 className="text-center mt-1">Detalhes da Solicitação</h4>
                 <div className='d-flex flex-column '>
-                    <Label>Nome Escola: Nome</Label>
+                    <Label>Nome Escola: {escolaSelecionada?.escola?.nomeEscola}</Label>
                     <Label><strong>Dados</strong></Label>
                     <div className='row mb-2'>
                         <div className='col-12 col-md-6'>
-                            <Label>Código: Codigo</Label>
+                            <Label>Código: {escolaSelecionada?.escola?.codigoEscola}</Label>
                         </div>
                         <div className='col-12 col-md-6'>
-                            <Label>Telefone escola: {"619999888".replace(/^(\d{2})(\d{4})(\d{4})/gm, "($1) $2-$3")}</Label>
-                        </div>
-                    </div>
-                    <div className='row mb-2'>
-                        <div className='col-12 col-md-6'>
-                            <Label>Alunos: numAlunos</Label>
-                        </div>
-                        <div className='col-12 col-md-6'>
-                            <Label>Professores: numProfessores</Label>
+                            <Label>Telefone escola: {escolaSelecionada?.escola?.telefone.replace(/^(\d{2})(\d{4})(\d{4})/gm, "($1) $2-$3")}</Label>
                         </div>
                     </div>
                     <div className='row mb-2'>
                         <div className='col-12 col-md-6'>
-                            <Label>Porte: Porte</Label>
+                            <Label>Alunos: {escolaSelecionada?.escola?.numeroTotalDeAlunos}</Label>
                         </div>
                         <div className='col-12 col-md-6'>
-                            <Label>Situação: Situacao</Label>
+                            <Label>Professores: {escolaSelecionada?.escola?.numeroTotalDeDocentes}</Label>
+                        </div>
+                    </div>
+                    <div className='row mb-2'>
+                        <div className='col-12 col-md-6'>
+                            <Label>Porte: {escolaSelecionada?.escola?.descricaoPorte}</Label>
+                        </div>
+                        <div className='col-12 col-md-6'>
+                            <Label>Situação: {escolaSelecionada?.escola?.descricaoSituacao}o</Label>
                         </div>
                     </div>
                     <Label>Rede: Rede</Label>
-                    <Label>Etapas de Ensino: Etapas</Label>
+                    <Label>Etapas de Ensino: {`${escolaSelecionada?.escola?.etapaEnsino}`}</Label>
                     <hr />
                     <div>
                         <div className='d-flex flex-column'>
                             <Label><strong>Endereço</strong></Label>
-                            <Label>Endereco</Label>
-                            <Label>Cep: Cep{/*escolaSelecionada.cep.replace(/^(\d{5})(\d{3})$/gm, "$1-$2")*/}</Label>
+                            <Label>Endereco: {escolaSelecionada?.escola?.endereco}</Label>
+                            <Label>Cep: {escolaSelecionada?.escola?.cep.replace(/^(\d{5})(\d{3})$/gm, "$1-$2")}</Label>
                             <div className='row'>
                                 <div className='col-12 col-md-6'>
-                                    <Label>Estado: UF</Label>
+                                    <Label>Estado: {escolaSelecionada?.escola?.siglaUf}</Label>
                                 </div>
                                 <div className='col-12 col-md-6'>
-                                    <Label>Município: Municipio</Label>
+                                    <Label>Município: {escolaSelecionada?.escola?.nomeMunicipio}</Label>
                                 </div>
                             </div>
                         </div>
@@ -113,13 +103,11 @@ const SolitacoesDialog: React.FC<ModalProps> = ({ escolaId, onClose, onCreateAca
                     <div className='d-flex flex-column '>
                         <Label><strong>Solicitações</strong></Label>
                         <div className='d-flex flex-column'>
-                            <Label>Nome do Solicitante: Fulano</Label>
-                            <Label>Vinculo com a Escola: Professor</Label>
-                            <Label>e-mail: fulano@gmail.com</Label>
-                            <Label>Telefone: {"619944888".replace(/^(\d{2})(\d{4})(\d{4})/gm, "($1) $2-$3")}</Label>
-                            <Label>Observações: Sem pensar conquistamos o mundo geral e construímos o nosso pequeno
-                                 lugar, deixando brilhar cada estrelinha. Estrelinhas. Doces, sensíveis, frias,
-                                  ternurentas. Mas sempre presentes em qualquer parte. Os donos da amizade.</Label>
+                            <Label>Nome do Solicitante: {escolaSelecionada?.nomeSolicitante}</Label>
+                            <Label>Vinculo com a Escola: Vínculo</Label>
+                            <Label>e-mail: {escolaSelecionada?.email}</Label>
+                            <Label>Telefone: {escolaSelecionada?.telefone.replace(/^(\d{2})(\d{4})(\d{4})/gm, "($1) $2-$3")}</Label>
+                            <Label>Observações: {escolaSelecionada?.observacoes}</Label>
                         </div>
                     </div>
                 </div>
