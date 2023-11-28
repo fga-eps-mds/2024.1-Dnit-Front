@@ -129,6 +129,8 @@ export default function GerenciarAcoes() {
                 '2': `${e.qtd}`,
                 '3': e.responsavel
               }}
+              hideEditIcon={true}
+              onDetailRow={_ => setShowDeletePlanejamento(e)}
             />
 
           )
