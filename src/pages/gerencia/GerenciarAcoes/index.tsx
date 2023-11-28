@@ -14,7 +14,7 @@ import Select from "../../../components/Select";
 import Table, { CustomTableRow } from "../../../components/Table";
 import ReactLoading  from 'react-loading';
 import { ButtonComponent } from "../../../components/Button";
-
+import DeletarPlanejamentoDialog, {DeletarPlanejamentoDialogArgs} from "../../../components/DeletarPlanejamentoDialog";
 
 interface PlanejamentoArgs {
   nome: string;
@@ -29,8 +29,9 @@ interface FilterOptions{
   intervalos: string | null;
 }
 
-interface PlanejamentoData {
-  id?: string;
+interface PlanejamentoDialogArgs{
+  nome: string | null;
+  readOnly: boolean;
 }
 
 const dados: PlanejamentoArgs[] = [{
@@ -76,7 +77,9 @@ export default function GerenciarAcoes() {
   
   const planejamentos = dados;
   const colunas = ['Nome', 'Período', 'Quantidade de Ações', 'Responsável']
-  const [showDeletePlanejamento, setShowDeletePlanejamento] = useState<PlanejamentoArgs | null>(null)
+
+  const [showPlanejamento, setShowPlanejamento] = useState<PlanejamentoDialogArgs|null>(null);
+  const [showDeletePlanejamento, setShowDeletePlanejamento] = useState<DeletarPlanejamentoDialogArgs | null>(null)
 
   const [nome, setNome] = useState("");
   const [periodo, setPeriodo] = useState("");
@@ -93,6 +96,11 @@ export default function GerenciarAcoes() {
   return  (
   <div className="App">
     {notificationContextHandler}
+    {showDeletePlanejamento && <DeletarPlanejamentoDialog 
+    nome={showDeletePlanejamento.nome}
+    qtdAcoes={showDeletePlanejamento.qtdAcoes||0}
+    closeDialog={(deletou) => {setShowDeletePlanejamento(null);}}
+    />}
     <Header/>
     <TrilhaDeNavegacao elementosLi={paginas}/>
     <div className="d-flex flex-column m-5">
@@ -128,6 +136,9 @@ export default function GerenciarAcoes() {
                 '1': `${e.periodo}`,
                 '2': `${e.qtd}`,
                 '3': e.responsavel
+              }}
+              onDeleteRow={() => {
+                setShowDeletePlanejamento({nome: e.nome, qtdAcoes: e.qtd});
               }}
             />
 
