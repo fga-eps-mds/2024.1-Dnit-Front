@@ -18,7 +18,7 @@ import { AuthContext } from "../../../provider/Autenticacao";
 import { Permissao } from "../../../models/auth";
 import { ButtonComponent } from "../../../components/Button";
 import AdicionarUsuarioDialog from "../../../components/AdicionarUsuarioDialog";
-import { SolicitacaoDeAcaoData } from "../../../models/service";
+import { SolicitacaoDeAcaoDTO } from "../../../models/service";
 import { SolicitacoesData } from "../../../models/solicitacoes";
 import SolicitacoesDialog from "../../../components/SolicitacoesDialog";
 

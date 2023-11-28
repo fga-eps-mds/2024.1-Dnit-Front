@@ -160,10 +160,11 @@ export interface EscolaInepData {
   nome: string;
 }
 
-export interface SolicitacaoDeAcaoData {
+export interface SolicitacaoDeAcaoDTO {
   Escola: string;
-  UF: string;
-  Municipio: string;
+  EscolaCodigoInep: string;
+  UF: number;
+  Municipio: number;
   NomeSolicitante: string;
   VinculoEscola: string;
   Email: string;
