@@ -55,7 +55,7 @@ const SolitacoesDialog: React.FC<ModalProps> = ({ escolaSelecionada, onClose, on
             <div className="d-flex flex-column">
                 <h4 className="text-center mt-1">Detalhes da Solicitação</h4>
                 <div className='d-flex flex-column '>
-                    <Label>Nome Escola: {escolaSelecionada?.escola?.nomeEscola}</Label>
+                    <Label>Nome Escola: {escolaSelecionada?.escola?.nomeEscola || 'ESCOLA NÃO CADASTRADA NO SISTEMA'} </Label>
                     <Label><strong>Dados</strong></Label>
                     <div className='row mb-2'>
                         <div className='col-12 col-md-6'>
