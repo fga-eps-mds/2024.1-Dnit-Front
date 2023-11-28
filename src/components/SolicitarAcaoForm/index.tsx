@@ -108,8 +108,8 @@ const SolicitacaoAcaoForm: React.FC = () => {
     const formData = {
       Escola: JSON.parse(values.escola).nome,
       EscolaCodigoInep: JSON.parse(values.escola).cod,
-      UF: UFAtual && UFAtual.id,
-      Municipio: municipioAtual && municipioAtual.id,
+      UF: UFAtual && `${UFAtual.sigla}`,
+      Municipio: municipioAtual && `${municipioAtual.id}`,
       NomeSolicitante: values.nome,
       VinculoEscola: values.vinculo,
       Email: values.email,

@@ -10,7 +10,7 @@ import InputFilter from "../../../components/InputFilter";
 import ReactLoading from "react-loading";
 import { useParams } from "react-router-dom";
 import { FilterOptions } from "../GerenciarUsuario";
-import { fetchMunicipio, fetchUnidadeFederativa } from "../../../service/escolaApi";
+import { fetchMunicipio, fetchSolicitacoesAcoes, fetchUnidadeFederativa } from "../../../service/escolaApi";
 import { fetchPerfis } from "../../../service/usuarioApi";
 import Select from "../../../components/Select";
 import RemoverUsuarioEmpresaDialog from "../../../components/RemoverUsuarioEmpresaDialog";
@@ -32,9 +32,11 @@ export default function GerenciarSolicitacoes() {
   const [uf, setUf] = useState('');
   const [municipio, setMunicipio] = useState('');
   const [qtdAlunos, setQtdAlunos] = useState('');
+  const [qtdAlunosMin, setQtdAlunosMin] = useState(1);
+  const [qtdAlunosMax, setQtdAlunosMax] = useState(5000);
   const [listaUfs, setListaUfs] = useState<FilterOptions[]>([]);
   const [listaMunicipios, setListaMunicipios] = useState<FilterOptions[]>([]);
-  const [listaQtdAlunos] = useState<FilterOptions[]> ([
+  const [listaQtdAlunos] = useState<FilterOptions[]>([
     { id: '1', rotulo: 'Até 50' },
     { id: '2', rotulo: 'Entre 51 e 200' },
     { id: '3', rotulo: 'Entre 201 e 500' },
@@ -47,17 +49,17 @@ export default function GerenciarSolicitacoes() {
   const [tamanhoPagina, setTamanhoPagina] = useState(10);
   const [solicitacaoAtual, setSolicitacaoAtual] = useState<SolicitacoesData | null>();
 
-  
+
 
   const buscarSolicitacoes = (proximaPagina: number, novoTamanhoPagina: number = tamanhoPagina) => {
-    // fetchSolicitacaoAcoes(proximaPagina, novoTamanhoPagina, escola, uf, municipio)
-    // 	.then(pagina => {
-    // 		setPagina(pagina)
-    // 		setListaSolicitacoes(pagina.items)
-    // setTotalPaginas(pagina.totalPaginas)
-    // 		setTamanhoPagina(pagina.itemsPorPagina)
-    // 	})
-    // 	.catch(error => notificationApi.error({ message: 'Falha na listagem de solicitacoes. ' + (error?.response?.data || '') }))
+    fetchSolicitacoesAcoes(proximaPagina, novoTamanhoPagina, totalPaginas, 50, escola, uf, municipio, qtdAlunosMin, qtdAlunosMax)
+      .then(pagina => {
+        setPagina(pagina.pagina)
+        setListaSolicitacoes(pagina.items)
+        setTotalPaginas(pagina.totalPaginas)
+        setTamanhoPagina(pagina.itemsPorPagina)
+      })
+      .catch(error => notificationApi.error({ message: 'Falha na listagem de solicitacoes. ' + (error?.response?.data || '') }))
   }
 
   async function fetchUf(): Promise<void> {
@@ -80,8 +82,13 @@ export default function GerenciarSolicitacoes() {
     return listaUfs.find((uf) => uf.id === '' + solicitacao.escola.idUf)?.rotulo;
   }
 
+  function atualizaFiltroAlunos(qtdAlunos: string){
+    //TODO: switch case para cobrir as opçoes do filtro
+
+  }
 
   useEffect(() => {
+    atualizaFiltroAlunos(qtdAlunos);
     buscarSolicitacoes(pagina, tamanhoPagina);
   }, [escola, uf, qtdAlunos, pagina, tamanhoPagina]);
 
