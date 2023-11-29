@@ -4,7 +4,7 @@ import Modal from "../Modal";
 import ReactLoading from "react-loading";
 import { fetchAtualizaTipoPerfil } from "../../service/usuarioApi";
 import { UsuarioModel } from "../../models/usuario";
-import { fetchEtapasDeEnsino, fetchMunicipio, fetchUnidadeFederativa } from "../../service/escolaApi";
+import { fetchEtapasDeEnsino, fetchMunicipio, fetchUnidadeFederativa, sendCadastroEscolas } from "../../service/escolaApi";
 import { SolicitacoesData } from "../../models/solicitacoes";
 import { fetchCEP } from "../../service/apiUtils";
 import { FilterOptions } from "../../pages/gerencia/GerenciarUsuario";
@@ -24,7 +24,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
   const [municipio, setMunicipio] = useState('');
   const [form] = Form.useForm();
   const [erroCEP, setErroCEP] = useState(false);
-  let cepEnviado = "0";
+  const [cepEnviado, setCepEnviado] = useState('0');
   const regras = [
     {
       required: true,
@@ -92,7 +92,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
               errors: ["CEP não encontrado"],
             },
           ]);
-          cepEnviado = "0";
+          setCepEnviado("0");
         } else {
           setErroCEP(true);
           form.setFieldsValue({
@@ -100,7 +100,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
             municipio: res.localidade,
             uf: res.uf,
           });
-          cepEnviado = cep;
+          setCepEnviado(cep);
         }
       } else {
         setErroCEP(false);
@@ -132,6 +132,43 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
     setListaMunicipios(novoMunicipio);
   }
 
+  const sendCadastro = async (values: any) => {
+    
+    if (!values.latitude) {
+      values.latitude = "0";
+    }
+
+    if (!values.longitude) {
+      values.longitude = "0";
+    }
+
+    const registroEscola = {
+      NomeEscola: values.nome,
+      IdRede: values.rede,
+      CodigoEscola: values.codigo,
+      IdUf: Number(uf),
+      Cep: cepEnviado,
+      Telefone: values.telefone,
+      IdEtapasDeEnsino: values.ciclos,
+      IdPorte: values.porte,
+      Endereco: values.endereco,
+      IdMunicipio: municipio,
+      IdLocalizacao: values.localizacao,
+      Longitude: values.longitude,
+      Latitude: values.latitude,
+      NumeroTotalDeAlunos: values.numeroAlunos,
+      NumeroTotalDeDocentes: values.numeroDocentes,
+    };
+
+    try {
+      // await sendCadastroEscolas(registroEscola);
+      console.log(registroEscola);
+      notification.success({ message: "Cadastro feito!" });
+    } catch (error) {
+      notificationApi.error({ message: "Erro ao fazer o cadastro" });
+    }
+  };
+
   useEffect(() => {
     fetchUf();
   }, [])
@@ -147,7 +184,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
         <h2>Cadastrar Escola</h2>
         <Form
           form={form}
-          onFinish={() => {}}
+          onFinish={sendCadastro}
           name="Cadastro Escola"
           layout="vertical"
           autoComplete="off"
@@ -199,7 +236,6 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                       <button
                         onClick={() => {
                           setUF(u.id);
-                          console.log('UF: ' + uf);
                         }}
                         className="option-municipio"
                       >
