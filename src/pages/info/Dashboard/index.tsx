@@ -6,6 +6,7 @@ import {
 import IconGerenciarPerfis from "../../../assets/icones/GerenciarPerfis.svg";
 import IconGerenciarUsuarios from "../../../assets/icones/GerenciarUsuarios.svg";
 import RankingEscolas from "../../../assets/icones/RankingEscolas.svg";
+import IconGerenciarPolos from "../../../assets/icones/GerenciarPolos.svg"
 import { Card, Collapse, CollapseProps } from "antd";
 import { useNavigate } from "react-router";
 import Header from "../../../components/Header";
@@ -151,7 +152,16 @@ export default function Dashboard() {
               <p className="text">Gerenciar Perfis</p>
             </Card>
           )}
-          {}
+            { /* TODO: podeGerenciarPolos, mudar a classe talvez, Rota*/ (
+                <Card className="card" onClick={() => navigate("/gerenciarPolos")}>
+                    <img
+                        className="iconPerfis"
+                        src={IconGerenciarPolos}
+                        alt="ícone gerenciar polos"
+                    />
+                    <p className="text">Gerenciar Polos</p>
+                </Card>
+            )}
         </div>
       ),
     },

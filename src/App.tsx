@@ -14,6 +14,7 @@ import SolicitacaoAcao from "./pages/SolicitacaoAcao/";
 import GerenciarPerfis from "./pages/gerencia/GerenciarPerfis";
 import GerenciarUsuario from "./pages/gerencia/GerenciarUsuario";
 import GerenciarEmpresas from "./pages/gerencia/GerenciarEmpresas";
+import GerenciarPolos from "./pages/gerencia/GerenciarPolos";
 import { AuthContext, configuraAutenticacaoAxios } from "./provider/Autenticacao";
 import "./styles/App.css";
 import GerenciarUsuariosEmpresa from "./pages/gerencia/GerenciarUsuariosEmpresa";
@@ -38,6 +39,7 @@ function App() {
           <Route path="/gerenciarUsuario" element={<GerenciarUsuario />}/>
           <Route path="/gerenciarPerfis" element={<GerenciarPerfis />} />
           <Route path="/gerenciarEmpresas" element={<GerenciarEmpresas/>}/>
+          <Route path="/gerenciarPolos" element={<GerenciarPolos/>}/>
           <Route path="/gerenciarUsuariosEmpresa/:cnpj" element={<GerenciarUsuariosEmpresa/>}/>
         </>
       ) : (
