@@ -21,6 +21,8 @@ import AdicionarUsuarioDialog from "../../../components/AdicionarUsuarioDialog";
 import { SolicitacaoDeAcaoDTO } from "../../../models/service";
 import { SolicitacoesData } from "../../../models/solicitacoes";
 import SolicitacoesDialog from "../../../components/SolicitacoesDialog";
+import CadastroManual from "../../../components/cadastrarEscolas/CadastroManual";
+import { formataCustoLogistico } from "../../../utils/utils";
 
 
 export default function GerenciarSolicitacoes() {
@@ -48,6 +50,7 @@ export default function GerenciarSolicitacoes() {
   const [totalPaginas, setTotalPaginas] = useState(1);
   const [tamanhoPagina, setTamanhoPagina] = useState(10);
   const [solicitacaoAtual, setSolicitacaoAtual] = useState<SolicitacoesData | null>();
+  const [cadastrarEscola, setCadastrarEscola] = useState<SolicitacoesData | null>(null);
 
 
 
@@ -102,6 +105,7 @@ export default function GerenciarSolicitacoes() {
       {notificationContextHandler}
       <Header />
       {solicitacaoAtual != null && <SolicitacoesDialog escolaSelecionada={solicitacaoAtual} onClose={() => { setSolicitacaoAtual(null) }} onCreateAcao={() => { }} />}
+      {/* {cadastrarEscola != null && <CadastroManual onClickBack={() => {}}/>} */}
       <TrilhaDeNavegacao elementosLi={paginas} />
       <div className="d-flex flex-column m-5">
         <div className="d-flex justify-content-left align-items-center mr-5">
@@ -141,13 +145,14 @@ export default function GerenciarSolicitacoes() {
                   '1': solicitacao.escola?.numeroTotalDeAlunos !== undefined ? `${solicitacao.escola.numeroTotalDeAlunos}` : '0',
                   '2': solicitacao.escola?.siglaUf !== undefined ? `${solicitacao.escola?.siglaUf}` : 'UF',
                   '3': solicitacao.escola?.idMunicipio !== undefined ? `${solicitacao.escola?.idMunicipio}` : 'Municipio',
-                  '4': "Escola não Cadastrada"
+                  '4': solicitacao.escola?.distanciaSuperintendencia !== undefined ? formataCustoLogistico(solicitacao.escola.distanciaSuperintendencia) : 'Escola não Cadastrada'
                 }}
                 hideEyeIcon={false}
                 hideTrashIcon={true}
-                hideEditIcon={true}
-                onDeleteRow={() => { }}
+                hideEditIcon={solicitacao.escola === null ? false : true}
                 onDetailRow={_ => setSolicitacaoAtual(solicitacao)}
+                onEditRow={() => setCadastrarEscola(solicitacao)}
+
               />
             )
           }
