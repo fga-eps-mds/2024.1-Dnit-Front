@@ -23,6 +23,7 @@ import { SolicitacoesData } from "../../../models/solicitacoes";
 import SolicitacoesDialog from "../../../components/SolicitacoesDialog";
 import CadastroManual from "../../../components/cadastrarEscolas/CadastroManual";
 import { formataCustoLogistico } from "../../../utils/utils";
+import { CadastroEscolaDialog } from "../../../components/CadastroEscolaDialog";
 
 
 export default function GerenciarSolicitacoes() {
@@ -105,7 +106,7 @@ export default function GerenciarSolicitacoes() {
       {notificationContextHandler}
       <Header />
       {solicitacaoAtual != null && <SolicitacoesDialog escolaSelecionada={solicitacaoAtual} onClose={() => { setSolicitacaoAtual(null) }} onCreateAcao={() => { }} />}
-      {/* {cadastrarEscola != null && <CadastroManual onClickBack={() => {}}/>} */}
+      {cadastrarEscola != null && <CadastroEscolaDialog closeDialog={() => setCadastrarEscola(null)} dadosSoliciatacao={solicitacaoAtual}/>}
       <TrilhaDeNavegacao elementosLi={paginas} />
       <div className="d-flex flex-column m-5">
         <div className="d-flex justify-content-left align-items-center mr-5">
