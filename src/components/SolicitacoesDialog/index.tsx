@@ -38,24 +38,25 @@ const SolitacoesDialog: React.FC<ModalProps> = ({ escolaSelecionada, onClose, on
     }
 
     
-    // if (!escolaSelecionada) {
-    //     return (
-    //         <Modal className="modal-title" closeModal={() => onClose()}>
-    //             <h4 className="text-center mt-2">Carregando Escola...</h4>
-    //             <div className="d-flex justify-content-center m-4">
-    //                 <ReactLoading type="spinningBubbles" color="#000000" />
-    //             </div>
-    //             <span></span>
-    //         </Modal>
-    //     );
-    // }
+    if (!escolaSelecionada) {
+        return (
+            <Modal className="modal-title" closeModal={() => onClose()}>
+                <h4 className="text-center mt-2">Carregando Escola...</h4>
+                <div className="d-flex justify-content-center m-4">
+                    <ReactLoading type="spinningBubbles" color="#000000" />
+                </div>
+                <span></span>
+            </Modal>
+        );
+    }
 
     return (
         <Modal className="default escola-ranque-modal" closeModal={() => onClose()}>
             <div className="d-flex flex-column">
                 <h4 className="text-center mt-1">Detalhes da Solicitação</h4>
                 <div className='d-flex flex-column '>
-                    <Label>Nome Escola: {escolaSelecionada?.escola?.nomeEscola || 'ESCOLA NÃO CADASTRADA NO SISTEMA'} </Label>
+                    <Label>Nome Escola: {escolaSelecionada?.escola?.nomeEscola || escolaSelecionada?.nome} </Label>
+                    {/* <Label>Situação: {escolaSelecionada?.escola === undefined ? "Cadastrada no sistema" : "Não possui cadastro no sistema"}</Label> */}
                     <Label><strong>Dados</strong></Label>
                     <div className='row mb-2'>
                         <div className='col-12 col-md-6'>
@@ -67,7 +68,7 @@ const SolitacoesDialog: React.FC<ModalProps> = ({ escolaSelecionada, onClose, on
                     </div>
                     <div className='row mb-2'>
                         <div className='col-12 col-md-6'>
-                            <Label>Alunos: {escolaSelecionada?.escola?.numeroTotalDeAlunos}</Label>
+                            <Label>Alunos: {escolaSelecionada?.escola?.numeroTotalDeAlunos || escolaSelecionada?.quantidadeAlunos}</Label>
                         </div>
                         <div className='col-12 col-md-6'>
                             <Label>Professores: {escolaSelecionada?.escola?.numeroTotalDeDocentes}</Label>
@@ -75,26 +76,26 @@ const SolitacoesDialog: React.FC<ModalProps> = ({ escolaSelecionada, onClose, on
                     </div>
                     <div className='row mb-2'>
                         <div className='col-12 col-md-6'>
-                            <Label>Porte: {escolaSelecionada?.escola?.descricaoPorte}</Label>
+                            <Label>Porte: {escolaSelecionada?.escola?.porte}</Label>
                         </div>
                         <div className='col-12 col-md-6'>
-                            <Label>Situação: {escolaSelecionada?.escola?.descricaoSituacao}o</Label>
+                            <Label>Situação: {escolaSelecionada?.escola?.situacao}</Label>
                         </div>
                     </div>
-                    <Label>Rede: Rede</Label>
+                    <Label>Rede: {escolaSelecionada?.escola?.rede}</Label>
                     <Label>Etapas de Ensino: {`${escolaSelecionada?.escola?.etapaEnsino}`}</Label>
                     <hr />
                     <div>
                         <div className='d-flex flex-column'>
                             <Label><strong>Endereço</strong></Label>
                             <Label>Endereco: {escolaSelecionada?.escola?.endereco}</Label>
-                            <Label>Cep: {escolaSelecionada?.escola?.cep.replace(/^(\d{5})(\d{3})$/gm, "$1-$2")}</Label>
+                            {/* <Label>Cep: {escolaSelecionada?.escola?.cep.replace(/^(\d{5})(\d{3})$/gm, "$1-$2")}</Label> */}
                             <div className='row'>
                                 <div className='col-12 col-md-6'>
-                                    <Label>Estado: {escolaSelecionada?.escola?.siglaUf}</Label>
+                                    <Label>Estado: {escolaSelecionada?.escola?.siglaUf || escolaSelecionada?.uf}</Label>
                                 </div>
                                 <div className='col-12 col-md-6'>
-                                    <Label>Município: {escolaSelecionada?.escola?.nomeMunicipio}</Label>
+                                    <Label>Município: {escolaSelecionada?.escola?.nomeMunicipio || escolaSelecionada?.municipio.nome}</Label>
                                 </div>
                             </div>
                         </div>

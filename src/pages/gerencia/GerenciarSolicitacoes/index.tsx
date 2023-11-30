@@ -145,7 +145,7 @@ export default function GerenciarSolicitacoes() {
                   '0': solicitacao.escola?.nomeEscola || solicitacao.nome.toUpperCase(),
                   '1': solicitacao.escola?.numeroTotalDeAlunos !== undefined ? `${solicitacao.escola.numeroTotalDeAlunos}` : `${solicitacao.quantidadeAlunos}`,
                   '2': solicitacao.escola?.siglaUf !== undefined ? `${solicitacao.escola?.siglaUf}` : solicitacao.uf,
-                  '3': solicitacao.escola?.idMunicipio !== undefined ? `${solicitacao.escola?.nomeMunicipio}` : solicitacao.municipioId,
+                  '3': solicitacao.escola?.idMunicipio !== undefined ? `${solicitacao.escola?.nomeMunicipio}` : solicitacao.municipio.nome,
                   '4': solicitacao.escola?.distanciaSuperintendencia !== undefined ? formataCustoLogistico(solicitacao.escola.distanciaSuperintendencia) : 'Escola não Cadastrada'
                 }}
                 hideEyeIcon={false}

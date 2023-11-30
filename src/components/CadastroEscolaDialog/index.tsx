@@ -162,9 +162,10 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
     };
 
     try {
-      // await sendCadastroEscolas(registroEscola);
+      await sendCadastroEscolas(registroEscola);
       console.log(registroEscola);
       notification.success({ message: "Cadastro feito!" });
+      closeDialog(true);
     } catch (error) {
       notificationApi.error({ message: "Erro ao fazer o cadastro" });
     }
@@ -173,7 +174,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
   useEffect(() => {
     fetchUf();
     console.log(dadosSoliciatacao);
-    form.setFieldValue("nome", dadosSoliciatacao?.nomeSolicitante);
+    form.setFieldValue("nome", dadosSoliciatacao?.nome.toUpperCase());
     form.setFieldValue("uf", 'DF');
     setUF('27');
     form.setFieldValue("municipio", 'Brasília');

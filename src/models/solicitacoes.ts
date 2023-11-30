@@ -1,4 +1,4 @@
-import { EscolaData, EtapasDeEnsinoData, MunicipioData, RedeData, SituacaoData, Superintendencia, UnidadeFederativaData } from "./service";
+import { EtapasDeEnsinoData, MunicipioData} from "./service";
 
 export interface ListaPaginada<T> {
     pagina: number;
@@ -8,9 +8,35 @@ export interface ListaPaginada<T> {
     items: T[];
 }
 
+export interface SolicitacaoEscolaData {
+    idEscola: number;
+    codigoEscola: number;
+    nomeEscola: string;
+    rede: string;
+    cep: string;
+    idUf: number;
+    siglaUf: string;
+    endereco: string;
+    idMunicipio: number;
+    nomeMunicipio: string;
+    localizacao: string;
+    longitude: string;
+    latitude: string;
+    idEtapasDeEnsino: number;
+    etapaEnsino?: [];
+    numeroTotalDeAlunos: number;
+    idSituacao: number;
+    situacao: string;
+    porte: string;
+    telefone: string;
+    numeroTotalDeDocentes: number;
+    distanciaSuperintendencia: number;
+    superintendenciaId: number;
+  }
+
 export interface SolicitacoesData{
     id: string;
-    escola?: EscolaData;
+    escola?: SolicitacaoEscolaData;
     escolaCodigoInep: string;
     escolaCadastrada: boolean;
     nome: string
@@ -22,6 +48,7 @@ export interface SolicitacoesData{
     observacoes?: string;
     dataRealizadaUtc: string;
     uf: string;
-    municipioId: string;
+    municipio: MunicipioData;
 
 }
+
