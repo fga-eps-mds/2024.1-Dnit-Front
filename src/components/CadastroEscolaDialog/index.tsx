@@ -11,7 +11,7 @@ import { FilterOptions } from "../../pages/gerencia/GerenciarUsuario";
 import "./styles.css";
 
 interface CadastroEscolaDialogProps {
-  dadosSoliciatacao?: SolicitacoesData;
+  dadosSoliciatacao: SolicitacoesData;
   closeDialog: (edicao: boolean) => void;
 }
 
@@ -137,6 +137,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
   }
 
   function procuraIdUf(rotulo: string) {
+    console.log('uf: ', rotulo);
     return listaUfs.find((uf) => uf.rotulo === '' + rotulo)?.id;
   }
 
@@ -180,15 +181,13 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
 
   useEffect(() => {
     fetchUf();
-    console.log(dadosSoliciatacao);
     form.setFieldValue("nome", dadosSoliciatacao?.nome.toUpperCase());
     form.setFieldValue("uf", dadosSoliciatacao?.uf);
-    setUF(`${procuraIdUf(`${dadosSoliciatacao?.uf}`)}`);
     form.setFieldValue("municipio", dadosSoliciatacao?.municipio.nome);
-    setMunicipio(`${dadosSoliciatacao?.municipio.id}`);
     form.setFieldValue("numeroAlunos", dadosSoliciatacao?.quantidadeAlunos);
     setQtdAlunos(Number(dadosSoliciatacao?.quantidadeAlunos))
   }, [])
+
 
   useEffect(() => {
     fetchMunicipios();
