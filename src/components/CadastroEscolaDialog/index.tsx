@@ -26,6 +26,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
   const [form] = Form.useForm();
   const [erroCEP, setErroCEP] = useState(false);
   const [cepEnviado, setCepEnviado] = useState('0');
+  const [qtdAlunos, setQtdAlunos] = useState(1);
   const regras = [
     {
       required: true,
@@ -101,6 +102,8 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
             municipio: res.localidade,
             uf: res.uf,
           });
+          setMunicipio(res.ibge);
+          setUF(`${procuraIdUf(res.uf)}`);
           setCepEnviado(cep);
         }
       } else {
@@ -133,6 +136,10 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
     setListaMunicipios(novoMunicipio);
   }
 
+  function procuraIdUf(rotulo: string) {
+    return listaUfs.find((uf) => uf.rotulo === '' + rotulo)?.id;
+  }
+
   const sendCadastro = async (values: any) => {
 
     if (!values.latitude) {
@@ -153,17 +160,17 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
       IdEtapasDeEnsino: values.ciclos,
       IdPorte: values.porte,
       Endereco: values.endereco,
-      IdMunicipio: municipio,
+      IdMunicipio: Number(municipio),
       IdLocalizacao: values.localizacao,
       Longitude: values.longitude,
       Latitude: values.latitude,
-      NumeroTotalDeAlunos: values.numeroAlunos,
+      NumeroTotalDeAlunos: qtdAlunos,
       NumeroTotalDeDocentes: values.numeroDocentes,
     };
 
     try {
-      await sendCadastroEscolas(registroEscola);
       console.log(registroEscola);
+      await sendCadastroEscolas(registroEscola);
       notification.success({ message: "Cadastro feito!" });
       closeDialog(true);
     } catch (error) {
@@ -179,6 +186,8 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
     setUF('27');
     form.setFieldValue("municipio", 'Brasília');
     setMunicipio("5300108");
+    form.setFieldValue("numeroAlunos", dadosSoliciatacao?.quantidadeAlunos);
+    setQtdAlunos(Number(dadosSoliciatacao?.quantidadeAlunos))
   }, [])
 
   useEffect(() => {
@@ -270,7 +279,9 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
               </div>
               <div className="bloco2">
                 <Form.Item name="telefone" label="Telefone" rules={regrasTelefone}>
-                  <Input className="inputForm2" />
+                  <Input 
+                    className="inputForm2"
+                   />
                 </Form.Item>
 
                 <Form.Item name="ciclos" label="Etapas de Ensino" rules={regras}>
@@ -364,7 +375,10 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                   label="Número Total de Alunos"
                   rules={regrasNumeroAlunoDocentes}
                 >
-                  <Input className="inputForm2" />
+                  <Input 
+                    className="inputForm2" 
+                    onChange={e => setQtdAlunos(form.getFieldValue("numeroAlunos"))}
+                  />
                 </Form.Item>
 
                 <Form.Item
