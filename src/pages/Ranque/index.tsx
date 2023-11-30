@@ -16,6 +16,7 @@ import { fetchEscolasRanque, fetchProcessamentoRanque } from '../../service/ranq
 import { EscolaRanqueData, EscolaRanqueFiltro, ListaPaginada, RanqueProcessamentoData } from '../../models/ranque';
 import { notification } from 'antd';
 import { FiltroNome } from '../../components/FiltroNome';
+import ModalExportarRanque from '../../components/ExportarRanqueModal';
 import Select, { SelectItem } from '../../components/Select';
 import ModalRanqueEscola from '../../components/EscolaRanqueModal';
 import { AuthContext } from '../../provider/Autenticacao';
@@ -198,8 +199,12 @@ function Ranque() {
         }
 
         <div style={{marginLeft: '82%', float: 'right', width: 'auto'}}>
-          {<ButtonComponent label="Exportar Dados" buttonStyle="primary"></ButtonComponent >}
+          <ButtonComponent label="Exportar Dados" buttonStyle="primary" onClick={openExportModal} />
         </div>
+
+        {showExportModal && (
+          <ModalExportarRanque ranqueId="SEU_ID_DO_RANQUE" onClose={closeExportModal} />
+        )}
 
         {loading && <div className="d-flex justify-content-center w-100 m-5"><ReactLoading type="spinningBubbles" color="#000000" /></div>}
         </div>
