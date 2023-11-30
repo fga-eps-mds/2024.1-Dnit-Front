@@ -79,3 +79,10 @@ export interface SuperintendenciaModel {
     id: number;
     uf: string;
 }
+
+export interface RanqueData {
+    data: string;
+    hora: string;
+    escolasNum: number;
+    ranque?: ranqueInfo;
+}
