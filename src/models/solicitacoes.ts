@@ -11,13 +11,17 @@ export interface ListaPaginada<T> {
 export interface SolicitacoesData{
     id: string;
     escola?: EscolaData;
-    escolaId: string;
+    escolaCodigoInep: string;
     escolaCadastrada: boolean;
+    nome: string
     nomeSolicitante: string;
-    //vinculo: string;
+    quantidadeAlunos: number;
+    vinculo: string;
     email: string;
     telefone: string;
     observacoes?: string;
     dataRealizadaUtc: string;
+    uf: string;
+    municipioId: string;
 
 }

@@ -35,8 +35,8 @@ export default function GerenciarSolicitacoes() {
   const [uf, setUf] = useState('');
   const [municipio, setMunicipio] = useState('');
   const [qtdAlunos, setQtdAlunos] = useState('');
-  const [qtdAlunosMin, setQtdAlunosMin] = useState(1);
-  const [qtdAlunosMax, setQtdAlunosMax] = useState(5000);
+  const [quantidadeAlunosMin, setQuantidadeAlunosMin] = useState(1);
+  const [quantidadeAlunosMax, setQuantidadeAlunosMax] = useState(5000);
   const [listaUfs, setListaUfs] = useState<FilterOptions[]>([]);
   const [listaMunicipios, setListaMunicipios] = useState<FilterOptions[]>([]);
   const [listaQtdAlunos] = useState<FilterOptions[]>([
@@ -56,7 +56,7 @@ export default function GerenciarSolicitacoes() {
 
 
   const buscarSolicitacoes = (proximaPagina: number, novoTamanhoPagina: number = tamanhoPagina) => {
-    fetchSolicitacoesAcoes(proximaPagina, novoTamanhoPagina, totalPaginas, 50, escola, uf, municipio, qtdAlunosMin, qtdAlunosMax)
+    fetchSolicitacoesAcoes(proximaPagina, novoTamanhoPagina, escola, uf, municipio, quantidadeAlunosMin, quantidadeAlunosMax)
       .then(pagina => {
         setPagina(pagina.pagina)
         setListaSolicitacoes(pagina.items)
@@ -91,7 +91,7 @@ export default function GerenciarSolicitacoes() {
   useEffect(() => {
     atualizaFiltroAlunos(qtdAlunos);
     buscarSolicitacoes(pagina, tamanhoPagina);
-  }, [escola, uf, qtdAlunos, pagina, tamanhoPagina]);
+  }, [escola, uf, municipio, qtdAlunos, pagina, tamanhoPagina]);
 
   useEffect(() => {
     fetchMunicipios();
@@ -142,10 +142,10 @@ export default function GerenciarSolicitacoes() {
             listaSolicitacoes.map((solicitacao, index) =>
               <CustomTableRow key={`${solicitacao.id}-${index}`} id={index}
                 data={{
-                  '0': solicitacao.escola?.nomeEscola || 'nada',
-                  '1': solicitacao.escola?.numeroTotalDeAlunos !== undefined ? `${solicitacao.escola.numeroTotalDeAlunos}` : '0',
-                  '2': solicitacao.escola?.siglaUf !== undefined ? `${solicitacao.escola?.siglaUf}` : 'UF',
-                  '3': solicitacao.escola?.idMunicipio !== undefined ? `${solicitacao.escola?.idMunicipio}` : 'Municipio',
+                  '0': solicitacao.escola?.nomeEscola || solicitacao.nome.toUpperCase(),
+                  '1': solicitacao.escola?.numeroTotalDeAlunos !== undefined ? `${solicitacao.escola.numeroTotalDeAlunos}` : `${solicitacao.quantidadeAlunos}`,
+                  '2': solicitacao.escola?.siglaUf !== undefined ? `${solicitacao.escola?.siglaUf}` : solicitacao.uf,
+                  '3': solicitacao.escola?.idMunicipio !== undefined ? `${solicitacao.escola?.nomeMunicipio}` : solicitacao.municipioId,
                   '4': solicitacao.escola?.distanciaSuperintendencia !== undefined ? formataCustoLogistico(solicitacao.escola.distanciaSuperintendencia) : 'Escola não Cadastrada'
                 }}
                 hideEyeIcon={false}

@@ -96,26 +96,22 @@ export async function sendSolicitaAcao(formData: DATA.SolicitacaoDeAcaoDTO): Pro
 export async function fetchSolicitacoesAcoes(
     pagina: number,
     tamanhoPagina: number,
-    total: number,
-    totalPaginas: number,
     nome: string,
     uf: string = "",
     idMunicipio: string = "",
-    quantidadeAlunosMax: number,
-    quantidadeAlunosMin: number
+    quantidadeAlunosMin: number,
+    quantidadeAlunosMax: number
 ): Promise<ListaPaginada<SolicitacoesData>> {
     try {
         const response: AxiosResponse<ListaPaginada<SolicitacoesData>> = await axios.get(URL.solicitacaoDeAcaoURL, {
             params: {
                 pagina,
                 tamanhoPagina,
-                total,
-                totalPaginas,
                 nome,
                 uf,
                 idMunicipio,
-                quantidadeAlunosMax,
-                quantidadeAlunosMin
+                quantidadeAlunosMin,
+                quantidadeAlunosMax
             }
         });
         return response.data;
