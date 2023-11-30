@@ -182,10 +182,10 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
     fetchUf();
     console.log(dadosSoliciatacao);
     form.setFieldValue("nome", dadosSoliciatacao?.nome.toUpperCase());
-    form.setFieldValue("uf", 'DF');
-    setUF('27');
-    form.setFieldValue("municipio", 'Brasília');
-    setMunicipio("5300108");
+    form.setFieldValue("uf", dadosSoliciatacao?.uf);
+    setUF(`${procuraIdUf(`${dadosSoliciatacao?.uf}`)}`);
+    form.setFieldValue("municipio", dadosSoliciatacao?.municipio.nome);
+    setMunicipio(`${dadosSoliciatacao?.municipio.id}`);
     form.setFieldValue("numeroAlunos", dadosSoliciatacao?.quantidadeAlunos);
     setQtdAlunos(Number(dadosSoliciatacao?.quantidadeAlunos))
   }, [])
