@@ -83,19 +83,55 @@ export default function GerenciarSolicitacoes() {
   // }
 
 
-  function atualizaFiltroAlunos(qtdAlunos: string){
-    //TODO: switch case para cobrir as opçoes do filtro
+  function atualizaFiltroAlunos(minMaxAlunos: string) {
+    console.log(minMaxAlunos);
+    switch (minMaxAlunos) {
+      case '1': {
+        setQuantidadeAlunosMin(1);
+        setQuantidadeAlunosMax(50);
+        break;
+      }
+      case '2': {
+        setQuantidadeAlunosMin(51);
+        setQuantidadeAlunosMax(200);
+        break;
+      }
+      case '3': {
+        setQuantidadeAlunosMin(201);
+        setQuantidadeAlunosMax(500);
+        break;
+      }
+      case '4': {
+        setQuantidadeAlunosMin(501);
+        setQuantidadeAlunosMax(1000);
+        break;
+      }
+      case '5': {
+        setQuantidadeAlunosMin(1001);
+        setQuantidadeAlunosMax(10000);
+        break;
+      }
+      default: {
+        //reseta o filtro para todos; 
+        setQuantidadeAlunosMin(1);
+        setQuantidadeAlunosMax(10000);
+        break;
+      }
+    }
 
   }
 
   useEffect(() => {
-    atualizaFiltroAlunos(qtdAlunos);
     buscarSolicitacoes(pagina, tamanhoPagina);
-  }, [escola, uf, municipio, qtdAlunos, pagina, tamanhoPagina]);
+  }, [escola, uf, municipio, quantidadeAlunosMax, pagina, tamanhoPagina]);
 
   useEffect(() => {
     fetchMunicipios();
   }, [uf]);
+
+  useEffect(() => {
+    atualizaFiltroAlunos(qtdAlunos);
+  }, [qtdAlunos])
 
   useEffect(() => {
     fetchUf();
