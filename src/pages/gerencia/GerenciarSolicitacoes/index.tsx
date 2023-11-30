@@ -50,8 +50,8 @@ export default function GerenciarSolicitacoes() {
   const [pagina, setPagina] = useState(1);
   const [totalPaginas, setTotalPaginas] = useState(1);
   const [tamanhoPagina, setTamanhoPagina] = useState(10);
-  const [solicitacaoAtual, setSolicitacaoAtual] = useState<SolicitacoesData | null>();
-  const [cadastrarEscola, setCadastrarEscola] = useState<SolicitacoesData | null>(null);
+  const [solicitacaoAtual, setSolicitacaoAtual] = useState<SolicitacoesData | undefined>();
+  const [cadastrarEscola, setCadastrarEscola] = useState<SolicitacoesData | undefined>();
 
 
 
@@ -105,8 +105,8 @@ export default function GerenciarSolicitacoes() {
     <div className="App">
       {notificationContextHandler}
       <Header />
-      {solicitacaoAtual != null && <SolicitacoesDialog escolaSelecionada={solicitacaoAtual} onClose={() => { setSolicitacaoAtual(null) }} onCreateAcao={() => { }} />}
-      {cadastrarEscola != null && <CadastroEscolaDialog closeDialog={() => setCadastrarEscola(null)} dadosSoliciatacao={solicitacaoAtual}/>}
+      {solicitacaoAtual != null && <SolicitacoesDialog escolaSelecionada={solicitacaoAtual} onClose={() => { setSolicitacaoAtual(undefined) }} onCreateAcao={() => { }} />}
+      {cadastrarEscola != undefined && <CadastroEscolaDialog dadosSoliciatacao={cadastrarEscola} closeDialog={() => setCadastrarEscola(undefined)} />}
       <TrilhaDeNavegacao elementosLi={paginas} />
       <div className="d-flex flex-column m-5">
         <div className="d-flex justify-content-left align-items-center mr-5">
@@ -152,7 +152,7 @@ export default function GerenciarSolicitacoes() {
                 hideTrashIcon={true}
                 hideEditIcon={solicitacao.escola === null ? false : true}
                 onDetailRow={_ => setSolicitacaoAtual(solicitacao)}
-                onEditRow={() => setCadastrarEscola(solicitacao)}
+                onEditRow={_ => setCadastrarEscola(solicitacao)}
 
               />
             )

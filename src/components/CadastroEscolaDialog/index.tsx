@@ -11,7 +11,7 @@ import { FilterOptions } from "../../pages/gerencia/GerenciarUsuario";
 import "./styles.css";
 
 interface CadastroEscolaDialogProps {
-  dadosSoliciatacao?: SolicitacoesData | null;
+  dadosSoliciatacao?: SolicitacoesData;
   closeDialog: (edicao: boolean) => void;
 }
 
@@ -172,6 +172,12 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
 
   useEffect(() => {
     fetchUf();
+    console.log(dadosSoliciatacao);
+    form.setFieldValue("nome", dadosSoliciatacao?.nomeSolicitante);
+    form.setFieldValue("uf", 'DF');
+    setUF('27');
+    form.setFieldValue("municipio", 'Brasília');
+    setMunicipio("5300108");
   }, [])
 
   useEffect(() => {
@@ -179,7 +185,16 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
   }, [uf]);
 
   return (
-    <div className="overlay " data-testid="overlay" onClick={() => closeDialog(true)} onKeyDown={() => { }}>
+    <div
+      className="overlay "
+      data-testid="overlay"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          closeDialog(true);
+        }
+      }}
+      onKeyDown={() => { }}
+    >
       <div className="custom-modal" style={{ width: "90%" }}>
         {contextHolder}
         <div >
@@ -196,7 +211,11 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
             <div className="divScroll">
               <div className="bloco">
                 <Form.Item name="nome" label="Nome da Escola" rules={regras}>
-                  <Input className="inputForm2" />
+                  <Input 
+                  type="text"
+                  className="inputForm2" 
+                  value={"dadosSoliciatacao?.nomeSolicitante"}
+                  />
                 </Form.Item>
 
                 <Form.Item name="rede" label="Rede" rules={regras}>
@@ -305,6 +324,14 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                   >
                     {listaMunicipios?.map((u) => (
                       <Select key={u.id} value={u.rotulo} >
+                        <button
+                          onClick={() => {
+                            setMunicipio(u.id);
+                          }}
+                          className="option-municipio"
+                        >
+                          {u.rotulo}
+                        </button>
                         {u.rotulo}
                       </Select>
                     ))}
@@ -349,7 +376,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
               </div>
             </div>
             <div className="cancelar">
-              <Space>
+              <Space size={735}>
                 <Button
                   className="custom-button"
                   type="primary"
