@@ -37,7 +37,7 @@ function Ranque() {
   const paginas = [{ nome: "Logout", link: "/login" }];
   const [loading, setLoading] = useState(true);
   const [escolas, setEscolas] = useState<ListaPaginada<EscolaRanqueData> | null>(null);
-  const colunas = ['Posição', 'Pontuação', 'Escola', 'Etapas de Ensino', 'UF', 'Município', 'UF Superintendência', 'Custo Logístico', 'Solicitações'];
+  const colunas = ['Posição', 'Pontuação', 'Escola', 'Etapas de Ensino', 'UF', 'Município', 'UF Superintendência', 'Custo Logístico'];
 
   const [paginacao, setPaginacao] = useState({pagina: 1, tamanhoPagina: 10,});
   const [notificationApi, notificationContextHandler] = notification.useNotification();
@@ -46,12 +46,7 @@ function Ranque() {
   const navigate = useNavigate();
   const { temPermissao } = useContext(AuthContext);
   
-  function verificaSolicitacao(escola: EscolaRanqueData) {
-    //TODO: lógica para retornar true caso a escola possua solicitação
-    //      Em implementação no back... 
-    return false;
-  }
-
+  
   useEffect(() => {
     if (!temPermissao(Permissao.RanqueVisualizar)) {
       navigate("/");
@@ -69,7 +64,6 @@ function Ranque() {
       .catch((error) => {
         console.error('Erro ao buscar informações do último processamento:', error);
       });
-    // TODO: fetch para buscar lista de solicitações...
   }, []);
 
   useEffect(() => {
@@ -175,7 +169,6 @@ function Ranque() {
                     '5': e.escola.municipio?.nome || '',
                     '6': e.escola.superintendencia?.uf || '' ,
                     '7': formataCustoLogistico(e.escola.distanciaSuperintendencia),
-                    '8': verificaSolicitacao(e) ? 'Pedido Pendente' : 'Sem Registro'
                   }}
                   hideTrashIcon={true}
                   hideEditIcon={true}
