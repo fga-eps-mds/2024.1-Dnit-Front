@@ -15,8 +15,8 @@ describe("Testes para o componente SolicitacoesDialog", () => {
     )
     expect(screen.getByText("Detalhes da Solicitação")).toBeInTheDocument();
 
-		const modalContent = screen.getByTestId('overlay'); 
-		fireEvent.click(modalContent);
+    const modalContent = screen.getByTestId('overlay');
+    fireEvent.click(modalContent);
   })
   test("Deve carregar o conteudo do Componente", async () => {
     const screen = render(
@@ -32,7 +32,7 @@ describe("Testes para o componente SolicitacoesDialog", () => {
     await waitFor(() => expect(screen.getByText("Estado: AC")).toBeInTheDocument());
     await waitFor(() => expect(screen.getByText("Telefone: (75) 3344-5566")).toBeInTheDocument());
     await waitFor(() => expect(screen.getByText("Observações: Preciso de uma visita. Existem muito acidentes")).toBeInTheDocument());
-		
+
   })
   test("Deve Fechar o componente ao clickar em Fechar", () => {
     const closeMock = jest.fn();
@@ -60,29 +60,29 @@ describe("Testes para o componente SolicitacoesDialog", () => {
 
     expect(screen.getByText(/Carregando Escola.../i)).toBeInTheDocument();
 
-    const modalContent = screen.getByTestId('overlay'); 
-		fireEvent.click(modalContent);
+    const modalContent = screen.getByTestId('overlay');
+    fireEvent.click(modalContent);
 
 
   });
-	test('Deve desabilitar o botão de Criar Ação', () => {
+  test('Deve desabilitar o botão de Criar Ação', () => {
     const createMock = jest.fn();
-		const screen = render(
-		<SolicitacoesDialog 
-		escolaSelecionada={solicitacao}
-		onClose={() => {}} 
-		onCreateAcao={createMock} 
-		/>);
+    const screen = render(
+      <SolicitacoesDialog
+        escolaSelecionada={solicitacao}
+        onClose={() => { }}
+        onCreateAcao={createMock}
+      />);
 
-		const botaoCriar = screen.getByTestId('botaoCriar');
+    const botaoCriar = screen.getByTestId('botaoCriar');
 
-		expect(botaoCriar).toBeInTheDocument();
+    expect(botaoCriar).toBeInTheDocument();
 
-		fireEvent.mouseOver(botaoCriar)
-		expect(botaoCriar).toBeDisabled();
-		fireEvent.click(botaoCriar)
-		expect(botaoCriar).toBeDisabled();
+    fireEvent.mouseOver(botaoCriar)
+    expect(botaoCriar).toBeDisabled();
+    fireEvent.click(botaoCriar)
+    expect(botaoCriar).toBeDisabled();
 
-		expect(createMock).not.toHaveBeenCalled();
-	});
+    expect(createMock).not.toHaveBeenCalled();
+  });
 })
