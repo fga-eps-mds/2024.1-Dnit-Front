@@ -2,7 +2,6 @@ import React, { ReactNode, useState, useEffect } from 'react';
 import "../../styles/App.css";
 import "../../pages/Ranque/";
 import Modal from "../../components/Modal/index";
-import Table, { CustomTableRow } from '../../components/Table';
 import { fetchRanques } from '../../service/ranqueApi';
 import { EscolaRanqueDetalhes, RanqueData, ListaPaginada } from '../../models/ranque';
 import ReactLoading from "react-loading";
@@ -12,6 +11,7 @@ import { ranqueData } from '../../tests/stub/ranqueModelos';
 
 interface ModalProps {
     onClose: () => void;
+    onEditDescription: () => void;
     ranqueId: string;
 }
 
@@ -26,7 +26,7 @@ function Label({ children, className }: LabelProps) {
     </label>)
 }
 
-const ModalDetalhesRanque: React.FC<ModalProps> = ({ ranqueId: ranqueId, onClose}) => {
+const ModalDetalhesRanque: React.FC<ModalProps> = ({ ranqueId, onEditDescription, onClose}) => {
     const [notificationApi, contextHolder] = notification.useNotification();
 
     // useEffect(() => {
@@ -39,27 +39,43 @@ const ModalDetalhesRanque: React.FC<ModalProps> = ({ ranqueId: ranqueId, onClose
 
     // }, []);
 
+    if (!ranqueId) {
+        return (
+            <Modal className="modal-title" closeModal={() => onClose()}>
+                <h4 className="text-center mt-2">Carregando Ranque...</h4>
+                <div className="d-flex justify-content-center m-4">
+                    <ReactLoading type="spinningBubbles" color="#000000" />
+                </div>
+                <span></span>
+            </Modal>
+        );
+    }
+
     return (
         <div className='escola-ranque-modal'>
             <Modal className="default escola-ranque-modal" closeModal={() => onClose()}>
                 {contextHolder}
                 <div className="d-flex flex-column">
                     <h4 className="text-center mt-1">Detalhes do Ranque</h4>
+                    <br/>
+                    <Label>Data: </Label>
+                    <br/>
+                    <Label>Hora: </Label>
+                    <br/>
+                    <Label>Fatores do processamento: </Label>
+                    <br/>
+                    <Label><strong>Dercrição do Ranque:</strong></Label>
                     <div className='d-flex flex-column '>
                     </div>
                 </div>
-
-                <br />
                 <div className="d-flex w-100 justify-content-end mb-2">
                     <button className="br-button secondary mr-3" type="button" onClick={() => onClose()}>
                         Fechar
                     </button>
-                    <button className="br-button primary mr-3" type="button" onClick={() => onClose()}>
+                    <button className="br-button primary mr-3" type="button" onClick={() => { onEditDescription() }} >
                         Editar Descrição
                     </button>
-
                 </div>
-
             </Modal>
         </div>
     );

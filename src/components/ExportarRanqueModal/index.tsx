@@ -3,6 +3,7 @@ import "../../styles/App.css";
 import "../../pages/Ranque/";
 import Modal from "../../components/Modal/index";
 import Table, { CustomTableRow } from '../../components/Table';
+import ModalDetalhesRanque from '../../components/DetalhesRanqueModal';
 import { fetchRanques } from '../../service/ranqueApi';
 import { EscolaRanqueDetalhes, RanqueData, ListaPaginada } from '../../models/ranque';
 import ReactLoading from "react-loading";
@@ -28,9 +29,10 @@ function Label({ children, className }: LabelProps) {
 
 const ModalExportarRanque: React.FC<ModalProps> = ({ ranqueId: ranqueId, onClose}) => {
     const [notificationApi, contextHolder] = notification.useNotification();
+    const [ranqueAtual, setRanqueAtual] = useState<RanqueData | null>();
     const colunas = ['Data', 'Hora', 'Número de escolas'];
     const [listaRanques, setListaRanques] = useState<RanqueData[]>([]);
-    var teste = [{data: "data", hora: "hora", escolasNum: 1}, {data: "data", hora: "hora", escolasNum: 2}, {data: "data", hora: "hora", escolasNum: 3}];
+    var teste = [{data: "1/12/23", hora: "10:00", escolasNum: 201}, {data: "15/11/23", hora: "09:00", escolasNum: 175}, {data: "9/10/23", hora: "12:00", escolasNum: 150}];
     const [pagina, setPagina] = useState(1);
     const [tamanhoPagina, setTamanhoPagina] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
@@ -44,12 +46,23 @@ const ModalExportarRanque: React.FC<ModalProps> = ({ ranqueId: ranqueId, onClose
     //         )
 
     // }, []);
+    if (!listaRanques) {
+        return (
+            <Modal className="modal-title" closeModal={() => onClose()}>
+                <h4 className="text-center mt-2">Carregando Tabela...</h4>
+                <div className="d-flex justify-content-center m-4">
+                    <ReactLoading type="spinningBubbles" color="#000000" />
+                </div>
+                <span></span>
+            </Modal>
+        );
+    }
 
     return (
         <div className='escola-ranque-modal'>
             <Modal className="default escola-ranque-modal" width={1000} closeModal={() => onClose()}>
                 {contextHolder}
-                {/* {ranqueAtual != null && <ModalDetalhesRanque onClose={() => { setranqueAtual(null) }} onCreateAcao={() => { }} escolaId={escolaAtual.escola.id} />} */}
+                {ranqueAtual != null && <ModalDetalhesRanque onClose={() => { setRanqueAtual(null) }} onEditDescription={() => { }} ranqueId='1' />}
                 <div className="d-flex flex-column">
                     <h4 className="text-center mt-1">Histórico de Ranques</h4>
                     <div className='d-flex flex-column '>
@@ -90,7 +103,7 @@ const ModalExportarRanque: React.FC<ModalProps> = ({ ranqueId: ranqueId, onClose
                                 }}
                                 hideTrashIcon={true}
                                 hideEditIcon={true}
-                                // onDetailRow={_ => setRanqueSelecionado(e)}
+                                onDetailRow={_ => setRanqueAtual(e)}
                             />
                         )
                     }
