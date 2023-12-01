@@ -28,16 +28,7 @@ function Label({ children, className }: LabelProps) {
     </label>)
 }
 
-const SolitacoesDialog: React.FC<ModalProps> = ({ escolaSelecionada, onClose, onCreateAcao }) => {
-
-    const [superintendenciaSelecionada, setSuperintendenciaSelecionada] = useState<Superintendencia | undefined>();
-
-    const fetchSuperintendenciaSelecionada = async (superintendenciaId?: number) => {
-        const superintendencia = await fetchSuperintendenciaData(superintendenciaId);
-        setSuperintendenciaSelecionada(superintendencia);
-    }
-
-    
+const SolicitacoesDialog: React.FC<ModalProps> = ({ escolaSelecionada, onClose, onCreateAcao }) => {    
     if (!escolaSelecionada) {
         return (
             <Modal className="modal-title" closeModal={() => onClose()}>
@@ -89,7 +80,6 @@ const SolitacoesDialog: React.FC<ModalProps> = ({ escolaSelecionada, onClose, on
                         <div className='d-flex flex-column'>
                             <Label><strong>Endereço</strong></Label>
                             <Label>Endereco: {escolaSelecionada?.escola?.endereco}</Label>
-                            {/* <Label>Cep: {escolaSelecionada?.escola?.cep.replace(/^(\d{5})(\d{3})$/gm, "$1-$2")}</Label> */}
                             <div className='row'>
                                 <div className='col-12 col-md-6'>
                                     <Label>Estado: {escolaSelecionada?.escola?.siglaUf || escolaSelecionada?.uf}</Label>
@@ -115,10 +105,10 @@ const SolitacoesDialog: React.FC<ModalProps> = ({ escolaSelecionada, onClose, on
             </div>
             <br />
             <div className="d-flex w-100 justify-content-end mb-2">
-                <button className="br-button secondary mr-3" type="button" onClick={() => onClose()}>
+                <button data-testid="botaoFechar" className="br-button secondary mr-3" type="button" onClick={() => onClose()}>
                     Fechar
                 </button>
-                <button className="br-button primary mr-3" type="button" onClick={() => { onCreateAcao() }} disabled>
+                <button data-testid="botaoCriar" className="br-button primary mr-3" type="button" onClick={() => { onCreateAcao() }} disabled>
                     Criar Ação
                 </button>
             </div>
@@ -127,4 +117,4 @@ const SolitacoesDialog: React.FC<ModalProps> = ({ escolaSelecionada, onClose, on
     );
 };
 
-export default SolitacoesDialog;
+export default SolicitacoesDialog;
