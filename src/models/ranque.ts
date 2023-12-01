@@ -73,6 +73,7 @@ export interface EscolaRanqueDetalhes {
     etapasEnsino?: EtapasDeEnsinoData[];
     superintendencia?: SuperintendenciaModel;
     distanciaSuperintendencia: number;
+    temSolicitacao: boolean;
 }
 
 export interface SuperintendenciaModel {
