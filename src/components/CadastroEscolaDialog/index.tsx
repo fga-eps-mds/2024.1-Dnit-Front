@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
 import { Button, Form, Input, Select, Space, notification } from "antd";
-import Modal from "../Modal";
-import ReactLoading from "react-loading";
-import { fetchAtualizaTipoPerfil } from "../../service/usuarioApi";
-import { UsuarioModel } from "../../models/usuario";
 import { fetchEtapasDeEnsino, fetchMunicipio, fetchUnidadeFederativa, sendCadastroEscolas } from "../../service/escolaApi";
 import { SolicitacoesData } from "../../models/solicitacoes";
 import { fetchCEP } from "../../service/apiUtils";
@@ -228,7 +224,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                 </Form.Item>
 
                 <Form.Item name="rede" label="Rede" rules={regras}>
-                  <Select>
+                  <Select data-testid={"selectRede"}>
                     <Select value={1}>Municipal</Select>
                     <Select value={2}>Estadual</Select>
                     <Select value={3}>Privada</Select>
@@ -254,6 +250,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
 
                 <Form.Item name="uf" rules={regras} label="UF">
                   <Select
+                    data-testid={"selectUf"}
                     onChange={limpaMunicipio}
                     disabled={erroCEP}
                     notFoundContent={<p>Carregando...</p>}
@@ -285,6 +282,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
 
                 <Form.Item name="ciclos" label="Etapas de Ensino" rules={regras}>
                   <Select
+                    data-testid={"selectEtapasEnsino"}
                     mode="multiple"
                     onClick={consultaEtapasDeEnsino}
                     options={OpcoesEtapasDeEnsino}
@@ -304,7 +302,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                 </Form.Item>
 
                 <Form.Item name="porte" label="Porte" rules={regras}>
-                  <Select>
+                  <Select data-testid={"selectPorte"}>
                     <Select value={1}>Até 50 matrículas de escolarização</Select>
                     <Select value={2}>
                       Entre 51 e 200 matrículas de escolarização
@@ -326,6 +324,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
 
                 <Form.Item name="municipio" label="Município" rules={regras}>
                   <Select
+                    data-testid={"selectMunicipio"}
                     disabled={erroCEP}
                     notFoundContent={<p>Carregando...</p>}
                     placement="bottomRight"
@@ -351,7 +350,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
               </div>
               <div className="bloco3">
                 <Form.Item name="localizacao" label="Localização" rules={regras}>
-                  <Select>
+                  <Select data-testid={"selectLocalizacao"}>
                     <Select value={1}>Rural</Select>
                     <Select value={2}>Urbana</Select>
                   </Select>
