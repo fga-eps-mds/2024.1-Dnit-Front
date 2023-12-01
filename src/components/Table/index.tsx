@@ -21,10 +21,12 @@ interface CustomTableRowsProps {
   hideEyeIcon?: boolean;
   hideTrashIcon?: boolean;
   hideUsersIcon?: boolean;
+  hideDownloadIcon?: boolean;
   onDeleteRow?: (rowIndex: number) => void;
   onEditRow?: (rowIndex: number) => void;
   onDetailRow?: (rowIndex: number) => void;
   onUsersRow?: (rowIndex: number) => void;
+  onDownload?: (rowIndex: number) => void;
 }
 
 export function CustomTableRow({
@@ -34,10 +36,12 @@ export function CustomTableRow({
   onEditRow = () => {},
   onDetailRow = () => {},
   onUsersRow = () => {},
+  onDownload = () => {},
   hideEditIcon = false,
   hideEyeIcon = false,
   hideTrashIcon = false,
-  hideUsersIcon = true
+  hideUsersIcon = true,
+  hideDownloadIcon = true
 }: CustomTableRowsProps) {
   const columns = Object.keys(data);
 
@@ -53,6 +57,13 @@ export function CustomTableRow({
               className="fas fa-user"
               aria-hidden="true"
               onClick={() => onUsersRow(id)}
+            />
+          )}
+          {!hideDownloadIcon && (
+            <i data-testid={`table-row-download-${id}`}
+              className="fas fa-download"
+              aria-hidden="true"
+              onClick={() => onDownload(id)}
             />
           )}
           {!hideEditIcon && (
