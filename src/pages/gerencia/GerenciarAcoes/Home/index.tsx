@@ -76,6 +76,7 @@ export default function GerenciarAcoes() {
   const navigate = useNavigate();
   const paginas = [{ nome: "Gerenciar Ações", link: "/gerenciarAcoes" }];
   const colunas = ["Nome", "Período", "Quantidade de Ações", "Responsável"];
+  
   const [notificationApi, notificationContextHandler] = 
       notification.useNotification();
   const [showPlanejamento, setShowPlanejamento] =
