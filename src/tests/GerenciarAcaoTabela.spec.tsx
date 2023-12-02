@@ -30,5 +30,28 @@ describe('Tabela de Gerenciar Acoes', () => {
         expect(screen.getByTestId("inputResponsavel")).toHaveValue("");
         expect(screen.getByLabelText("Período:")).toHaveValue("");
     });
+
+    it("Deve filtrar as Acoes", async () => {
+        autenticar(Permissao.RanqueVisualizar);
+
+        render(
+            <MemoryRouter>
+                <AuthProvider>
+                    <GerenciarAcoes />
+                </AuthProvider>
+            </MemoryRouter>
+        );
+
+        fireEvent.change(screen.getByTestId("inputNome"), { target: { value: "PLANEJAMENTO CENTRO OESTE"}});
+        expect(screen.getByTestId("inputNome")).toHaveValue("PLANEJAMENTO CENTRO OESTE");
+        await waitFor(() => expect(screen.getByText('PLANEJAMENTO CENTRO OESTE')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('PLANEJAMENTO CENTRO NORTE')).not.toBeInTheDocument());
+
+        fireEvent.change(screen.getByTestId("inputResponsavel"), { target: { value: "Wellington Guimarães"}});
+        expect(screen.getByTestId("inputResponsavel")).toHaveValue("Wellington Guimarães");
+        await waitFor(() => expect(screen.getByText('Wellington Guimarães')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('Julieta Vieira')).not.toBeInTheDocument());
+    })
+
     
 })
