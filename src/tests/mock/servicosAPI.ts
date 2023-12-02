@@ -897,7 +897,60 @@ const server = setupServer(
         descricao: 'etapa 2'
       }
     ],
-  })))
+    temSolicitacao: true,
+  }))),
+  rest.get(`${listarEscolasRanque}/2`, (_, res, ctx) => res(ctx.json({
+    ranqueInfo: {
+      ranqueId: 2,
+      pontuacao: 1000,
+      posicao: 2,
+      fatores: [
+        {
+          nome: "UPS",
+          peso: 1,
+          valor: 1454
+        }
+      ],
+    },
+    id: '2',
+    codigo: '123',
+    nome: 'escola teste',
+    cep: '72844654',
+    endereco: 'endereco',
+    longitude: '1.0',
+    latitude: '1.0',
+    totalDocentes: 10,
+    totalAlunos: 10,
+    telefone: '40028922',
+    uf: {
+      id: 1,
+      sigla: 'DF',
+      nome: 'Distrito Federal'
+    },
+    municipio: {
+      id: 1,
+      nome: 'municipio'
+    },
+    rede: {
+      id: 'Municipal',
+      nome: 'Municipal',
+    },
+    porte: {},
+    localizacao: {
+      id: 'Urbana',
+      descricao: 'Urbana'
+    },
+    situacao: {},
+    etapasEnsino: [],
+    temSolicitacao: false,
+  }))),
+  rest.post(
+    `${escolasService}/solicitacaoAcao`,
+    (req, res, ctx) => {
+      return res(ctx.status(200));
+    }
+  )
+
 );
 
 export default server;

@@ -27,213 +27,228 @@ window.matchMedia = jest.fn().mockImplementation((query) => {
   };
 });
 
-test("Visualizar Escolas", async () => {
-  autenticar(Permissao.EscolaVisualizar);
+describe("Testes do dashboard", () => {
+  test("Visualizar Escolas", async () => {
+    autenticar(Permissao.EscolaVisualizar);
 
-  const screen = render(
-    <MemoryRouter initialEntries={["/dashboard"]}>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </MemoryRouter>
-  );
+    const screen = render(
+      <MemoryRouter initialEntries={["/dashboard"]}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </MemoryRouter>
+    );
 
-  const escolas = screen.getAllByText("Visualizar Escolas");
-  fireEvent.click(escolas[0]);
-});
+    const escolas = screen.getAllByText("Visualizar Escolas");
+    fireEvent.click(escolas[0]);
+  });
 
-test("Visualizar Escolas Sem Permissão", async () => {
-  autenticar();
+  test("Visualizar Escolas Sem Permissão", async () => {
+    autenticar();
 
-  const screen = render(
-    <MemoryRouter initialEntries={["/dashboard"]}>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </MemoryRouter>
-  );
+    const screen = render(
+      <MemoryRouter initialEntries={["/dashboard"]}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </MemoryRouter>
+    );
 
-  const botao = await screen.queryByTestId("visualizar-escola-option");
-  expect(botao).toBeNull();
-});
+    const botao = await screen.queryByTestId("visualizar-escola-option");
+    expect(botao).toBeNull();
+  });
 
 
-test("Visualizar Ranque", async () => {
-  autenticar(Permissao.RanqueVisualizar);
+  test("Visualizar Ranque", async () => {
+    autenticar(Permissao.RanqueVisualizar);
 
-  const screen = render(
-    <MemoryRouter initialEntries={["/dashboard"]}>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </MemoryRouter>
-  );
+    const screen = render(
+      <MemoryRouter initialEntries={["/dashboard"]}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </MemoryRouter>
+    );
 
-  const ups = screen.getByText("Ranking de escolas");
-  fireEvent.click(ups);
-});
+    const ups = screen.getByText("Ranking de escolas");
+    fireEvent.click(ups);
+  });
 
-test("Visualizar Dados UPS Sem Permissão", async () => {
-  autenticar();
+  test("Visualizar Dados UPS Sem Permissão", async () => {
+    autenticar();
 
-  const screen = render(
-    <MemoryRouter initialEntries={["/dashboard"]}>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </MemoryRouter>
-  );
+    const screen = render(
+      <MemoryRouter initialEntries={["/dashboard"]}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </MemoryRouter>
+    );
 
-  const botao = screen.queryByText("Visualizar Dados UPS");
-  expect(botao).toBeNull();
-});
+    const botao = screen.queryByText("Visualizar Dados UPS");
+    expect(botao).toBeNull();
+  });
 
-test("Cadastrar Escolas", async () => {
-  autenticar(Permissao.EscolaCadastrar);
+  test("Visualisar Solicitações", async () => {
+    const screen = render(
+      <MemoryRouter initialEntries={["/dashboard"]}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </MemoryRouter>
+    );
 
-  const screen = render(
-    <MemoryRouter initialEntries={["/dashboard"]}>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </MemoryRouter>
-  );
+    const escolas = screen.getByText("Solicitações");
+    fireEvent.click(escolas);
+  })
 
-  const escolas = screen.getByText("Cadastrar Escolas");
-  fireEvent.click(escolas);
-});
+  test("Cadastrar Escolas", async () => {
+    autenticar(Permissao.EscolaCadastrar);
 
-test("Cadastrar Escolas Sem Permissão", async () => {
-  autenticar();
+    const screen = render(
+      <MemoryRouter initialEntries={["/dashboard"]}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </MemoryRouter>
+    );
 
-  const screen = render(
-    <MemoryRouter initialEntries={["/dashboard"]}>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </MemoryRouter>
-  );
+    const escolas = screen.getByText("Cadastrar Escolas");
+    fireEvent.click(escolas);
+  });
 
-  const botao = screen.queryByText("Cadastrar Escolas");
-  expect(botao).toBeNull();
-});
+  test("Cadastrar Escolas Sem Permissão", async () => {
+    autenticar();
 
-test("Adicionar Sinistros", async () => {
-  autenticar(Permissao.SinistroCadastrar);
+    const screen = render(
+      <MemoryRouter initialEntries={["/dashboard"]}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </MemoryRouter>
+    );
 
-  const screen = render(
-    <MemoryRouter initialEntries={["/dashboard"]}>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </MemoryRouter>
-  );
+    const botao = screen.queryByText("Cadastrar Escolas");
+    expect(botao).toBeNull();
+  });
 
-  const sinistros = screen.getByText("Adicionar Sinistros");
-  fireEvent.click(sinistros);
-});
+  test("Adicionar Sinistros", async () => {
+    autenticar(Permissao.SinistroCadastrar);
 
-test("Adicionar Sinistros Sem Permissão", async () => {
-  autenticar();
+    const screen = render(
+      <MemoryRouter initialEntries={["/dashboard"]}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </MemoryRouter>
+    );
 
-  const screen = render(
-    <MemoryRouter initialEntries={["/dashboard"]}>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </MemoryRouter>
-  );
+    const sinistros = screen.getByText("Adicionar Sinistros");
+    fireEvent.click(sinistros);
+  });
 
-  const botao = screen.queryByText("Adicionar Sinistros");
-  expect(botao).toBeNull();
-});
+  test("Adicionar Sinistros Sem Permissão", async () => {
+    autenticar();
 
-test("Adicionar Rodovias", async () => {
-  autenticar(Permissao.RodoviaCadastrar);
+    const screen = render(
+      <MemoryRouter initialEntries={["/dashboard"]}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </MemoryRouter>
+    );
 
-  const screen = render(
-    <MemoryRouter initialEntries={["/dashboard"]}>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </MemoryRouter>
-  );
+    const botao = screen.queryByText("Adicionar Sinistros");
+    expect(botao).toBeNull();
+  });
 
-  const rodovias = screen.getByText("Adicionar Rodovias");
-  fireEvent.click(rodovias);
-});
+  test("Adicionar Rodovias", async () => {
+    autenticar(Permissao.RodoviaCadastrar);
 
-test("Adicionar Rodovias Sem Permissão", async () => {
-  autenticar();
+    const screen = render(
+      <MemoryRouter initialEntries={["/dashboard"]}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </MemoryRouter>
+    );
 
-  const screen = render(
-    <MemoryRouter initialEntries={["/dashboard"]}>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </MemoryRouter>
-  );
+    const rodovias = screen.getByText("Adicionar Rodovias");
+    fireEvent.click(rodovias);
+  });
 
-  const botao = screen.queryByText("Adicionar Rodovias");
-  expect(botao).toBeNull();
-});
+  test("Adicionar Rodovias Sem Permissão", async () => {
+    autenticar();
 
-test("Gerenciar Usuarios", async () => {
-  autenticar(Permissao.UsuarioVisualizar);
+    const screen = render(
+      <MemoryRouter initialEntries={["/dashboard"]}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </MemoryRouter>
+    );
 
-  const screen = render(
-    <MemoryRouter initialEntries={["/dashboard"]}>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </MemoryRouter>
-  );
+    const botao = screen.queryByText("Adicionar Rodovias");
+    expect(botao).toBeNull();
+  });
 
-  const rodovias = screen.getByText("Gerenciar Usuário");
-  fireEvent.click(rodovias);
-});
+  test("Gerenciar Usuarios", async () => {
+    autenticar(Permissao.UsuarioVisualizar);
 
-test("Gerenciar Usuarios Sem Permissão", async () => {
-  autenticar();
+    const screen = render(
+      <MemoryRouter initialEntries={["/dashboard"]}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </MemoryRouter>
+    );
 
-  const screen = render(
-    <MemoryRouter initialEntries={["/dashboard"]}>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </MemoryRouter>
-  );
+    const rodovias = screen.getByText("Gerenciar Usuário");
+    fireEvent.click(rodovias);
+  });
 
-  const botao = screen.queryByText("Gerenciar Usuário");
-  expect(botao).toBeNull();
-});
+  test("Gerenciar Usuarios Sem Permissão", async () => {
+    autenticar();
 
-test("Gerenciar Perfis", async () => {
-  autenticar(Permissao.PerfilVisualizar);
+    const screen = render(
+      <MemoryRouter initialEntries={["/dashboard"]}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </MemoryRouter>
+    );
 
-  const screen = render(
-    <MemoryRouter initialEntries={["/dashboard"]}>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </MemoryRouter>
-  );
+    const botao = screen.queryByText("Gerenciar Usuário");
+    expect(botao).toBeNull();
+  });
 
-  const rodovias = screen.getByText("Gerenciar Perfis");
-  fireEvent.click(rodovias);
-});
+  test("Gerenciar Perfis", async () => {
+    autenticar(Permissao.PerfilVisualizar);
 
-test("Gerenciar Perfis Sem Permissão", async () => {
-  autenticar();
+    const screen = render(
+      <MemoryRouter initialEntries={["/dashboard"]}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </MemoryRouter>
+    );
 
-  const screen = render(
-    <MemoryRouter initialEntries={["/dashboard"]}>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </MemoryRouter>
-  );
+    const rodovias = screen.getByText("Gerenciar Perfis");
+    fireEvent.click(rodovias);
+  });
 
-  const botao = screen.queryByText("Gerenciar Perfis");
-  expect(botao).toBeNull();
+  test("Gerenciar Perfis Sem Permissão", async () => {
+    autenticar();
+
+    const screen = render(
+      <MemoryRouter initialEntries={["/dashboard"]}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </MemoryRouter>
+    );
+
+    const botao = screen.queryByText("Gerenciar Perfis");
+    expect(botao).toBeNull();
+  });
 });
