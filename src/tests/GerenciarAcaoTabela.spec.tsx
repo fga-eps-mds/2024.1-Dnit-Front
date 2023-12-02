@@ -53,5 +53,22 @@ describe('Tabela de Gerenciar Acoes', () => {
         await waitFor(() => expect(screen.getByText('Julieta Vieira')).not.toBeInTheDocument());
     })
 
+    it("Deve renderizar a pagina de Gerenciar Acoes (BOTAO)", async () => {
+        autenticar(Permissao.UsuarioEditar)
+        render(
+            <MemoryRouter>
+                <AuthProvider>
+                    <GerenciarAcoes/>
+                </AuthProvider>
+            </MemoryRouter>
+        );
+        
+        const novoPlanejamentoButton = screen.getByText("Criar Novo Planejamento");
+        expect(novoPlanejamentoButton).toBeInTheDocument();
+        
+        fireEvent.click(novoPlanejamentoButton);
+        expect(screen.getByText("Gerar Planejamento")).toBeInTheDocument(); 
+    });
+    
     
 })
