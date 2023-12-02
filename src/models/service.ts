@@ -131,11 +131,29 @@ export interface FiltroEscolaData {
   };
 }
 
+export interface FiltroPoloData {
+    params: {
+        Pagina: number;
+        TamanhoPagina: number;
+        Nome: string;
+        Cep: string;
+        idUf: string | number;
+        idMunicipio: string | number;
+    };
+}
+
 export interface EscolasFiltradasResponse {
   escolas: EscolaData[];
   escolasPorPagina: number;
   totalEscolas: number;
   totalPaginas: number;
+}
+
+export interface PolosFiltradosResponse {
+    polos: PoloData[];
+    polosPorPagina: number;
+    totalPolos: number;
+    totalPaginas: number;
 }
 
 export interface AlterarDadosEscolaData {
@@ -225,4 +243,15 @@ export interface RanqueInfo {
   pontuacao: number;
   posicao: number;
   fatores: Fatores[];
+}
+
+export interface PoloData {
+    id: number;
+    endereco: string;
+    cep: string;
+    latitude: string;
+    longitude: string;
+    nomeMunicipio: string;
+    nome: string;
+    uf: number;
 }
