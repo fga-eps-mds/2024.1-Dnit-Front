@@ -70,5 +70,26 @@ describe('Tabela de Gerenciar Acoes', () => {
         expect(screen.getByText("Gerar Planejamento")).toBeInTheDocument(); 
     });
     
-    
+    it("Deve abrir o modal de deletar", async () => {
+        autenticar(Permissao.UsuarioEditar);
+
+        render(
+            <MemoryRouter>
+                <AuthProvider>
+                    <GerenciarAcoes />
+                </AuthProvider>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => expect(screen.getByText('PLANEJAMENTO CENTRO OESTE')).toBeInTheDocument());
+        
+        fireEvent.click(screen.getByTestId('table-row-delete-0'));
+        expect(screen.getByText('Tem certeza que deseja excluir este planejamento?')).toBeInTheDocument();
+        
+        fireEvent.click(screen.getByText('Cancelar'));
+        await waitFor(() => expect(screen.queryByText('Tem certeza que deseja excluir este planejamento?')).toBeNull());
+        
+        expect(screen.getByTestId("inputNome")).toHaveValue("");
+        expect(screen.getByTestId("inputResponsavel")).toHaveValue("");
+    })
 })
