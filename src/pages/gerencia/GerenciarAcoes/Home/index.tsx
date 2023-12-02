@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import { ListaPaginada, periodos } from "../../../../models/planejamento";
 import { notification } from "antd";
 import { AuthContext, temPermissao } from "../../../../provider/Autenticacao";
@@ -18,13 +18,6 @@ import DeletarPlanejamentoDialog, {
   DeletarPlanejamentoDialogArgs,
 } from "../../../../components/DeletarPlanejamentoDialog";
 
-interface PlanejamentoArgs {
-  nome: string;
-  periodo: string;
-  qtd: number | null;
-  responsavel: string;
-}
-
 interface FilterOptions {
   id: string;
   rotulo: string;
@@ -36,77 +29,76 @@ interface PlanejamentoDialogArgs {
   readOnly: boolean;
 }
 
-const dados: PlanejamentoArgs[] = [
+interface PlanejamentoRanque {
+  nome: string;
+  periodo: string;
+  quantidadeAcoes: number | null;
+  responsavel: string;
+}
+
+const dados: PlanejamentoRanque[] = [
   {
     nome: "PLANEJAMENTO CENTRO OESTE",
     periodo: "10 JAN - 30 OUT",
-    qtd: 1000,
+    quantidadeAcoes: 1000,
     responsavel: "Wellington Guimarães",
   },
   {
     nome: "PLANEJAMENTO NORTE",
     periodo: "10 ABR - 20 JUL",
-    qtd: 2400,
+    quantidadeAcoes: 2400,
     responsavel: "Ronaldo Marques",
   },
   {
     nome: "PLANEJAMENTO SUL",
     periodo: "15 MAR - 7 NOV",
-    qtd: 489,
+    quantidadeAcoes: 489,
     responsavel: "Julio Pellizon",
   },
   {
     nome: "PLANEJAMENTO NORDESTE",
     periodo: "10 FEV - 27 JUN",
-    qtd: 2900,
+    quantidadeAcoes: 2900,
     responsavel: "Nayara Azevedo",
   },
   {
     nome: "PLANEJAMENTO SUDESTE",
     periodo: "10 AGO - 12 DEZ",
-    qtd: 500,
+    quantidadeAcoes: 500,
     responsavel: "Julieta Vieira",
   },
 ];
 
 export default function GerenciarAcoes() {
-  const paginas = [{ nome: "Gerenciar Ações", link: "/gerenciarAcoes" }];
-  const [notificationApi, notificationContextHandler] =
-    notification.useNotification();
   const { temPermissao } = useContext(AuthContext);
+  const possuiPermissao = { excluir: temPermissao(Permissao.UsuarioEditar) };
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  const [pagina, setPagina] = useState<ListaPaginada<any>>({
-    items: [],
-    pagina: 1,
-    itemsPorPagina: 10,
-    total: 0,
-    totalPaginas: 0,
-  });
-  const [planejamento, setPlanejamento] = useState<PlanejamentoMacroModel[]>(
-    []
-  );
-
-  const planejamentos = dados;
+  const paginas = [{ nome: "Gerenciar Ações", link: "/gerenciarAcoes" }];
   const colunas = ["Nome", "Período", "Quantidade de Ações", "Responsável"];
-
+  const [notificationApi, notificationContextHandler] = 
+      notification.useNotification();
   const [showPlanejamento, setShowPlanejamento] =
     useState<PlanejamentoDialogArgs | null>(null);
   const [showDeletePlanejamento, setShowDeletePlanejamento] =
     useState<DeletarPlanejamentoDialogArgs | null>(null);
-
+  
+  const [listaPeriodo, setListaPeriodo] = useState<FilterOptions[]>([]);
+  
   const [nome, setNome] = useState("");
   const [periodo, setPeriodo] = useState("");
-  const [qtd, setQtd] = useState();
   const [responsavel, setResponsavel] = useState("");
 
-  const [listaPeriodo, setListaPeriodo] = useState<FilterOptions[]>([]);
-  const [tamanhoPagina, setTamanhoPagina] = useState(pagina.itemsPorPagina);
+  const [planejamentos, setPlanejamentos] = useState<PlanejamentoRanque[]>(dados);
 
-  const possuiPermissao = {
-    excluir: temPermissao(Permissao.UsuarioEditar),
-  };
+  useEffect(() => {
+    setPlanejamentos(
+        dados.filter(index =>
+          index.nome.toLowerCase().includes(nome.toLowerCase()) &&
+          index.responsavel.toLowerCase().includes(responsavel.toLowerCase())
+        )
+    );
+  }, [nome, responsavel]);
 
   return (
     <div className="App">
@@ -147,28 +139,33 @@ export default function GerenciarAcoes() {
             </div>
           )}
         </div>
-        <Table
-          columsTitle={colunas}
-          title=""
-          initialItemsPerPage={10}
-          totalItems={planejamentos.length}
-        >
-          {dados.map((e, index) => (
-            <CustomTableRow
-              key={e.nome}
-              id={index}
-              data={{
-                "0": e.nome,
-                "1": `${e.periodo}`,
-                "2": `${e.qtd}`,
-                "3": e.responsavel,
-              }}
-              onDeleteRow={() => {
-                setShowDeletePlanejamento({ nome: e.nome, qtdAcoes: e.qtd });
-              }}
-            />
-          ))}
-        </Table>
+          
+        {(loading || !planejamentos?.length) && <Table columsTitle={colunas} initialItemsPerPage={10} totalItems={0} title=""><></><></></Table>}
+        {planejamentos.length != null &&
+            <Table
+                columsTitle={colunas}
+                title=""
+                initialItemsPerPage={10}
+                totalItems={planejamentos?.length}
+            >
+              {planejamentos?.map((e, index) => (
+                  <CustomTableRow
+                      key={e.nome}
+                      id={index}
+                      data={{
+                        "0": e.nome,
+                        "1": `${e.periodo}`,
+                        "2": `${e.quantidadeAcoes}`,
+                        "3": e.responsavel,
+                      }}
+                      hideEditIcon={true}
+                      onDeleteRow={() => {
+                        setShowDeletePlanejamento({ nome: e.nome, qtdAcoes: e.quantidadeAcoes });
+                      }}
+                  />
+              ))}
+            </Table>
+        }
         {loading && (
           <div className="d-flex justify-content-center w-100 m-5">
             <ReactLoading type="spinningBubbles" color="#000000" />
