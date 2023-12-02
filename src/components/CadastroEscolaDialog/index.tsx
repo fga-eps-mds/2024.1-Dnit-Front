@@ -23,58 +23,27 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
   const [erroCEP, setErroCEP] = useState(false);
   const [cepEnviado, setCepEnviado] = useState('0');
   const [qtdAlunos, setQtdAlunos] = useState(1);
-  const regras = [
+
+  const regrasPreenchimento = [
     {
       required: true,
-      message: "Preencha o campo ${label}!",
+      message: "Este campo de ${label} deve ser preenchido!",
     },
   ];
-  const regrasLatitude = [
+
+  const regrasLatLong = [
     {
       required: false,
-      pattern: /^-?([1-8]?\d|90)(.\d{1,15})?$/,
-      message: "Deve estar entre -90 e +90 e até 15 decimais, utilizando ponto",
+      pattern: /^-?([1-8]?\d|90)(.\d{1,12})?$/,
+      message: "Insira um número entre -90 e +90 com até 12 decimais, utilizando ponto",
     },
   ];
 
-  const regrasLongitude = [
-    {
-      required: false,
-      pattern: /^-?((1?[0-7]|[0-9])?\d|180)(.\d{1,15})?$/,
-      message:
-        "Deve estar entre -180 e +180 e até 15 decimais, utilizando ponto",
-    },
-  ];
-
-  const regrasCodigoEscola = [
-    {
-      required: true,
-      pattern: /^\d{8}$/,
-      message: "O código deve conter 8 digitos",
-    },
-  ];
-
-  const regrasTelefone = [
-    {
-      required: true,
-      pattern: /^\d{10,11}$/,
-      message: "O telefone deve conter DDD + 9 ou 8 digitos",
-    },
-  ];
-
-  const regrasNumeroAlunoDocentes = [
+  const regrasQtdAlunosDocentes = [
     {
       required: true,
       pattern: /^[1-9]\d*$/,
-      message: "Deve conter apenas números",
-    },
-  ];
-
-  const regrasCEP = [
-    {
-      required: true,
-      pattern: /^\d{8}$/,
-      message: "CEP inválido",
+      message: "Preencha com apenas números",
     },
   ];
 
@@ -215,15 +184,15 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
           >
             <div className="divScroll">
               <div className="bloco">
-                <Form.Item name="nome" label="Nome da Escola" rules={regras}>
-                  <Input 
-                  type="text"
-                  className="inputForm2" 
-                  value={"dadosSoliciatacao?.nomeSolicitante"}
+                <Form.Item name="nome" label="Nome da Escola" rules={regrasPreenchimento}>
+                  <Input
+                    type="text"
+                    className="inputForm2"
+                    value={"dadosSoliciatacao?.nomeSolicitante"}
                   />
                 </Form.Item>
 
-                <Form.Item name="rede" label="Rede" rules={regras}>
+                <Form.Item name="rede" label="Rede" rules={regrasPreenchimento}>
                   <Select data-testid={"selectRede"}>
                     <Select value={1}>Municipal</Select>
                     <Select value={2}>Estadual</Select>
@@ -234,12 +203,28 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                 <Form.Item
                   name="codigo"
                   label="Codigo da Escola"
-                  rules={regrasCodigoEscola}
+                  rules={[
+                    {
+                      required: true,
+                      pattern: /^\d{8}$/,
+                      message: "O código da escola deve conter 8 digitos",
+                    },
+                  ]}
                 >
                   <Input className="inputForm2" />
                 </Form.Item>
 
-                <Form.Item name="cep" label="CEP" rules={regrasCEP}>
+                <Form.Item
+                  name="cep"
+                  label="CEP"
+                  rules={[
+                    {
+                      required: true,
+                      pattern: /^\d{8}$/,
+                      message: "CEP inválido",
+                    },
+                  ]}
+                >
                   <Input
                     className="inputForm2"
                     onChange={(event) => {
@@ -248,7 +233,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                   />
                 </Form.Item>
 
-                <Form.Item name="uf" rules={regras} label="UF">
+                <Form.Item name="uf" rules={regrasPreenchimento} label="UF">
                   <Select
                     data-testid={"selectUf"}
                     onChange={limpaMunicipio}
@@ -274,13 +259,19 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                 </Form.Item>
               </div>
               <div className="bloco2">
-                <Form.Item name="telefone" label="Telefone" rules={regrasTelefone}>
-                  <Input 
+                <Form.Item name="telefone" label="Telefone" rules={[
+                  {
+                    required: true,
+                    pattern: /^\d{10,11}$/,
+                    message: "O número de telefone deve conte 9 ou 8 digitos com DDD",
+                  },
+                ]}>
+                  <Input
                     className="inputForm2"
-                   />
+                  />
                 </Form.Item>
 
-                <Form.Item name="ciclos" label="Etapas de Ensino" rules={regras}>
+                <Form.Item name="ciclos" label="Etapas de Ensino" rules={regrasPreenchimento}>
                   <Select
                     data-testid={"selectEtapasEnsino"}
                     mode="multiple"
@@ -301,7 +292,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                   </Select>
                 </Form.Item>
 
-                <Form.Item name="porte" label="Porte" rules={regras}>
+                <Form.Item name="porte" label="Porte" rules={regrasPreenchimento}>
                   <Select data-testid={"selectPorte"}>
                     <Select value={1}>Até 50 matrículas de escolarização</Select>
                     <Select value={2}>
@@ -318,11 +309,11 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                     </Select>
                   </Select>
                 </Form.Item>
-                <Form.Item name="endereco" label="Endereço" rules={regras}>
+                <Form.Item name="endereco" label="Endereço" rules={regrasPreenchimento}>
                   <Input className="inputForm2" />
                 </Form.Item>
 
-                <Form.Item name="municipio" label="Município" rules={regras}>
+                <Form.Item name="municipio" label="Município" rules={regrasPreenchimento}>
                   <Select
                     data-testid={"selectMunicipio"}
                     disabled={erroCEP}
@@ -349,7 +340,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                 </Form.Item>
               </div>
               <div className="bloco3">
-                <Form.Item name="localizacao" label="Localização" rules={regras}>
+                <Form.Item name="localizacao" label="Localização" rules={regrasPreenchimento}>
                   <Select data-testid={"selectLocalizacao"}>
                     <Select value={1}>Rural</Select>
                     <Select value={2}>Urbana</Select>
@@ -359,22 +350,22 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                 <Form.Item
                   name="longitude"
                   label="Longitude"
-                  rules={regrasLongitude}
+                  rules={regrasLatLong}
                 >
                   <Input className="inputForm2" />
                 </Form.Item>
 
-                <Form.Item name="latitude" label="Latitude" rules={regrasLatitude}>
+                <Form.Item name="latitude" label="Latitude" rules={regrasLatLong}>
                   <Input className="inputForm2" />
                 </Form.Item>
 
                 <Form.Item
                   name="numeroAlunos"
                   label="Número Total de Alunos"
-                  rules={regrasNumeroAlunoDocentes}
+                  rules={regrasQtdAlunosDocentes}
                 >
-                  <Input 
-                    className="inputForm2" 
+                  <Input
+                    className="inputForm2"
                     onChange={e => setQtdAlunos(form.getFieldValue("numeroAlunos"))}
                   />
                 </Form.Item>
@@ -382,7 +373,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                 <Form.Item
                   name="numeroDocentes"
                   label="Número Total de Docentes"
-                  rules={regrasNumeroAlunoDocentes}
+                  rules={regrasQtdAlunosDocentes}
                 >
                   <Input className="inputForm2" />
                 </Form.Item>
