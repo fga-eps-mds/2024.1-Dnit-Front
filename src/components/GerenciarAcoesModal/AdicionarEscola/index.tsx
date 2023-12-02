@@ -34,6 +34,7 @@ const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) =>
     const [nome, setNome] = useState("");
     const [escolaSelecionada, setEscolaSelecionada] = useState<{ [key: number]: boolean }>({});
     const [listaEscolasSelecionadas, SetListaEscolasSelecionadas] = useState<Escola[]>([]);
+    const [mes, setMes] = useState<string>("Dezembro");
 
     //TODO A FUNCAO FETCHESCOLAS
     // useEffect(() => {
@@ -43,6 +44,11 @@ const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) =>
     //                 setEscolas(escolas);
     //             }
     //         )
+    // }, []);
+    
+    //TODO A FUNCAO FETCHMES
+    // useEffect(() => {
+    //     fetchMesAtual().then((mes) => { setMes(mes) })
     // }, []);
     
     useEffect(() => {
@@ -73,15 +79,12 @@ const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) =>
     
     return (
         <Modal className="default" closeModal={() => onClose()}>
-            
             <div className="d-flex flex-column">
-
-                {/*TODO CORRIGIR PROBLEMA NA BORDA*/}
                 <div style={{ position: "sticky", top: 0, background: "white", zIndex: 1}}>
                     <h4 className="text-center mt-1">Adicionar Escola</h4>
 
                     {/*TODO ADICIONAR A INTERATIVIDADE DO MES*/}
-                    <label className="text-center mt-1">A escola selecionada será adicionada ao mês de Novembro</label>
+                    <label className="text-center mt-1">A escola selecionada será adicionada ao mês de {mes}</label>
                     <div className='d-flex flex-column'>
                         <div className="br-input large input-button" style={{ width: "95%", fontSize: '16px', textAlign: 'start' }}>
                             <input
@@ -118,12 +121,14 @@ const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) =>
                         </div>
                     ))}
                 </div>
-                <br/>
+                <br/><br/>
                 
-                {/*TODO DEIXAR ESSA PARTE FIXA EM BAIXO*/}
                 <div className="d-flex justify-content-end mb-2" style={{ position: "absolute", bottom: 0, right: "5%", height: "10%", width: "95%", backgroundColor: "white", zIndex: 1 }}>
                     <div style={{ position: "relative", top: "20%" }}>
-                        <button className="br-button secondary mr-3" type="button" onClick={() => onClose()}>
+                        <button className="br-button secondary mr-3" type="button" onClick={() => {
+                            setEscolaSelecionada({});
+                            onClose();
+                        }}>
                             Cancelar
                         </button>
                         <button className="br-button primary" type="button" onClick={() => {
@@ -135,9 +140,7 @@ const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) =>
                         </button>
                     </div>
                 </div>
-
-
-
+                
             </div>
         </Modal>
     );
