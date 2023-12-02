@@ -2,6 +2,7 @@ import React, { ReactNode, useState, useEffect } from 'react';
 import Modal from "../../Modal";
 import ReactLoading from "react-loading";
 import InputFilter from "../../InputFilter";
+import SelectSchoolCard from "../../SelectSchoolCard";
 
 interface ModalProps {
     onClose: () => void;
@@ -9,17 +10,18 @@ interface ModalProps {
 }
 
 interface Escola {
+    id: number
     nome: string;
     uf: string;
     qtdAlunos: number;
 }
 
 const dados: Escola[] = [
-    { nome: "Escola A", uf: "SP", qtdAlunos: 500 },
-    { nome: "Escola B", uf: "RJ", qtdAlunos: 700 },
-    { nome: "Escola C", uf: "MG", qtdAlunos: 400 },
-    { nome: "Escola D", uf: "RS", qtdAlunos: 600 },
-    { nome: "Escola E", uf: "BA", qtdAlunos: 800 }
+    { id: 1, nome: "Sigma", uf: "SP", qtdAlunos: 500 },
+    { id: 2, nome: "Beta", uf: "RJ", qtdAlunos: 700 },
+    { id: 3, nome: "Omega", uf: "MG", qtdAlunos: 400 },
+    { id: 4, nome: "Alpha", uf: "RS", qtdAlunos: 600 },
+    { id: 5, nome: "Teta", uf: "BA", qtdAlunos: 800 }
 ];
 
 const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) => {
@@ -61,26 +63,53 @@ const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) =>
     return (
         <Modal className="default escola-ranque-modal" closeModal={() => onClose()}>
             <div className="d-flex flex-column">
-                <h4 className="text-center mt-1">Adicionar Escola</h4>
-                {/*todo adicionar interatividade no mes*/}
-                <label className="text-center mt-1" >A escola selecionada será adicionada ao mês de Novembro</label>
-                <div className='d-flex flex-column '>
-                    <div className={"inputNome"} style={{width: "100%"}}>
-                        <InputFilter onChange={setNome} label={"Procure a escola"} placeholder={"digite aqui"} />
-                    </div>
-                    
-                </div>
-            </div>
-            <br/>
-            <div className="d-flex w-100 justify-content-end mb-2">
-                <button className="br-button secondary mr-3" type="button" onClick={() => onClose()}>
-                    Cancelar
-                </button>
-                <button className="br-button primary mr-3" type="button" onClick={() => { onAdicionar()}} disabled>
-                    Adicionar
-                </button>
-            </div>
+                
+                <div className="br-modal-header">
+                    <h4 className="text-center mt-1">Adicionar Escola</h4>
+                    {/*todo adicionar interatividade no mes*/}
+                    <label className="text-center mt-1" >A escola selecionada será adicionada ao mês de Novembro</label>
 
+                    <div className='d-flex flex-column '>
+                        <div className="br-input large input-button" style={{ width: "95%", fontSize: '16px', textAlign: 'start'}}>
+                            <input className="br-input-search-large" type="search" placeholder={"Procure uma escola"}
+                                   onChange={e => setNome(e.target.value)}
+                            />
+                            <button className="br-button" type="button" aria-label="Buscar" onClick={() => { }}>
+                                <i className="fas fa-search" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div >
+                    {escolas?.map((escola, index) => (
+                        <div key={index}>
+                            <SelectSchoolCard
+                                schoolId={escola.id}
+                                schoolName={escola.nome}
+                                schoolUf={escola.uf}
+                                schoolStudents={escola.qtdAlunos}
+                                onClick={() => {
+                                    // Lógica de manipulação ao clicar na escola
+                                }}
+                            />
+                            <br/>
+                        </div>
+                    ))}
+                </div>
+                
+                <br/>
+                <div className="br-modal-footer">
+                    <div className="d-flex w-100 justify-content-end mb-2">
+                        <button className="br-button secondary mr-3" type="button" onClick={() => onClose()}>
+                            Cancelar
+                        </button>
+                        <button className="br-button primary mr-3" type="button" onClick={() => { onAdicionar()}} disabled>
+                            Adicionar
+                        </button>
+                    </div>
+                </div>
+                
+            </div>
         </Modal>
     );
 };
