@@ -29,11 +29,14 @@ function Label({ children, className }: LabelProps) {
 const ModalDetalhesRanque: React.FC<ModalProps> = ({ ranque, onEditDescription, onClose}) => {
     const [notificationApi, contextHolder] = notification.useNotification();
 
-const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    const padZeros = (n: number) => n.toString().padStart(2, '0');
-    return `${padZeros(date.getDate())}/${padZeros(date.getMonth())}/${date.getFullYear()} ${padZeros(date.getHours())}:${padZeros(date.getMinutes())}`
-}
+    const formatDate = (dateStr: string) => {
+        const date = new Date(dateStr);
+        const padZeros = (n: number) => n.toString().padStart(2, '0');
+        return `${padZeros(date.getDate())}/${padZeros(date.getMonth())}/${date.getFullYear()} ${padZeros(date.getHours())}:${padZeros(date.getMinutes())}`
+    }
+
+    const [modoEdicao, setModoEdicao] = useState(false);
+    const [novaDescricao, setNovaDescricao] = useState(ranque.descricao);
 
     return (
         <div className='escola-ranque-modal'>
@@ -52,8 +55,17 @@ const formatDate = (dateStr: string) => {
                         {ranque.fatores.map(f => <Label className='ml-4'>Fator {f.nome}, Peso {f.peso}, Valor {f.valor}</Label>)}
                     </div>
                     <br/>
-                    <Label><strong>Dercrição do Ranque:</strong></Label>
-                    <Label>{ranque.descricao}</Label>
+                    <Label><strong>Descrição do Ranque:</strong></Label>
+                    {modoEdicao ? (
+                        <textarea
+                            value={novaDescricao}
+                            onChange={(e) => setNovaDescricao(e.target.value)}
+                            rows={9}
+                            cols={50}
+                        />
+                    ) : (
+                        <Label>{ranque.descricao}</Label>
+                    )}
                     <div className='d-flex flex-column '>
                     </div>
                 </div>
@@ -61,8 +73,13 @@ const formatDate = (dateStr: string) => {
                     <button className="br-button secondary mr-3" type="button" onClick={() => onClose()}>
                         Fechar
                     </button>
-                    <button className="br-button primary mr-3" type="button" onClick={() => { onEditDescription() }} >
-                        Editar Descrição
+                    <button className="br-button primary mr-3" type="button" onClick={() => {
+                        if (modoEdicao) {
+                            setModoEdicao(false);
+                        } else {
+                            setModoEdicao(true);
+                        }
+                    }}> {modoEdicao ? 'Salvar Descrição' : 'Editar Descrição'}
                     </button>
                 </div>
             </Modal>
