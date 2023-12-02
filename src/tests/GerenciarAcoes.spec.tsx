@@ -5,6 +5,7 @@ import server from "./mock/servicosAPI";
 import { Permissao } from "../models/auth";
 import { autenticar } from "./mock/autenticacao";
 import GerenciarAcoes from "../pages/gerencia/GerenciarAcoes/Home";
+import ModalAdicionarEscola from "../components/GerenciarAcoesModal/AdicionarEscola";
 
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
@@ -92,4 +93,71 @@ describe('Tabela de Gerenciar Acoes', () => {
         expect(screen.getByTestId("inputNome")).toHaveValue("");
         expect(screen.getByTestId("inputResponsavel")).toHaveValue("");
     })
+})
+
+describe('Modal adicionar Escola', () => {
+    it("Deve renderizar o modal de Adicionar Escola", () => {
+        let aberto = true;
+        render(
+            <div>
+                {aberto && <ModalAdicionarEscola
+                    onClose={() => { aberto = false; }}
+                    onAdicionar={() => { }}
+                />}
+            </div>
+        );
+
+        expect(screen.getByText("Adicionar Escola")).toBeInTheDocument();
+        expect(screen.getByText("Procure uma escola")).toBeInTheDocument();
+        expect(screen.getByText("Cancelar")).toBeInTheDocument();
+        expect(screen.getByText("Adicionar")).toBeInTheDocument();
+
+        expect(screen.getByTestId("Procurar escola")).toHaveValue("");
+    });
+
+    it("Deve testar o filtro do modal", () => {
+        let aberto = true;
+        render(
+            <div>
+                {aberto && <ModalAdicionarEscola
+                    onClose={() => { aberto = false; }}
+                    onAdicionar={() => { }}
+                />}
+            </div>
+        );
+
+        fireEvent.change(screen.getByTestId("Procurar escola"), { target: { value: "Sigma"}});
+        expect(screen.getByTestId("Procurar escola")).toHaveValue("Sigma");
+        expect(screen.getByText('Sigma')).toBeInTheDocument();
+        expect(screen.queryByText('Beta')).not.toBeInTheDocument();
+
+        fireEvent.change(screen.getByTestId("Procurar escola"), { target: { value: "Sigma\\"}});
+        expect(screen.getByTestId("Procurar escola")).toHaveValue("Sigma\\");
+        expect(screen.queryByText('Sigma')).not.toBeInTheDocument();
+        expect(screen.queryByText('Beta')).not.toBeInTheDocument();
+        expect(screen.queryByText('Nome')).not.toBeInTheDocument();
+    });
+
+    it("Deve testar sair da Modal", () => {
+        let aberto = true;
+        render(
+            <div>
+                {aberto && <ModalAdicionarEscola
+                    onClose={() => { aberto = false; }}
+                    onAdicionar={() => { }}
+                />}
+            </div>
+        );
+
+        expect(screen.getByText('Cancelar')).toBeInTheDocument();
+        fireEvent.click(screen.getByText("Cancelar"));
+        expect(screen.queryByText('Adicionar Escola')).not.toBeInTheDocument();
+        expect(aberto).toEqual(false);
+    });
+
+    it("deve renderizar a mensagem de carregamento enquanto as escolas estão sendo carregadas", () => {
+        render(<ModalAdicionarEscola onClose={() => {}} onAdicionar={() => {}} />);
+        expect(screen.getByText("Carregando Escolas...")).toBeInTheDocument();
+    });
+
 })

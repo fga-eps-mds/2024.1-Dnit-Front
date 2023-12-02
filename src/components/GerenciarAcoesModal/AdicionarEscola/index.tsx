@@ -28,7 +28,7 @@ const dados: Escola[] = [
     { id: 10, nome: "Iota", uf: "GO", qtdAlunos: 720 }
 ];
 
-const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) => {
+export default function ModalAdicionarEscola({ onClose, onAdicionar }: ModalProps) {
     const [escolasBanco, setEscolasBanco] = useState<Escola[]>(dados);
     const [escolas, setEscolas] = useState<Escola[] | null>(escolasBanco);
     const [nome, setNome] = useState("");
@@ -88,6 +88,7 @@ const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) =>
                     <div className='d-flex flex-column'>
                         <div className="br-input large input-button" style={{ width: "95%", fontSize: '16px', textAlign: 'start' }}>
                             <input
+                                data-testid={"Procurar escola"}
                                 className="br-input-search-large"
                                 type="search"
                                 placeholder={"Procure uma escola"}
@@ -145,5 +146,4 @@ const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) =>
         </Modal>
     );
 };
-
-export default ModalAdicionarEscola;
+    
