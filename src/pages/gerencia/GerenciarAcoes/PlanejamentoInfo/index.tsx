@@ -6,6 +6,7 @@ import { escolasTabela, monthsData, ufData } from "./fixtures";
 import "./styles.css";
 import { EscolasPlanejamentoTabela } from "../../../../models/gerenciarAcoes";
 import { ButtonComponent } from "../../../../components/Button";
+import ModalAdicionarEscola from "../../../../components/GerenciarAcoesModal/AdicionarEscola";
 export default function PlanejamentoInfo() {
   const colunas = [
     "UPS",
@@ -17,9 +18,15 @@ export default function PlanejamentoInfo() {
 
   const [escolasPlanejamento, setEscolasPlanejamento] =
     useState<EscolasPlanejamentoTabela[]>(escolasTabela);
+  
+  const [modalAdicionarAcao, setModalAdicionarAcao] = useState<boolean>(false);
 
   return (
     <div>
+      {modalAdicionarAcao && <ModalAdicionarEscola
+          onClose={() => { setModalAdicionarAcao(false) }}
+          onAdicionar={() => { }}
+      />}
       <div className="planning-info">
         <div className="months-cards">
           <SelectCardGroup cardsData={monthsData} />
@@ -34,7 +41,7 @@ export default function PlanejamentoInfo() {
       </div>
       <div className="table-title">
         <span className="title-text">Escolas no mês de Novembro</span>
-        <ButtonComponent buttonStyle="primary" label="Adicionar Escola" />
+        <ButtonComponent buttonStyle="primary" label="Adicionar Escola" onClick={() => setModalAdicionarAcao(true)}/>
       </div>
       {escolasPlanejamento.length != null && (
         <Table
