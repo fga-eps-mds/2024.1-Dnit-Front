@@ -24,9 +24,11 @@ const dados: Escola[] = [
 ];
 
 const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) => {
-    const [escolasBanco, setEscolasBanco] = useState<Escola[] | null>(dados);
+    const [escolasBanco, setEscolasBanco] = useState<Escola[]>(dados);
     const [escolas, setEscolas] = useState<Escola[] | null>(escolasBanco);
     const [nome, setNome] = useState("");
+    const [escolaSelecionada, setEscolaSelecionada] = useState<{ [key: number]: boolean }>({});
+    const [listaEscolasSelecionadas, SetListaEscolasSelecionadas] = useState<Escola[]>([]);
 
     //TODO A FUNCAO FETCHESCOLAS
     // useEffect(() => {
@@ -40,12 +42,17 @@ const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) =>
     
     useEffect(() => {
         setEscolas(
-            //TODO COLOCAR ESCOLAS BANCO NO DADOS DEPOIS QUE FAZER O FETCH
-            dados.filter(index =>
+            escolasBanco.filter(index =>
                 index.nome.toLowerCase().includes(nome.toLowerCase())
             )
         );
     }, [nome]);
+
+    useEffect(() => {
+        const escolasFiltradas = escolasBanco.filter(escola => escolaSelecionada[escola.id]);
+        SetListaEscolasSelecionadas(escolasFiltradas);
+    }, [escolaSelecionada, escolasBanco]);
+
 
     if(!escolas){
         return (
@@ -91,8 +98,12 @@ const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) =>
                                 schoolName={escola.nome}
                                 schoolUf={escola.uf}
                                 schoolStudents={escola.qtdAlunos}
+                                isSelected={escolaSelecionada[escola.id] || false}
                                 onClick={() => {
-                                    // Lógica de manipulação ao clicar na escola
+                                    setEscolaSelecionada(prevState => ({
+                                        ...prevState,
+                                        [escola.id]: !prevState[escola.id]
+                                    }));
                                 }}
                             />
                             <br/>
@@ -106,7 +117,12 @@ const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) =>
                     <button className="br-button secondary mr-3" type="button" onClick={() => onClose()}>
                         Cancelar
                     </button>
-                    <button className="br-button primary mr-3" type="button" onClick={() => { onAdicionar()}} disabled>
+                    <button className="br-button primary mr-3" type="button" onClick={() => { 
+                        // LISTA DE ESCOLAS SELECIONADAS ESTÁ AQUI
+                        console.log(listaEscolasSelecionadas);
+                        onAdicionar();
+                        onClose();
+                    }}>
                         Adicionar
                     </button>
                 </div>
