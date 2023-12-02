@@ -8,8 +8,8 @@ interface CustomTableProps {
   totalPages?: number;
   totalItems?: number;
   children: ReactNode[];
-  onNextPage?: () => void
-  onPreviousPage?: () => void
+  onNextPage?: () => void;
+  onPreviousPage?: () => void;
   onPageResize?: (newItemsPerPage: number) => void;
   onPageSelect?: (newSelectedPage: number) => void;
 }
@@ -21,9 +21,11 @@ interface CustomTableRowsProps {
   hideEyeIcon?: boolean;
   hideTrashIcon?: boolean;
   hideUsersIcon?: boolean;
+  hideChangeIcon?: boolean;
   onDeleteRow?: (rowIndex: number) => void;
   onEditRow?: (rowIndex: number) => void;
   onDetailRow?: (rowIndex: number) => void;
+  onChangeRow?: (rowIndex: number) => void;
   onUsersRow?: (rowIndex: number) => void;
 }
 
@@ -33,44 +35,75 @@ export function CustomTableRow({
   onDeleteRow = () => {},
   onEditRow = () => {},
   onDetailRow = () => {},
+  onChangeRow = () => {},
   onUsersRow = () => {},
   hideEditIcon = false,
   hideEyeIcon = false,
   hideTrashIcon = false,
-  hideUsersIcon = true
+  hideUsersIcon = true,
+  hideChangeIcon = true,
 }: CustomTableRowsProps) {
   const columns = Object.keys(data);
 
   return (
     <tr>
-      {columns.map((column, colIndex) => (
-        <td key={`${id}-${column}`} data-th={colIndex}>{data[column]}</td>
-      ))}
+      {columns.map((column, colIndex) =>
+        column === "Custo logístico" ? (
+          <td>
+            <div className="icon-row-cost">
+              {[...Array(Number(data[column]))].map((_, digitIndex) => (
+                <i
+                  data-testid={`table-row-seeuser-${id}`}
+                  className="fas fa-dollar-sign"
+                  aria-hidden="true"
+                  onClick={() => onUsersRow(id)}
+                />
+              ))}
+            </div>
+          </td>
+        ) : (
+          <td key={`${id}-${column}`} data-th={colIndex}>
+            {data[column]}
+          </td>
+        )
+      )}
       <td>
         <div className="icon-row">
           {!hideUsersIcon && (
-            <i data-testid={`table-row-seeuser-${id}`}
+            <i
+              data-testid={`table-row-seeuser-${id}`}
               className="fas fa-user"
               aria-hidden="true"
               onClick={() => onUsersRow(id)}
             />
           )}
           {!hideEditIcon && (
-            <i data-testid={`table-row-edit-${id}`}
+            <i
+              data-testid={`table-row-edit-${id}`}
               className="fas fa-edit"
               aria-hidden="true"
               onClick={() => onEditRow(id)}
             />
           )}
           {!hideEyeIcon && (
-            <i data-testid={`table-row-eye-${id}`}
+            <i
+              data-testid={`table-row-eye-${id}`}
               className="fas fa-eye"
               aria-hidden="true"
               onClick={() => onDetailRow(id)}
             />
           )}
+          {!hideChangeIcon && (
+            <i
+              data-testid={`table-row-change-${id}`}
+              className="fas fa-repeat"
+              aria-hidden="true"
+              onClick={() => onDetailRow(id)}
+            />
+          )}
           {!hideTrashIcon && (
-            <i data-testid={`table-row-delete-${id}`}
+            <i
+              data-testid={`table-row-delete-${id}`}
               className="fas fa-trash-alt"
               aria-hidden="true"
               onClick={() => onDeleteRow(id)}
@@ -110,52 +143,49 @@ export default function CustomTable({
   }
 
   useEffect(() => {
-    const lastItem = currentPage * itemsPerPage > children.length
-      ? children.length
-      : currentPage * itemsPerPage;
+    const lastItem =
+      currentPage * itemsPerPage > children.length
+        ? children.length
+        : currentPage * itemsPerPage;
 
     const firstItem = Math.max(lastItem - itemsPerPage, 0);
 
-
-    const screenLastItem = currentPage * itemsPerPage > dataSize
-      ? dataSize
-      : currentPage * itemsPerPage;
+    const screenLastItem =
+      currentPage * itemsPerPage > dataSize
+        ? dataSize
+        : currentPage * itemsPerPage;
 
     const screenFirstItem = Math.max(screenLastItem - itemsPerPage, 0);
 
     setIndexOfFirstItem(screenFirstItem);
     setIndexOfLastItem(screenLastItem);
     setCurrentItems(children.slice(firstItem, lastItem));
-  }, [currentPage, itemsPerPage, children])
-
+  }, [currentPage, itemsPerPage, children]);
 
   if (children.length === 0) return null;
 
-
   const changeItemsPerPage = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const valorPagina = parseInt(event.target.value)
+    const valorPagina = parseInt(event.target.value);
     setItemsPerPage(valorPagina);
-    pageResize(valorPagina)
+    pageResize(valorPagina);
     setPageItemsOpen(false);
   };
 
   const changeSelectedPage = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const valorPaginaSelecionada = parseInt(event.target.value)
+    const valorPaginaSelecionada = parseInt(event.target.value);
     setCurrentPage(valorPaginaSelecionada);
     pageSelect(valorPaginaSelecionada);
     setPageIndexOpen(false);
   };
 
   function previousPage() {
-    if (currentPage === 1)
-      return
+    if (currentPage === 1) return;
     onPreviousPage && onPreviousPage();
     setCurrentPage(currentPage - 1);
   }
 
   function nextPage() {
-    if (currentPage === totalPages)
-      return
+    if (currentPage === totalPages) return;
     onNextPage && onNextPage();
     setCurrentPage(currentPage + 1);
   }
@@ -188,7 +218,13 @@ export default function CustomTable({
         <thead>
           <tr>
             {columsTitle.map((element) => (
-              <th key={`${title}-${element}`} scope="col" style={{ color: "#1351B4", fontWeight: "bold" }}>{element}</th>
+              <th
+                key={`${title}-${element}`}
+                scope="col"
+                style={{ color: "#1351B4", fontWeight: "bold" }}
+              >
+                {element}
+              </th>
             ))}
             <th scope="col"></th>
           </tr>
@@ -214,18 +250,15 @@ export default function CustomTable({
                   tabIndex={-1}
                   data-trigger="data-trigger"
                   onChange={(value) => {
-                    changeItemsPerPage(value)
+                    changeItemsPerPage(value);
                   }}
                   onFocus={() => setPageItemsOpen(true)}
                   onBlur={() => setPageItemsOpen(false)}
                   value={itemsPerPage}
                 >
-                  {pageOptions.map(element => {
+                  {pageOptions.map((element) => {
                     return element <= dataSize * 3 ? (
-                      <option
-                        key={element}
-                        value={element}
-                      >
+                      <option key={element} value={element}>
                         {element}
                       </option>
                     ) : null;
@@ -244,12 +277,13 @@ export default function CustomTable({
           </div>
           <span className="br-divider d-none d-sm-block mx-3"></span>
           <div className="pagination-inhtmlFormation d-none d-sm-flex">
-            {
-              !!totalItems &&
+            {!!totalItems && (
               <span className="current">
-                {`${indexOfFirstItem + 1}-${indexOfLastItem} de ${dataSize <= 10 ? children.length : dataSize} itens`}
+                {`${indexOfFirstItem + 1}-${indexOfLastItem} de ${
+                  dataSize <= 10 ? children.length : dataSize
+                } itens`}
               </span>
-            }
+            )}
           </div>
           <div className="pagination-go-to-page d-none d-sm-flex ml-auto">
             <div className="br-select">
@@ -270,9 +304,8 @@ export default function CustomTable({
                   value={currentPage}
                 >
                   {pageNumbers.map((element) => (
-                    <option key={element} value={element} >
+                    <option key={element} value={element}>
                       {element}
-
                     </option>
                   ))}
                 </select>
