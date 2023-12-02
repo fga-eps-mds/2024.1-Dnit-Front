@@ -1,7 +1,6 @@
-import React, { ReactNode, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from "../../Modal";
 import ReactLoading from "react-loading";
-import InputFilter from "../../InputFilter";
 import SelectSchoolCard from "../../SelectSchoolCard";
 
 interface ModalProps {
@@ -26,34 +25,37 @@ const dados: Escola[] = [
 
 const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) => {
 
-    const[escolas, setEscolas] = useState<Escola[] | null>(null);
+    const[escolasBanco, setEscolasBanco] = useState<Escola[] | null>(dados);
+    const[escolas, setEscolas] = useState<Escola[] | null>(escolasBanco);
 
-    //TODO CRIAR FETCH ESCOLAS
+    //TODO A FUNCAO FETCHESCOLAS
     // useEffect(() => {
-    //     fetchEscolaRanque(escolaId)
-    //         .then((escola) => {
-    //                 setEscolaSelecionada(escola);
-    //                 fetchSuperintendenciaSelecionada(escola.superintendencia?.id);
+    //     fetchEscolas(escolaId)
+    //         .then((escolas) => {
+    //                 setEscolasBanco(escolas);
+    //                 setEscolas(escolas);
     //             }
     //         )
     // }, []);
 
 
-    // if (!escolas) {
-    //     return (
-    //         <Modal className="modal-title" closeModal={() => onClose()}>
-    //             <h4 className="text-center mt-2">Carregando Escolas...</h4>
-    //             <div className="d-flex justify-content-center m-4">
-    //                 <ReactLoading type="spinningBubbles" color="#000000" />
-    //             </div>
-    //             <span></span>
-    //         </Modal>
-    //     );
-    // }
+    if(!escolas){
+        return (
+            <Modal className="modal-title" closeModal={() => onClose()}>
+                <h4 className="text-center mt-2">Carregando Escolas...</h4>
+                <div className="d-flex justify-content-center m-4">
+                    <ReactLoading type="spinningBubbles" color="#000000" />
+                </div>
+                <span></span>
+            </Modal>
+        );
+    }
 
     const [nome, setNome] = useState("");
     useEffect(() => {
         setEscolas(
+            
+            //TODO COLOCAR ESCOLAS BANCO NO DADOS DEPOIS QUE FAZER O FETCH
             dados.filter(index =>
                 index.nome.toLowerCase().includes(nome.toLowerCase())
             )
@@ -64,9 +66,11 @@ const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) =>
         <Modal className="default escola-ranque-modal" closeModal={() => onClose()}>
             <div className="d-flex flex-column">
                 
-                <div className="br-modal-header">
+                {/*TODO DEIXAR ESSA PARTE FIXA NO TOPO*/}
+                <div>
                     <h4 className="text-center mt-1">Adicionar Escola</h4>
-                    {/*todo adicionar interatividade no mes*/}
+                    
+                    {/*TODO ADICIONAR INTERATIVIDADE NO MES*/}
                     <label className="text-center mt-1" >A escola selecionada será adicionada ao mês de Novembro</label>
 
                     <div className='d-flex flex-column '>
@@ -80,9 +84,11 @@ const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) =>
                         </div>
                     </div>
                 </div>
-                <div >
+
+                {/*TODO CORRIGIR A RESPONSIVIDADE*/}
+                <div>
                     {escolas?.map((escola, index) => (
-                        <div key={index}>
+                        <div key={index} style={{width: "30%"}}>
                             <SelectSchoolCard
                                 schoolId={escola.id}
                                 schoolName={escola.nome}
@@ -96,8 +102,9 @@ const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) =>
                         </div>
                     ))}
                 </div>
-                
                 <br/>
+                
+                {/*TODO DEIXAR ESSA PARTE FIXA EM BAIXO*/}
                 <div className="br-modal-footer">
                     <div className="d-flex w-100 justify-content-end mb-2">
                         <button className="br-button secondary mr-3" type="button" onClick={() => onClose()}>
