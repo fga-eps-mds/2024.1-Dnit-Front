@@ -21,7 +21,7 @@ export async function fetchRanques(
   tamanhoPagina: number
 ): Promise<ListaPaginada<RanqueData>> {
   try {
-      const response: AxiosResponse<ListaPaginada<RanqueData>> = await axios.get(URL.solicitacaoDeAcaoURL, {
+      const response: AxiosResponse<ListaPaginada<RanqueData>> = await axios.get(URL.listarRanques, {
           params: {
               pagina,
               tamanhoPagina
@@ -33,3 +33,4 @@ export async function fetchRanques(
       throw error;
   }
 }
+

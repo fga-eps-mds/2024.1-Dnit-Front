@@ -68,6 +68,8 @@ const ModalExportarRanque: React.FC<ModalProps> = ({ ranqueId: ranqueId, onClose
         return `${padZeros(date.getDate())}/${padZeros(date.getMonth())}/${date.getFullYear()} ${padZeros(date.getHours())}:${padZeros(date.getMinutes())}`
     }
 
+    const onDownload = (ranque: RanqueData) => {
+        window.open(`${urlAPIEscolas}/ranque/${ranque.id}/exportar`, "_blank")
     } 
 
     return (
@@ -114,7 +116,9 @@ const ModalExportarRanque: React.FC<ModalProps> = ({ ranqueId: ranqueId, onClose
                                     }}
                                     hideTrashIcon={true}
                                     hideEditIcon={true}
+                                    hideDownloadIcon={false}
                                     onDetailRow={_ => setRanqueAtual(e)}
+                                    onDownload={_ => onDownload(e)}
                                 />
                             )
                         }
