@@ -5,6 +5,7 @@ import empresaRequests from "./empresa/API";
 import { Permissao, TipoPerfil } from "../../models/auth";
 import { usuarios } from "../stub/usuarioModelos";
 import { ranqueData } from "../stub/ranqueModelos";
+import { solicitacao, solicitacaoSemEscola } from "../stub/solicitacaoAcao";
 
 const escolasService = urlAPIEscolas;
 const upsService = urlAPIUps;
@@ -948,6 +949,20 @@ const server = setupServer(
     `${escolasService}/solicitacaoAcao`,
     (req, res, ctx) => {
       return res(ctx.status(200));
+    }
+  ),
+  rest.get(
+    `${escolasService}/solicitacaoAcao`,
+    (req, res, ctx) => {
+      return res(ctx.status(200), ctx.json(
+        {
+          "pagina": 1,
+          "itemsPorPagina": 10,
+          "total": 2,
+          "totalPaginas": 1,
+          "items": [solicitacao, solicitacaoSemEscola]
+        }
+      ))
     }
   )
 

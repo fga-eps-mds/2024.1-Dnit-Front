@@ -43,7 +43,7 @@ export const solicitacao: SolicitacoesData = {
   observacoes: 'Preciso de uma visita. Existem muito acidentes',
   dataRealizadaUtc: '0001-01-01T00:00:00',
   uf: 'AC',
-  municipio: {nome: 'Acre', id: 1},
+  municipio: {nome: 'Acrelândia', id: 1200013},
   escolaCadastrada: true,
 }
 
@@ -60,6 +60,6 @@ export const solicitacaoSemEscola: SolicitacoesData = {
   observacoes: undefined,
   dataRealizadaUtc: '0001-01-01T00:00:00',
   uf: 'AC',
-  municipio: {nome: 'Acre', id: 1},
+  municipio: {nome: 'Acrelândia', id: 1200013},
   escolaCadastrada: false,
 }

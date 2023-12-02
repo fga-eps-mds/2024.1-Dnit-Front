@@ -78,11 +78,6 @@ export default function GerenciarSolicitacoes() {
     setListaMunicipios(novoMunicipio);
   }
 
-  // function procuraRotuloMunicipio(usuario: UsuarioModel) {
-  //   return usuario.municipio === null || usuario.municipio?.nome === "undefined" ? "Não Cadastrado" : usuario.municipio?.nome;
-  // }
-
-
   function atualizaFiltroAlunos(minMaxAlunos: string) {
     console.log(minMaxAlunos);
     switch (minMaxAlunos) {
