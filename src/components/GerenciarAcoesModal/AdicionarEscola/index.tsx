@@ -20,13 +20,21 @@ const dados: Escola[] = [
     { id: 2, nome: "Beta", uf: "RJ", qtdAlunos: 700 },
     { id: 3, nome: "Omega", uf: "MG", qtdAlunos: 400 },
     { id: 4, nome: "Alpha", uf: "RS", qtdAlunos: 600 },
-    { id: 5, nome: "ABELIANO DA SILVA SANTOS PAULINO", uf: "BA", qtdAlunos: 800 }
+    { id: 5, nome: "ABELIANO DA SILVA SANTOS PAULINO", uf: "BA", qtdAlunos: 800 },
+    { id: 6, nome: "Gamma", uf: "SC", qtdAlunos: 550 },
+    { id: 7, nome: "Delta", uf: "PR", qtdAlunos: 450 },
+    { id: 8, nome: "Theta", uf: "CE", qtdAlunos: 350 },
+    { id: 9, nome: "Zeta", uf: "PE", qtdAlunos: 900 },
+    { id: 10, nome: "Iota", uf: "GO", qtdAlunos: 720 }
 ];
 
 const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) => {
-    const [escolasBanco, setEscolasBanco] = useState<Escola[] | null>(dados);
+    const [escolasBanco, setEscolasBanco] = useState<Escola[]>(dados);
     const [escolas, setEscolas] = useState<Escola[] | null>(escolasBanco);
     const [nome, setNome] = useState("");
+    const [escolaSelecionada, setEscolaSelecionada] = useState<{ [key: number]: boolean }>({});
+    const [listaEscolasSelecionadas, SetListaEscolasSelecionadas] = useState<Escola[]>([]);
+    const [mes, setMes] = useState<string>("Dezembro");
 
     //TODO A FUNCAO FETCHESCOLAS
     // useEffect(() => {
@@ -38,14 +46,24 @@ const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) =>
     //         )
     // }, []);
     
+    //TODO A FUNCAO FETCHMES
+    // useEffect(() => {
+    //     fetchMesAtual().then((mes) => { setMes(mes) })
+    // }, []);
+    
     useEffect(() => {
         setEscolas(
-            //TODO COLOCAR ESCOLAS BANCO NO DADOS DEPOIS QUE FAZER O FETCH
-            dados.filter(index =>
+            escolasBanco.filter(index =>
                 index.nome.toLowerCase().includes(nome.toLowerCase())
             )
         );
     }, [nome]);
+
+    useEffect(() => {
+        const escolasFiltradas = escolasBanco.filter(escola => escolaSelecionada[escola.id]);
+        SetListaEscolasSelecionadas(escolasFiltradas);
+    }, [escolaSelecionada, escolasBanco]);
+
 
     if(!escolas){
         return (
@@ -60,20 +78,20 @@ const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) =>
     }
     
     return (
-        <Modal className="default escola-ranque-modal" closeModal={() => onClose()}>
+        <Modal className="default" closeModal={() => onClose()}>
             <div className="d-flex flex-column">
-                
-                {/*TODO DEIXAR ESSA PARTE FIXA NO TOPO*/}
-                <div>
+                <div style={{ position: "sticky", top: 0, background: "white", zIndex: 1}}>
                     <h4 className="text-center mt-1">Adicionar Escola</h4>
-                    
-                    {/*TODO ADICIONAR INTERATIVIDADE NO MES*/}
-                    <label className="text-center mt-1" >A escola selecionada será adicionada ao mês de Novembro</label>
 
-                    <div className='d-flex flex-column '>
-                        <div className="br-input large input-button" style={{ width: "95%", fontSize: '16px', textAlign: 'start'}}>
-                            <input className="br-input-search-large" type="search" placeholder={"Procure uma escola"}
-                                   onChange={e => setNome(e.target.value)}
+                    {/*TODO ADICIONAR A INTERATIVIDADE DO MES*/}
+                    <label className="text-center mt-1">A escola selecionada será adicionada ao mês de {mes}</label>
+                    <div className='d-flex flex-column'>
+                        <div className="br-input large input-button" style={{ width: "95%", fontSize: '16px', textAlign: 'start' }}>
+                            <input
+                                className="br-input-search-large"
+                                type="search"
+                                placeholder={"Procure uma escola"}
+                                onChange={e => setNome(e.target.value)}
                             />
                             <button className="br-button" type="button" aria-label="Buscar" onClick={() => { }}>
                                 <i className="fas fa-search" aria-hidden="true"></i>
@@ -82,8 +100,8 @@ const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) =>
                     </div>
                 </div>
                 <br/>
-                
-                <div >
+
+                <div className="d-flex flex-column" style={{width: "95%", position: "relative", left: "2%"}}>
                     {escolas?.map((escola, index) => (
                         <div key={index}>
                             <SelectSchoolCard
@@ -91,26 +109,37 @@ const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) =>
                                 schoolName={escola.nome}
                                 schoolUf={escola.uf}
                                 schoolStudents={escola.qtdAlunos}
+                                isSelected={escolaSelecionada[escola.id] || false}
                                 onClick={() => {
-                                    // Lógica de manipulação ao clicar na escola
+                                    setEscolaSelecionada(prevState => ({
+                                        ...prevState,
+                                        [escola.id]: !prevState[escola.id]
+                                    }));
                                 }}
                             />
                             <br/>
                         </div>
                     ))}
                 </div>
-                <br/>
+                <br/><br/>
                 
-                {/*TODO DEIXAR ESSA PARTE FIXA EM BAIXO*/}
-                <div className="d-flex w-100 justify-content-end mb-2">
-                    <button className="br-button secondary mr-3" type="button" onClick={() => onClose()}>
-                        Cancelar
-                    </button>
-                    <button className="br-button primary mr-3" type="button" onClick={() => { onAdicionar()}} disabled>
-                        Adicionar
-                    </button>
+                <div className="d-flex justify-content-end mb-2" style={{ position: "absolute", bottom: 0, right: "5%", height: "10%", width: "95%", backgroundColor: "white", zIndex: 1 }}>
+                    <div style={{ position: "relative", top: "20%" }}>
+                        <button className="br-button secondary mr-3" type="button" onClick={() => {
+                            setEscolaSelecionada({});
+                            onClose();
+                        }}>
+                            Cancelar
+                        </button>
+                        <button className="br-button primary" type="button" onClick={() => {
+                            console.log(listaEscolasSelecionadas);
+                            onAdicionar();
+                            onClose();
+                        }}>
+                            Adicionar
+                        </button>
+                    </div>
                 </div>
-                
                 
             </div>
         </Modal>
