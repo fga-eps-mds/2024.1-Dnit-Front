@@ -4,7 +4,7 @@ import Header from "../../../components/Header";
 import Footer from "../../../components/Footer";
 import TrilhaDeNavegacao from "../../../components/Navegacao";
 import Table, { CustomTableRow } from "../../../components/Table";
-import { EmpresaModel, ListaPaginada } from "../../../models/empresa";
+import { EmpresaModel } from "../../../models/empresa";
 import EditarEmpresasDialog from "../../../components/EditarEmpresaDialog";
 import { fetchEmpresas } from "../../../service/empresaApi";
 import { notification } from "antd";
@@ -18,92 +18,93 @@ import { FilterOptions } from "../GerenciarUsuario";
 import {fetchMunicipio, fetchUnidadeFederativa} from "../../../service/escolaApi";
 import MultiSelect from "../../../components/MultiSelect";
 import Select, {SelectItem} from "../../../components/Select";
+import {fetchListarPolosFiltrados} from "../../../service/poloAPI";
+import {FiltroPoloData} from "../../../models/service";
+import {PoloModel, ListaPaginada} from "../../../models/polo";
 
 interface EmpresaDialogArgs {
   id: string | null;
   readOnly: boolean;
 }
 
-export default function GerenciarEmpresas() {
+export default function GerenciarPolos() {
+    const colunasTabela = ["Nome", "Endereço", "UF", "Município", "CEP"];
+    const tituloTabela = "Polos cadastrados"
     const paginas = [{nome: "Gerenciar Polos", link: "/gerenciarPolos"}];
+
     const [nome, setNome] = useState('');
     const [ufs, setufs] = useState<string[]>([]);
     const [uf, setuf] = useState<SelectItem | null>(null);
     const [cep, setCep] = useState('');
     const [municipio, setMunicipio] = useState<SelectItem | null>(null);
+
     const [municipios, setMunicipios] = useState<SelectItem[]>([]);
-    // TODO: criar poloModel
-    const [pagina, setPagina] = useState<ListaPaginada<EmpresaModel>>({items: [], pagina: 1, itemsPorPagina: 10, total: 0, totalPaginas: 0});
+    const [listaUfs, setListaUfs] = useState<FilterOptions[]>([]);
 
-    // TODO:
-    const [listaEmpresas, setListaEmpresas] = useState<EmpresaModel[]>(pagina.items);
-    const [showEmpresa, setShowEmpresa] = useState<EmpresaDialogArgs | null>(null);
-    const [showDeleteEmpresa, setShowDeleteEmpresa] = useState<DeletarEmpresaDialogArgs | null>(null);
-
-    const [razaoSocial, setRazaoSocial] = useState('');
-	const [cnpj, setCnpj] = useState('');
-	const [listaUfs, setListaUfs] = useState<FilterOptions[]>([]);
+    const [pagina, setPagina] = useState<ListaPaginada<PoloModel>>(
+        {items: [], pagina: 1, itemsPorPagina: 10, total: 0, totalPaginas: 0}
+    );
 	const [tamanhoPagina, setTamanhoPagina] = useState(pagina.itemsPorPagina);
-	const [notificationApi, notificationContextHandler] = notification.useNotification();
+    const [listaPolos, setListaPolos] = useState<PoloModel[]>(pagina.items);
+
+    const [notificationApi, notificationContextHandler] = notification.useNotification();
 
 	const navigate = useNavigate();
 
 	const { temPermissao } = useContext(AuthContext);
 
     // TODO: permissões polos
-	const temPermissaoGerenciar = {
-		cadastrar: temPermissao(Permissao.EmpresaCadastrar),
-		visualizar: temPermissao(Permissao.EmpresaVisualizar),
-		remover: temPermissao(Permissao.EmpresaRemover),
-		editar: temPermissao(Permissao.EmpresaEditar),
-		visualizarUsuarios: temPermissao(Permissao.EmpresaVisualizarUsuarios)
-	}
 
-	const ufParams = () => {
-		return ufs.join(",");
-	}
+    const buscarPolos = (proximaPagina: number, novoTamanhoPagina: number = tamanhoPagina) => {
+        const filtro = { params: {
+            Pagina: proximaPagina,
+            TamanhoPagina: novoTamanhoPagina,
+            Nome: nome,
+            Cep: cep,
+            idUf: uf?.id,
+            idMunicipio: municipio?.id}} as FiltroPoloData;
 
-	const buscarEmpresas = (proximaPagina: number, novoTamanhoPagina: number = tamanhoPagina) => {
-		fetchEmpresas(proximaPagina, novoTamanhoPagina, razaoSocial, cnpj, ufParams())
-			.then(pagina => {
-				setPagina(pagina)
-				setListaEmpresas(pagina.items)
-				setTamanhoPagina(pagina.itemsPorPagina)
-			})
-			.catch(error => notificationApi.error({ message: 'Falha na listagem de empresas. ' + (error?.response?.data || '') }))
-	}
-
-	async function fetchUf(): Promise<void> {
-		const listaUfs = await fetchUnidadeFederativa();
-		const novaUf = listaUfs.map((u) => ({ id: '' + u.id, rotulo: u.sigla }));
-		setListaUfs(novaUf);
-	}
-
-	const onEmpresaChange = (changed: boolean) => {
-		if (changed) buscarEmpresas(1);
-	}
-
-	useEffect(() => {
-		buscarEmpresas(1);
-	  }, [razaoSocial, cnpj, ufs]);
-
-	useEffect(() => {
-		fetchUf();
-	}, []);
-
-	useEffect(() => {
-	if (!temPermissao(Permissao.EmpresaVisualizar)) {
-	  navigate("/dashboard");
-	}
-	}, []);
-
+        fetchListarPolosFiltrados(filtro)
+            .then(p => {
+                console.log(p)
+                setPagina(p)
+                console.log(pagina)
+                setListaPolos(p.items)
+                setTamanhoPagina(p.itemsPorPagina)
+            })
+            .catch(error => notificationApi.error({message: 'Falha na listagem de polos. ' + (error?.response?.data || '')}));
+    }
+    useEffect(() => {
+        buscarPolos(1);
+    }, [nome, cep, uf, municipio]);
 
     useEffect(() => {
+        fetchUnidadeFederativa()
+            .then(ufs =>
+            setListaUfs(ufs.map(m => (
+                {
+                    id: m.id.toString(),
+                    rotulo: m.sigla
+                })
+            ))
+        );
+	}, []);
+
+    async function fetchMunicipios(): Promise<void> {
         if (!uf?.id) {
+            setMunicipios([]);
             return;
         }
-        fetchMunicipio(Number(uf.id)).then(municipios => setMunicipios(municipios.map(m => ({ id: m.id.toString(), rotulo: m.nome }))))
+        const listaMunicipios = await fetchMunicipio(Number(uf.id));
+        console.log(listaMunicipios);
+        const novoMunicipio = listaMunicipios.map((u) => ({ id: '' + u.id, rotulo: u.nome }));
+        setMunicipios(novoMunicipio);
+    }
+
+    useEffect(() => {
+        fetchMunicipios();
     }, [uf]);
+
 
     return (
 		<div className="App">
@@ -120,55 +121,49 @@ export default function GerenciarEmpresas() {
                             filtrarTodos={true}/>
                     <Select items={municipios} value={municipio?.id || ''} label={"Municípios:"}
                             onChange={id => setMunicipio(municipios.find(m => m.id == id) || null)}
-                            dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
+                            dropdownStyle={{ marginLeft: "20px", width: "260px" }}
+                            filtrarTodos={true} />
 					<ButtonComponent label="Cadastrar Polo" buttonStyle="primary" ></ButtonComponent>
         		</div>
-				{listaEmpresas.length === 0 && <Table columsTitle={["Razão Social", "CNPJ", "UFs"]} initialItemsPerPage={10} title="Empresas Cadastradas"><></><></></Table>}
+				{listaPolos.length === 0 && <Table columsTitle={colunasTabela} initialItemsPerPage={10} title={tituloTabela}><></><></></Table>}
 				<Table 
-					title="Polos cadastrados"
-					columsTitle={["Nome", "Endereço", "UF", "Município", "CEP"]}
+					title={tituloTabela}
+					columsTitle={colunasTabela}
 					totalPages={pagina.totalPaginas}
 					totalItems={pagina.total}
 					initialItemsPerPage={pagina.itemsPorPagina}
 					onNextPage={() => {
 						if (pagina.pagina === pagina.totalPaginas) return;
-						buscarEmpresas(pagina.pagina + 1);
+						buscarPolos(pagina.pagina + 1);
 					}}
 					onPreviousPage={() => {
 						if (pagina.pagina === 1) return;
-						buscarEmpresas(pagina.pagina - 1);
+                        buscarPolos(pagina.pagina - 1);
 					}}
 					onPageResize={(newItensPerPage) => {
-						buscarEmpresas(pagina.pagina, newItensPerPage);
+                        buscarPolos(pagina.pagina, newItensPerPage);
 					}}
 					onPageSelect={(newSelectedPage) => {
-						buscarEmpresas(newSelectedPage);
+                        buscarPolos(newSelectedPage);
 					}}
 				>
 					{
-						listaEmpresas.map((empresa, index) => (
+						listaPolos.map((polo, index) => (
 							<CustomTableRow
-								key={`${empresa.cnpj}`} id={index}
-								data={{'0': empresa.razaoSocial, '1': formatCnpj(empresa.cnpj),
-									'2': empresa.uFs.length === 27 ? "Todas" : empresa.uFs.map((e) => e.sigla).join(', ')}}
-								onEditRow={() => {
-									// setEmpresaSelecionada(empresa.Cnpj)
-									setShowEmpresa({id: empresa.cnpj, readOnly: false})
-								}}
-								onDetailRow={() => {
-									// setEmpresaSelecionada(empresa.Cnpj)
-									setShowEmpresa({id: empresa.cnpj, readOnly: true})
-								}}
-								onDeleteRow={() => {
-									setShowDeleteEmpresa({id: empresa.cnpj, nome: empresa.razaoSocial})
-								}}
-								onUsersRow={() => {
-									navigate(`/gerenciarUsuariosEmpresa/${empresa.cnpj}`);
-								}}
-								hideUsersIcon = {!temPermissaoGerenciar.visualizarUsuarios}
-								hideEyeIcon = {!temPermissaoGerenciar.visualizar}
-								hideTrashIcon = {!temPermissaoGerenciar.remover}
-								hideEditIcon={!temPermissaoGerenciar.editar}
+								key={`${polo.endereco}`}
+                                id={index}
+                                onEditRow={() => {}}
+                                onDetailRow={() => {}}
+                                onDeleteRow={() => {}}
+                                onUsersRow={() => {}}
+								data={
+                                {
+                                    '0': polo.nome,
+                                    '1': polo.endereco,
+									'2': polo.uf.sigla,
+                                    '3': polo.municipio.nome,
+                                    '4': polo.cep
+                                }}
 							/>
 						))
 					}
