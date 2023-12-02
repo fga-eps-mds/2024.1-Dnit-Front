@@ -1,6 +1,6 @@
 import * as URL from "../consts/service"
 import { fetchDados } from "./apiUtils";
-import { EscolaRanqueData, EscolaRanqueDetalhes, EscolaRanqueFiltro, ListaPaginada, RanqueProcessamentoData, RanqueData } from "../models/ranque";
+import { EscolaRanqueData, EscolaRanqueDetalhes, EscolaRanqueFiltro, ListaPaginada, RanqueProcessamentoData, RanqueData, RanqueUpdateData } from "../models/ranque";
 import axios, { AxiosResponse } from "axios";
 
 
@@ -32,5 +32,9 @@ export async function fetchRanques(
       console.log(error);
       throw error;
   }
+}
+
+export async function fetchAtualizarDescricaoRanque(ranqueId: number, novaDescricao: RanqueUpdateData) {
+  const response: AxiosResponse<RanqueUpdateData> = await axios.put(`${URL.atualizarDescricaoRanque}/${ranqueId}`, novaDescricao);
 }
 

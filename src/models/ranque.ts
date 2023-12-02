@@ -93,3 +93,7 @@ export interface RanqueData {
     descricao: string;
     fatores: FatorModel[];
 }
+
+export interface RanqueUpdateData {
+    descricao: string;
+}

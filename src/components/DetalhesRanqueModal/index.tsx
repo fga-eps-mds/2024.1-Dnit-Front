@@ -2,8 +2,8 @@ import React, { ReactNode, useState, useEffect } from 'react';
 import "../../styles/App.css";
 import "../../pages/Ranque/";
 import Modal from "../../components/Modal/index";
-import { fetchRanques } from '../../service/ranqueApi';
-import { EscolaRanqueDetalhes, RanqueData, ListaPaginada } from '../../models/ranque';
+import { fetchAtualizarDescricaoRanque } from '../../service/ranqueApi';
+import { EscolaRanqueDetalhes, RanqueData, RanqueUpdateData } from '../../models/ranque';
 import ReactLoading from "react-loading";
 import "./index.css";
 import { notification } from 'antd';
@@ -73,8 +73,11 @@ const ModalDetalhesRanque: React.FC<ModalProps> = ({ ranque, onEditDescription, 
                     <button className="br-button secondary mr-3" type="button" onClick={() => onClose()}>
                         Fechar
                     </button>
-                    <button className="br-button primary mr-3" type="button" onClick={() => {
+                    <button className="br-button primary mr-3" type="button" onClick={async () => {
                         if (modoEdicao) {
+                            const descricao: RanqueUpdateData = {descricao: novaDescricao};
+                            await fetchAtualizarDescricaoRanque(ranque.id, descricao);
+                            ranque.descricao = novaDescricao;
                             setModoEdicao(false);
                         } else {
                             setModoEdicao(true);
