@@ -173,6 +173,14 @@
   border-radius: 0px;
 }
 
+.fas.fa-plus {
+  margin-right: 4%;
+  color: var(--blue);
+  height: 15.75px;
+  width: 17.5px;
+  border-radius: 0px;
+}
+
 .fas.fa-city {
   color: var(--blue);
 }
