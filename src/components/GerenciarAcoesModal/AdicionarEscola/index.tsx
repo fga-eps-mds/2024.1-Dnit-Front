@@ -20,13 +20,13 @@ const dados: Escola[] = [
     { id: 2, nome: "Beta", uf: "RJ", qtdAlunos: 700 },
     { id: 3, nome: "Omega", uf: "MG", qtdAlunos: 400 },
     { id: 4, nome: "Alpha", uf: "RS", qtdAlunos: 600 },
-    { id: 5, nome: "Teta", uf: "BA", qtdAlunos: 800 }
+    { id: 5, nome: "ABELIANO DA SILVA SANTOS PAULINO", uf: "BA", qtdAlunos: 800 }
 ];
 
 const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) => {
-
-    const[escolasBanco, setEscolasBanco] = useState<Escola[] | null>(dados);
-    const[escolas, setEscolas] = useState<Escola[] | null>(escolasBanco);
+    const [escolasBanco, setEscolasBanco] = useState<Escola[] | null>(dados);
+    const [escolas, setEscolas] = useState<Escola[] | null>(escolasBanco);
+    const [nome, setNome] = useState("");
 
     //TODO A FUNCAO FETCHESCOLAS
     // useEffect(() => {
@@ -37,7 +37,15 @@ const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) =>
     //             }
     //         )
     // }, []);
-
+    
+    useEffect(() => {
+        setEscolas(
+            //TODO COLOCAR ESCOLAS BANCO NO DADOS DEPOIS QUE FAZER O FETCH
+            dados.filter(index =>
+                index.nome.toLowerCase().includes(nome.toLowerCase())
+            )
+        );
+    }, [nome]);
 
     if(!escolas){
         return (
@@ -50,17 +58,6 @@ const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) =>
             </Modal>
         );
     }
-
-    const [nome, setNome] = useState("");
-    useEffect(() => {
-        setEscolas(
-            
-            //TODO COLOCAR ESCOLAS BANCO NO DADOS DEPOIS QUE FAZER O FETCH
-            dados.filter(index =>
-                index.nome.toLowerCase().includes(nome.toLowerCase())
-            )
-        );
-    }, [nome]);
     
     return (
         <Modal className="default escola-ranque-modal" closeModal={() => onClose()}>
@@ -84,11 +81,11 @@ const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) =>
                         </div>
                     </div>
                 </div>
-
-                {/*TODO CORRIGIR A RESPONSIVIDADE*/}
-                <div>
+                <br/>
+                
+                <div >
                     {escolas?.map((escola, index) => (
-                        <div key={index} style={{width: "30%"}}>
+                        <div key={index}>
                             <SelectSchoolCard
                                 schoolId={escola.id}
                                 schoolName={escola.nome}
@@ -105,16 +102,15 @@ const ModalAdicionarEscola: React.FC<ModalProps> = ({ onClose, onAdicionar }) =>
                 <br/>
                 
                 {/*TODO DEIXAR ESSA PARTE FIXA EM BAIXO*/}
-                <div className="br-modal-footer">
-                    <div className="d-flex w-100 justify-content-end mb-2">
-                        <button className="br-button secondary mr-3" type="button" onClick={() => onClose()}>
-                            Cancelar
-                        </button>
-                        <button className="br-button primary mr-3" type="button" onClick={() => { onAdicionar()}} disabled>
-                            Adicionar
-                        </button>
-                    </div>
+                <div className="d-flex w-100 justify-content-end mb-2">
+                    <button className="br-button secondary mr-3" type="button" onClick={() => onClose()}>
+                        Cancelar
+                    </button>
+                    <button className="br-button primary mr-3" type="button" onClick={() => { onAdicionar()}} disabled>
+                        Adicionar
+                    </button>
                 </div>
+                
                 
             </div>
         </Modal>
