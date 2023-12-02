@@ -382,6 +382,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
             <div className="cancelar">
               <Space size={735}>
                 <Button
+                  data-testid="botaoCancelar"
                   className="custom-button"
                   type="primary"
                   size="large"

@@ -49,22 +49,25 @@ describe('Testes para a pagina de Solicitacoes', () => {
     const tamanhoPaginaSelector = screen.getByTestId('items-per-page');
     fireEvent.change(tamanhoPaginaSelector, { target: { value: '1' } });
 
-    const qtdAlunos = screen.getByTestId("Qtd. Alunos:customSelect")
+    const qtdAlunos = screen.getByTestId("Qtd. Alunos:customSelect");
 
     await fireEvent.click(qtdAlunos);
-    fireEvent.click(screen.getByText('Entre 51 e 200'))
-
-    await fireEvent.click(qtdAlunos);
-    fireEvent.click(screen.getByText('Entre 201 e 500'))
-
-    await fireEvent.click(qtdAlunos);
-    fireEvent.click(screen.getByText('Entre 501 e 1000'))
-
-    await fireEvent.click(qtdAlunos);
-    fireEvent.click(screen.getByText('Mais que 1001'))
+    fireEvent.click(screen.getByText('Até 50'));
     
     await fireEvent.click(qtdAlunos);
-    fireEvent.click(screen.getByText('Todos'))
+    fireEvent.click(screen.getByText('Entre 51 e 200'));
+
+    await fireEvent.click(qtdAlunos);
+    fireEvent.click(screen.getByText('Entre 201 e 500'));
+
+    await fireEvent.click(qtdAlunos);
+    fireEvent.click(screen.getByText('Entre 501 e 1000'));
+
+    await fireEvent.click(qtdAlunos);
+    fireEvent.click(screen.getByText('Mais que 1001'));
+    
+    await fireEvent.click(qtdAlunos);
+    fireEvent.click(screen.getByText('Todos'));
 
     await waitFor(() => expect(screen.findAllByText('Escola A')).toBeInTheDocument);
 
@@ -144,6 +147,57 @@ describe('Testes para a pagina de Solicitacoes', () => {
     fireEvent.change(paginaSelectorDropdown, { target: { value: '2' } });
 
     await waitFor(() => expect(screen.getByText("Escola:")).toBeInTheDocument());
+
+  });
+
+  test('Deve clickar no botao de visualisar', async () => {
+    const screen = render(
+      <MemoryRouter>
+        <GerenciarSolicitacoes />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => screen.getByText("Soliciatações de Ações"));
+
+    const tamanhoPaginaSelector = screen.getByTestId('items-per-page');
+    fireEvent.change(tamanhoPaginaSelector, { target: { value: '1' } });
+
+    await waitFor(() => screen.getByText('Escola A'));
+
+    await waitFor(() => fireEvent.click(screen.getByTestId('table-row-eye-0')));
+
+    await waitFor(expect(screen.getByText('Detalhes da Solicitação')).toBeInTheDocument);
+
+    const botaoFechar = screen.getByTestId('botaoFechar');
+    fireEvent.click(botaoFechar);
+
+  });
+
+  test.skip('Deve clickar no botao de criar escola', async () => {
+    const screen = render(
+      <MemoryRouter>
+        <GerenciarSolicitacoes />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => screen.getByText("Soliciatações de Ações"));
+
+    const tamanhoPaginaSelector = screen.getByTestId('items-per-page');
+    fireEvent.change(tamanhoPaginaSelector, { target: { value: '1' } });
+
+    const buttonNext = screen.getByTestId("proxima-pagina");
+    await fireEvent.click(buttonNext);
+
+    await waitFor(() => expect(screen.getByText('Outra Escola')).toBeInTheDocument);
+    
+
+    await waitFor(() => fireEvent.click(screen.getByTestId('table-row-plus-0')));
+    
+
+    await waitFor(expect(screen.getByText('Cadastrar Escola')).toBeInTheDocument);
+
+    const botaoFechar = screen.getByTestId('botaoCancelar');
+    fireEvent.click(botaoFechar);
 
   });
 

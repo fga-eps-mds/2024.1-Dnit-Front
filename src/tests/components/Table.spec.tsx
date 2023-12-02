@@ -281,6 +281,8 @@ describe("CustomTable Component", () => {
     const onEditButtonMock = jest.fn();
     const onViewButtonMock = jest.fn();
     const onTrashButtonMock = jest.fn();
+    const onPlusButtonMock = jest.fn();
+
     const id = 1;
     
 
@@ -303,9 +305,11 @@ describe("CustomTable Component", () => {
             hideEditIcon={false}
             hideEyeIcon={false}
             hideTrashIcon={false}
+            hidePlusIcon={false}
             onDeleteRow={onTrashButtonMock}
             onEditRow={onEditButtonMock}
             onDetailRow={onViewButtonMock}
+            onPlusRow={onPlusButtonMock}
           />
         ))}
       </CustomTable>
@@ -322,6 +326,10 @@ describe("CustomTable Component", () => {
     const buttonTrash = screen.getByTestId(`table-row-delete-${id}`)
     fireEvent.click(buttonTrash);
     expect(onTrashButtonMock).toHaveBeenCalledWith(id);
+
+    const buttonPlus = screen.getByTestId(`table-row-plus-${id}`)
+    fireEvent.click(buttonPlus);
+    expect(onPlusButtonMock).toHaveBeenCalledWith(id);
   });
 
   test("Não passar pagina", () => {
