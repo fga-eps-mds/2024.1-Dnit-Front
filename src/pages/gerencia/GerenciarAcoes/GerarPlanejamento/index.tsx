@@ -5,6 +5,7 @@ import TrilhaDeNavegacao from "../../../../components/Navegacao";
 import "./styles.css";
 import { ButtonComponent } from "../../../../components/Button";
 import MonthSelect from "../../../../components/MonthSelect";
+import PlanejamentoInfo from "../PlanejamentoInfo";
 export default function GerenciarAcoes() {
   const paginas = [
     { nome: "Gerenciar Ações", link: "/gerenciarAcoes" },
@@ -26,6 +27,7 @@ export default function GerenciarAcoes() {
     "Dezembro",
   ];
 
+  const [savedTitle, setSavedTitle] = useState("");
   const [title, setTitle] = useState("");
   const [initialMonth, setInitialMonth] = useState("");
   const [qtdActions, setQtdActions] = useState(0);
@@ -97,7 +99,13 @@ export default function GerenciarAcoes() {
       // Envie a solicitação para o servidor
       console.log("Envio da request");
       setIsPlanningGenerated(true);
+      setSavedTitle(title);
     }
+  };
+
+  const updatePlanning = () => {
+    // Enviar request para update do nome
+    setSavedTitle(title);
   };
 
   return (
@@ -150,15 +158,31 @@ export default function GerenciarAcoes() {
             </div>
           </div>
 
-          <div className="planning-button">
-            <ButtonComponent
-              label="Gerar Planejamento"
-              buttonStyle="outlined"
-              buttonType="default"
-              padding="37px"
-              onClick={() => handleSubmit()}
-            />
-          </div>
+          {isPlanningGenerated ? null : (
+            <div className="planning-button">
+              <ButtonComponent
+                label="Criar Planejamento"
+                buttonStyle="outlined"
+                buttonType="default"
+                padding="37px"
+                onClick={() => handleSubmit()}
+              />
+            </div>
+          )}
+
+          {isPlanningGenerated && savedTitle !== title ? (
+            <div className="planning-button">
+              <ButtonComponent
+                label="Salvar"
+                buttonStyle="primary"
+                buttonType="default"
+                padding="37px"
+                onClick={() => updatePlanning()}
+              />
+            </div>
+          ) : null}
+
+          {isPlanningGenerated ? <PlanejamentoInfo /> : null}
         </div>
       </div>
 
