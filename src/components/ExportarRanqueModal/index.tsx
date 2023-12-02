@@ -10,6 +10,7 @@ import ReactLoading from "react-loading";
 import "./index.css";
 import { notification } from 'antd';
 import { ranqueData } from '../../tests/stub/ranqueModelos';
+import { urlAPIEscolas } from '../../consts/service';
 
 interface ModalProps {
     onClose: () => void;
@@ -30,7 +31,7 @@ function Label({ children, className }: LabelProps) {
 const ModalExportarRanque: React.FC<ModalProps> = ({ ranqueId: ranqueId, onClose}) => {
     const [notificationApi, contextHolder] = notification.useNotification();
     const [ranqueAtual, setRanqueAtual] = useState<RanqueData | null>();
-    const colunas = ['Data', 'Hora', 'Número de escolas'];
+    const colunas = ['Data e Hora', 'Número de escolas'];
     const [listaRanques, setListaRanques] = useState<RanqueData[]>([]);
     var teste = [{data: "1/12/23", hora: "10:00", escolasNum: 201},
                 {data: "15/11/23", hora: "09:00", escolasNum: 175},
@@ -40,15 +41,15 @@ const ModalExportarRanque: React.FC<ModalProps> = ({ ranqueId: ranqueId, onClose
     const [tamanhoPagina, setTamanhoPagina] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
 
-    // useEffect(() => {
-    //     fetchRanques(pagina, tamanhoPagina)
-    //         .then((ranque) => {
-    //             setListaRanques(ranque.items);
-    //             setTotalPages(ranque.totalPaginas);
-    //         }
-    //         )
+    useEffect(() => {
+        fetchRanques(pagina, tamanhoPagina)
+            .then((ranque) => {
+                setListaRanques(ranque.items);
+                setTotalPages(ranque.totalPaginas);
+            }
+            )
 
-    // }, []);
+    }, []);
     if (!listaRanques) {
         return (
             <Modal className="modal-title" closeModal={() => onClose()}>
@@ -60,6 +61,14 @@ const ModalExportarRanque: React.FC<ModalProps> = ({ ranqueId: ranqueId, onClose
             </Modal>
         );
     }
+
+    const formatDate = (dateStr: string) => {
+        const date = new Date(dateStr);
+        const padZeros = (n: number) => n.toString().padStart(2, '0');
+        return `${padZeros(date.getDate())}/${padZeros(date.getMonth())}/${date.getFullYear()} ${padZeros(date.getHours())}:${padZeros(date.getMinutes())}`
+    }
+
+    } 
 
     return (
         <div className='exportar-ranque-modal'>
@@ -95,14 +104,13 @@ const ModalExportarRanque: React.FC<ModalProps> = ({ ranqueId: ranqueId, onClose
                             setPagina(newPagina)
                         }}>
                         {
-                            teste.map((e, index) => 
+                            listaRanques.map((e, index) => 
                                 <CustomTableRow
                                     key={2} 
                                     id={index}
                                     data={{
-                                        '0': `${e.data}`,
-                                        '1': `${e.hora}`,
-                                        '2': `${e.escolasNum}`,
+                                        '0': `${formatDate(e.data)}`,
+                                        '1': `${e.numEscolas}`,
                                     }}
                                     hideTrashIcon={true}
                                     hideEditIcon={true}
