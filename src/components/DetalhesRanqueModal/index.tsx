@@ -12,7 +12,7 @@ import { ranqueData } from '../../tests/stub/ranqueModelos';
 interface ModalProps {
     onClose: () => void;
     onEditDescription: () => void;
-    ranqueId: string;
+    ranque: RanqueData;
 }
 
 interface LabelProps {
@@ -26,30 +26,14 @@ function Label({ children, className }: LabelProps) {
     </label>)
 }
 
-const ModalDetalhesRanque: React.FC<ModalProps> = ({ ranqueId, onEditDescription, onClose}) => {
+const ModalDetalhesRanque: React.FC<ModalProps> = ({ ranque, onEditDescription, onClose}) => {
     const [notificationApi, contextHolder] = notification.useNotification();
 
-    // useEffect(() => {
-    //     fetchRanques(pagina, tamanhoPagina)
-    //         .then((ranque) => {
-    //             setListaRanques(ranque.items);
-    //             setTotalPages(ranque.totalPaginas);
-    //         }
-    //         )
-
-    // }, []);
-
-    if (!ranqueId) {
-        return (
-            <Modal className="modal-title" closeModal={() => onClose()}>
-                <h4 className="text-center mt-2">Carregando Ranque...</h4>
-                <div className="d-flex justify-content-center m-4">
-                    <ReactLoading type="spinningBubbles" color="#000000" />
-                </div>
-                <span></span>
-            </Modal>
-        );
-    }
+const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const padZeros = (n: number) => n.toString().padStart(2, '0');
+    return `${padZeros(date.getDate())}/${padZeros(date.getMonth())}/${date.getFullYear()} ${padZeros(date.getHours())}:${padZeros(date.getMinutes())}`
+}
 
     return (
         <div className='escola-ranque-modal'>
@@ -58,13 +42,18 @@ const ModalDetalhesRanque: React.FC<ModalProps> = ({ ranqueId, onEditDescription
                 <div className="d-flex flex-column">
                     <h4 className="text-center mt-1">Detalhes do Ranque</h4>
                     <br/>
-                    <Label>Data: </Label>
+                    <Label><strong>Data e hora do processamento:</strong></Label>
+                    <Label>{formatDate(ranque.data)}</Label> 
                     <br/>
-                    <Label>Hora: </Label>
+                    <Label><strong>Número de escolas:</strong> {ranque.numEscolas}</Label>
                     <br/>
-                    <Label>Fatores do processamento: </Label>
+                    <Label><strong>Fatores do processamento:</strong></Label>
+                    <div className='d-flex flex-column'>
+                        {ranque.fatores.map(f => <Label className='ml-4'>Fator {f.nome}, Peso {f.peso}, Valor {f.valor}</Label>)}
+                    </div>
                     <br/>
                     <Label><strong>Dercrição do Ranque:</strong></Label>
+                    <Label>{ranque.descricao}</Label>
                     <div className='d-flex flex-column '>
                     </div>
                 </div>

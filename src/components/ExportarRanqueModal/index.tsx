@@ -28,15 +28,15 @@ function Label({ children, className }: LabelProps) {
     </label>)
 }
 
-const ModalExportarRanque: React.FC<ModalProps> = ({ ranqueId: ranqueId, onClose}) => {
+const ModalExportarRanque: React.FC<ModalProps> = ({ ranqueId: ranqueId, onClose }) => {
     const [notificationApi, contextHolder] = notification.useNotification();
     const [ranqueAtual, setRanqueAtual] = useState<RanqueData | null>();
     const colunas = ['Data e Hora', 'Número de escolas'];
     const [listaRanques, setListaRanques] = useState<RanqueData[]>([]);
-    var teste = [{data: "1/12/23", hora: "10:00", escolasNum: 201},
-                {data: "15/11/23", hora: "09:00", escolasNum: 175},
-                {data: "1/12/23", hora: "10:00", escolasNum: 201},
-                {data: "1/12/23", hora: "10:00", escolasNum: 201},];
+    var teste = [{ data: "1/12/23", hora: "10:00", escolasNum: 201 },
+    { data: "15/11/23", hora: "09:00", escolasNum: 175 },
+    { data: "1/12/23", hora: "10:00", escolasNum: 201 },
+    { data: "1/12/23", hora: "10:00", escolasNum: 201 },];
     const [pagina, setPagina] = useState(1);
     const [tamanhoPagina, setTamanhoPagina] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
@@ -70,20 +70,20 @@ const ModalExportarRanque: React.FC<ModalProps> = ({ ranqueId: ranqueId, onClose
 
     const onDownload = (ranque: RanqueData) => {
         window.open(`${urlAPIEscolas}/ranque/${ranque.id}/exportar`, "_blank")
-    } 
+    }
 
     return (
         <div className='exportar-ranque-modal'>
             <Modal className="default exportar-ranque-modal" width={1000} closeModal={() => onClose()}>
                 {contextHolder}
-                {ranqueAtual != null && <ModalDetalhesRanque onClose={() => { setRanqueAtual(null) }} onEditDescription={() => { }} ranqueId='1' />}
+                {ranqueAtual != null && <ModalDetalhesRanque onClose={() => { setRanqueAtual(null) }} onEditDescription={() => { }} ranque={ranqueAtual} />}
                 <div className="d-flex flex-column">
                     <h4 className="text-center mt-1">Histórico de Ranques</h4>
                     <div className='d-flex flex-column '>
                         <Label>Últimos Processamentos:</Label>
                     </div>
                 </div>
-                
+
                 <div style={{ maxHeight: '800px', overflowY: 'visible' }}>
                     <Table
                         columsTitle={colunas}
@@ -106,9 +106,9 @@ const ModalExportarRanque: React.FC<ModalProps> = ({ ranqueId: ranqueId, onClose
                             setPagina(newPagina)
                         }}>
                         {
-                            listaRanques.map((e, index) => 
+                            listaRanques.map((e, index) =>
                                 <CustomTableRow
-                                    key={2} 
+                                    key={2}
                                     id={index}
                                     data={{
                                         '0': `${formatDate(e.data)}`,
@@ -124,10 +124,10 @@ const ModalExportarRanque: React.FC<ModalProps> = ({ ranqueId: ranqueId, onClose
                         }
                     </Table>
                     <div className="d-flex w-100 justify-content-end mb-2">
-                    <button className="br-button secondary mr-3" type="button" onClick={() => onClose()}>
-                        Fechar
-                    </button>
-                </div>
+                        <button className="br-button secondary mr-3" type="button" onClick={() => onClose()}>
+                            Fechar
+                        </button>
+                    </div>
                 </div>
 
                 <br />
