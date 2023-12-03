@@ -1,6 +1,6 @@
 import { rest } from "msw";
 import { setupServer } from "msw/node";
-import { atualizarTipoPerfil, atualizarTokenUrl, cadastrarPerfilUrl, excluiPerfil, listarEscolasRanque, listarPerfis, listarPermissoesCategoria, listarUsuarioPermissoes, listarUsuarios, municipioURL, obterPerfil, ranqueamentoProcessamento, unidadesFederativasURL, urlAPIEscolas, urlAPIUps } from "../../consts/service";
+import { atualizarTipoPerfil, atualizarTokenUrl, cadastrarPerfilUrl, excluiPerfil, listarEscolasRanque, listarPerfis, listarPermissoesCategoria, listarRanques, listarUsuarioPermissoes, listarUsuarios, municipioURL, obterPerfil, ranqueamentoProcessamento, unidadesFederativasURL, urlAPIEscolas, urlAPIUps } from "../../consts/service";
 import empresaRequests from "./empresa/API";
 import { Permissao, TipoPerfil } from "../../models/auth";
 import { usuarios } from "../stub/usuarioModelos";
@@ -897,7 +897,48 @@ const server = setupServer(
         descricao: 'etapa 2'
       }
     ],
-  })))
+  }))),
+  rest.get(
+    `${escolasService}/listarRanques`,
+    (req, res, ctx) => {
+        return res(ctx.status(200), ctx.delay(100), ctx.json([
+          {
+            pagina: 1,
+            itemsPorPagina: 2,
+            total: 2,
+            totalPaginas: 1,
+            items: [
+              {
+                id: 1,
+                numEscolas: 7777,
+                data: "2023-12-03T21:29:34.136Z",
+                descricao: "descrição 1",
+                fatores: [
+                  {
+                    nome: "fator x",
+                    peso: 0,
+                    valor: 0
+                  }
+                ]
+              },
+              {
+                id: 2,
+                numEscolas: 8888,
+                data: "2023-12-03T21:29:34.136Z",
+                descricao: "descrição 2",
+                fatores: [
+                  {
+                    nome: "fator y",
+                    peso: 0,
+                    valor: 0
+                  }
+                ]
+              }]
+          }
+        ])
+      );
+    }
+  ),
 );
 
 export default server;

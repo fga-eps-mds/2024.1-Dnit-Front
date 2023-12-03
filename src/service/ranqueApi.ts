@@ -16,22 +16,8 @@ export async function fetchEscolaRanque(id: string) {
   return fetchDados<EscolaRanqueDetalhes>(`${URL.listarEscolasRanque}/${id}`);
 }
 
-export async function fetchRanques(
-  pagina: number,
-  tamanhoPagina: number
-): Promise<ListaPaginada<RanqueData>> {
-  try {
-      const response: AxiosResponse<ListaPaginada<RanqueData>> = await axios.get(URL.listarRanques, {
-          params: {
-              pagina,
-              tamanhoPagina
-          }
-      });
-      return response.data;
-  } catch (error) {
-      console.log(error);
-      throw error;
-  }
+export async function fetchRanques(pagina: number, tamanhoPagina: number): Promise<ListaPaginada<RanqueData>> {
+  return fetchDados<ListaPaginada<RanqueData>>(URL.listarRanques, {pagina, tamanhoPagina});
 }
 
 export async function fetchAtualizarDescricaoRanque(ranqueId: number, novaDescricao: RanqueUpdateData) {

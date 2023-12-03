@@ -8,6 +8,7 @@ import ReactLoading from "react-loading";
 import "./index.css";
 import { notification } from 'antd';
 import { ranqueData } from '../../tests/stub/ranqueModelos';
+import { formatDate } from '../../utils/utils';
 
 interface ModalProps {
     onClose: () => void;
@@ -26,17 +27,22 @@ function Label({ children, className }: LabelProps) {
     </label>)
 }
 
-const ModalDetalhesRanque: React.FC<ModalProps> = ({ ranque, onEditDescription, onClose}) => {
+const ModalDetalhesRanque: React.FC<ModalProps> = ({ ranque, onEditDescription, onClose }) => {
     const [notificationApi, contextHolder] = notification.useNotification();
-
-    const formatDate = (dateStr: string) => {
-        const date = new Date(dateStr);
-        const padZeros = (n: number) => n.toString().padStart(2, '0');
-        return `${padZeros(date.getDate())}/${padZeros(date.getMonth())}/${date.getFullYear()} ${padZeros(date.getHours())}:${padZeros(date.getMinutes())}`
-    }
 
     const [modoEdicao, setModoEdicao] = useState(false);
     const [novaDescricao, setNovaDescricao] = useState(ranque.descricao);
+
+    const onEditClick = async () => {
+        if (modoEdicao) {
+            const descricao: RanqueUpdateData = { descricao: novaDescricao };
+            await fetchAtualizarDescricaoRanque(ranque.id, descricao);
+            ranque.descricao = novaDescricao;
+            setModoEdicao(false);
+        } else {
+            setModoEdicao(true);
+        }
+    };
 
     return (
         <div className='escola-ranque-modal'>
@@ -44,17 +50,17 @@ const ModalDetalhesRanque: React.FC<ModalProps> = ({ ranque, onEditDescription, 
                 {contextHolder}
                 <div className="d-flex flex-column">
                     <h4 className="text-center mt-1">Detalhes do Ranque</h4>
-                    <br/>
+                    <br />
                     <Label><strong>Data e hora do processamento:</strong></Label>
-                    <Label>{formatDate(ranque.data)}</Label> 
-                    <br/>
+                    <Label>{formatDate(ranque.data)}</Label>
+                    <br />
                     <Label><strong>Número de escolas:</strong> {ranque.numEscolas}</Label>
-                    <br/>
+                    <br />
                     <Label><strong>Fatores do processamento:</strong></Label>
                     <div className='d-flex flex-column'>
                         {ranque.fatores.map(f => <Label className='ml-4'>Fator {f.nome}, Peso {f.peso}, Valor {f.valor}</Label>)}
                     </div>
-                    <br/>
+                    <br />
                     <Label><strong>Descrição do Ranque:</strong></Label>
                     {modoEdicao ? (
                         <textarea
@@ -62,6 +68,7 @@ const ModalDetalhesRanque: React.FC<ModalProps> = ({ ranque, onEditDescription, 
                             onChange={(e) => setNovaDescricao(e.target.value)}
                             rows={9}
                             cols={50}
+                            maxLength={100}
                         />
                     ) : (
                         <Label>{ranque.descricao}</Label>
@@ -73,16 +80,8 @@ const ModalDetalhesRanque: React.FC<ModalProps> = ({ ranque, onEditDescription, 
                     <button className="br-button secondary mr-3" type="button" onClick={() => onClose()}>
                         Fechar
                     </button>
-                    <button className="br-button primary mr-3" type="button" onClick={async () => {
-                        if (modoEdicao) {
-                            const descricao: RanqueUpdateData = {descricao: novaDescricao};
-                            await fetchAtualizarDescricaoRanque(ranque.id, descricao);
-                            ranque.descricao = novaDescricao;
-                            setModoEdicao(false);
-                        } else {
-                            setModoEdicao(true);
-                        }
-                    }}> {modoEdicao ? 'Salvar Descrição' : 'Editar Descrição'}
+                    <button className="br-button primary mr-3" type="button" onClick={() => onEditClick()}>
+                        {modoEdicao ? 'Salvar Descrição' : 'Editar Descrição'}
                     </button>
                 </div>
             </Modal>
