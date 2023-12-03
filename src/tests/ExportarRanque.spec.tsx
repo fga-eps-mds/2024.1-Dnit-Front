@@ -1,7 +1,8 @@
 import React from 'react';
-import { render, waitForElementToBeRemoved, fireEvent, screen } from '@testing-library/react';
+import { render, waitForElementToBeRemoved, fireEvent, screen, waitFor } from '@testing-library/react';
 import ModalExportarRanque from '../components/ExportarRanqueModal';
 import userEvent from '@testing-library/user-event';
+import { CustomTableRow } from '../components/Table';
 
 describe('ModalExportarRanque component', () => {
     const onCloseMock = jest.fn();
@@ -28,5 +29,23 @@ describe('ModalExportarRanque component', () => {
         expect(elements).toHaveLength(1);
       });
 });
+
+describe('ModalExportarRanque Component', () => {
+  test('chama onDetailRow quando o ícone de detalhes é clicado', () => {
+    const onDetailRowMock = jest.fn();
+    const { getByTestId } = render(
+      <CustomTableRow
+        id={1}
+        data={{ '0': 'data', '1': 'number' }}
+        onDetailRow={onDetailRowMock}
+      />
+    );
+  
+    fireEvent.click(getByTestId('table-row-eye-1')); // Substitua "1" pelo id que você espera
+    expect(onDetailRowMock).toHaveBeenCalledTimes(1);
+  });
+  
+});
+
 
   
