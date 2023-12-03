@@ -41,10 +41,9 @@ describe('ModalExportarRanque Component', () => {
       />
     );
   
-    fireEvent.click(getByTestId('table-row-eye-1')); // Substitua "1" pelo id que você espera
+    fireEvent.click(getByTestId('table-row-eye-1'));
     expect(onDetailRowMock).toHaveBeenCalledTimes(1);
   });
-  
 });
 
 
