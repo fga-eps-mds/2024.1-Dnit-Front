@@ -73,9 +73,28 @@ export interface EscolaRanqueDetalhes {
     etapasEnsino?: EtapasDeEnsinoData[];
     polo?: PoloModel;
     distanciaPolo: number;
+    temSolicitacao: boolean;
 }
 
 export interface PoloModel {
     id: number;
     uf: string;
+}
+
+export interface FatorModel {
+    nome: string;
+    peso: number;
+    valor: number;
+}
+
+export interface RanqueData {
+    id: number;
+    numEscolas: number;
+    data: string;
+    descricao: string;
+    fatores: FatorModel[];
+}
+
+export interface RanqueUpdateData {
+    descricao: string;
 }

@@ -6,7 +6,7 @@ import {
 import IconGerenciarPerfis from "../../../assets/icones/GerenciarPerfis.svg";
 import IconGerenciarUsuarios from "../../../assets/icones/GerenciarUsuarios.svg";
 import RankingEscolas from "../../../assets/icones/RankingEscolas.svg";
-import IconGerenciarPolos from "../../../assets/icones/GerenciarPolos.svg"
+import Solicitacoes from "../../../assets/icones/BotaoSolicitacao.svg";
 import { Card, Collapse, CollapseProps } from "antd";
 import { useNavigate } from "react-router";
 import Header from "../../../components/Header";
@@ -18,7 +18,8 @@ import "../../../components/Collapse/";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../provider/Autenticacao";
 import { Permissao } from "../../../models/auth";
-import {fetchPermissoesDoUsuario} from "../../../service/usuarioApi";
+import { fetchPermissoesDoUsuario } from "../../../service/usuarioApi";
+import IconGerenciarPolos from "../../../assets/icones/GerenciarPolos.svg"
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ export default function Dashboard() {
   const [podeGerenciarUsuario, setPodeGerenciarUsuario] = useState(
     temPermissao(Permissao.UsuarioVisualizar)
   );
-  
+
   const [podeGerenciarPolos, setPodeGerenciarPolos] = useState(
     temPermissao(Permissao.PoloVisualizar)
   );
@@ -88,8 +89,19 @@ export default function Dashboard() {
           )}
           {podeVisualizarRanque && (
             <Card className="card" onClick={() => navigate("/ranque")}>
-              <img src={RankingEscolas} alt="ícone gerenciar usuarios"/>
+              <img src={RankingEscolas} alt="ícone gerenciar usuarios" />
               <p className="text">Ranking de escolas</p>
+            </Card>
+          )}
+          {
+            /*podeVisualizarSolicitacoes &&*/ (
+              <Card className="card" onClick={() => navigate("/solicitacoes")}>
+              <img
+                className="iconPerfis"
+                src={Solicitacoes}
+                alt="ícone solicitacoes"
+              />
+              <p className="text">Solicitações</p>
             </Card>
           )}
         </div>

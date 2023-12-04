@@ -178,10 +178,12 @@ export interface EscolaInepData {
   nome: string;
 }
 
-export interface SolicitacaoDeAcaoData {
+export interface SolicitacaoDeAcaoDTO {
   Escola: string;
-  UF: string;
-  Municipio: string;
+  EscolaCodigoInep: string;
+  Uf: number;
+  Municipio: string
+  MunicipioId: number;
   NomeSolicitante: string;
   VinculoEscola: string;
   Email: string;
