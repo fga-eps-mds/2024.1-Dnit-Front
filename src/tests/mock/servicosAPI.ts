@@ -905,7 +905,7 @@ const server = setupServer(
   rest.get(
     `${escolasService}/listarRanques`,
     (req, res, ctx) => {
-        return res(ctx.status(200), ctx.delay(100), ctx.json([
+        return res(ctx.status(200), ctx.json([
           {
             pagina: 1,
             itemsPorPagina: 2,

@@ -18,7 +18,7 @@ describe('ModalExportarRanque component', () => {
   test('Deve chamar onClose quando fechar e clicado', async () => {
     const screen = render(<ModalExportarRanque {...(mockProps as any)} />);
     await waitFor(() => expect(screen.getByText('Fechar')).toBeInTheDocument());
-    fireEvent.click(screen.getByText('Fechar'));
+    await waitFor(() => fireEvent.click(screen.getByText('Fechar')));
     expect(onCloseMock).toHaveBeenCalledTimes(1);
   });
 
