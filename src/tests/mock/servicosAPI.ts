@@ -5,6 +5,7 @@ import empresaRequests from "./empresa/API";
 import { Permissao, TipoPerfil } from "../../models/auth";
 import { usuarios } from "../stub/usuarioModelos";
 import { ranqueData } from "../stub/ranqueModelos";
+import { solicitacao, solicitacaoSemEscola } from "../stub/solicitacaoAcao";
 
 const escolasService = urlAPIEscolas;
 const upsService = urlAPIUps;
@@ -471,8 +472,8 @@ const server = setupServer(
         logradouro: "SHA Conjunto Chácara",
         complemento: "",
         bairro: "Setor Habitacional Arniqueira (Águas Claras)",
-        localidade: "Acrelândia",
-        uf: "AC",
+        localidade: "Brasília",
+        uf: "DF",
         ibge: "5300108",
         gia: "",
         ddd: "61",
@@ -897,7 +898,73 @@ const server = setupServer(
         descricao: 'etapa 2'
       }
     ],
+    temSolicitacao: true,
   }))),
+  rest.get(`${listarEscolasRanque}/2`, (_, res, ctx) => res(ctx.json({
+    ranqueInfo: {
+      ranqueId: 2,
+      pontuacao: 1000,
+      posicao: 2,
+      fatores: [
+        {
+          nome: "UPS",
+          peso: 1,
+          valor: 1454
+        }
+      ],
+    },
+    id: '2',
+    codigo: '123',
+    nome: 'escola teste',
+    cep: '72844654',
+    endereco: 'endereco',
+    longitude: '1.0',
+    latitude: '1.0',
+    totalDocentes: 10,
+    totalAlunos: 10,
+    telefone: '40028922',
+    uf: {
+      id: 1,
+      sigla: 'DF',
+      nome: 'Distrito Federal'
+    },
+    municipio: {
+      id: 1,
+      nome: 'municipio'
+    },
+    rede: {
+      id: 'Municipal',
+      nome: 'Municipal',
+    },
+    porte: {},
+    localizacao: {
+      id: 'Urbana',
+      descricao: 'Urbana'
+    },
+    situacao: {},
+    etapasEnsino: [],
+    temSolicitacao: false,
+  }))),
+  rest.post(
+    `${escolasService}/solicitacaoAcao`,
+    (req, res, ctx) => {
+      return res(ctx.status(200));
+    }
+  ),
+  rest.get(
+    `${escolasService}/solicitacaoAcao`,
+    (req, res, ctx) => {
+      return res(ctx.status(200), ctx.json(
+        {
+          "pagina": 1,
+          "itemsPorPagina": 10,
+          "total": 2,
+          "totalPaginas": 1,
+          "items": [solicitacao, solicitacaoSemEscola]
+        }
+      ))
+    }
+  ),
   rest.put(
     `${atualizarDescricaoRanque}/1`,
     (req, res, ctx) => res(ctx.status(200))
@@ -943,45 +1010,5 @@ const server = setupServer(
     )
   )
 );
-
-// rest.get(
-//   listarRanques,
-//   (req, res, ctx) => res(ctx.status(200), ctx.json([
-//         {
-//           pagina: 1,
-//           itemsPorPagina: 2,
-//           total: 2,
-//           totalPaginas: 1,
-//           items: [
-//             {
-//               id: 1,
-//               numEscolas: 7777,
-//               data: "2023-12-03T21:29:34.136Z",
-//               descricao: "descrição 1",
-//               fatores: [
-//                 {
-//                   nome: "fator x",
-//                   peso: 0,
-//                   valor: 0
-//                 }
-//               ]
-//             },
-//             {
-//               id: 2,
-//               numEscolas: 8888,
-//               data: "2023-12-03T21:29:34.136Z",
-//               descricao: "descrição 2",
-//               fatores: [
-//                 {
-//                   nome: "fator y",
-//                   peso: 0,
-//                   valor: 0
-//                 }
-//               ]
-//             }]
-//         }
-//       ])
-//     )
-// ),
 
 export default server;

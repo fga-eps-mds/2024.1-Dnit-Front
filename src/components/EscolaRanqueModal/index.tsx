@@ -73,6 +73,7 @@ const ModalRanqueEscola: React.FC<ModalProps> = ({ escolaId, onClose, onCreateAc
                         <Label className='ml-4'>Custo Logístico: {formataCustoLogistico(escolaSelecionada.distanciaSuperintendencia)}</Label>
                     </div>
                     <Label>Total: {escolaSelecionada.ranqueInfo.pontuacao}</Label>
+                    <Label>Solicitação: {escolaSelecionada.temSolicitacao ? "Esta escola possui solicitação de ação" : "Não há registro de solicitacao"}</Label>
                     <hr />
                     <Label><strong>Dados</strong></Label>
                     <div className='row mb-2'>
