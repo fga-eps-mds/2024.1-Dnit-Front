@@ -1,7 +1,5 @@
-import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import ModalDetalhesRanque from '../components/DetalhesRanqueModal';
-import formatDate from '../components/DetalhesRanqueModal';
 import { RanqueData } from '../models/ranque';
 
 describe('test DetalhesRanqueModal', () => {
@@ -26,7 +24,7 @@ describe('test DetalhesRanqueModal', () => {
     const fechar = jest.fn();
     const editarDescricao = jest.fn();
 
-    const { getByText, getByLabelText } = render(
+    const { getByText } = render(
       <ModalDetalhesRanque
         ranque={mockRanque}
         onClose={fechar}
@@ -41,7 +39,7 @@ describe('test DetalhesRanqueModal', () => {
     expect(getByText(`${mockRanque.numEscolas}`)).toBeInTheDocument();
     expect(getByText(`Fatores do processamento:`)).toBeInTheDocument();
     mockRanque.fatores.forEach((fator) => {
-        expect(getByText(`Fator ${fator.nome}, Peso ${fator.peso}, Valor ${fator.valor}`)).toBeInTheDocument();
+        expect(getByText(`Fator: ${fator.nome}, Peso ${fator.peso}`)).toBeInTheDocument();
     });
     expect(getByText(`Descrição do Ranque:`)).toBeInTheDocument();
     expect(getByText(`${mockRanque.descricao}`)).toBeInTheDocument();

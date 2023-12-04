@@ -88,10 +88,10 @@ const ModalExportarRanque: React.FC<ModalProps> = ({ onClose }) => {
                             setPagina(p => p - 1)
                         }}
                         onPageResize={(newTamanhoPagina) => {
-                            setTamanhoPagina(newTamanhoPagina)
+                            setTamanhoPagina(newTamanhoPagina);
                         }}
                         onPageSelect={(newPagina) => {
-                            setPagina(newPagina)
+                            setPagina(newPagina);
                         }}>
                         {
                             listaRanques.map((e, index) =>

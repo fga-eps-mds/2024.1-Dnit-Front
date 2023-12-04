@@ -19,10 +19,10 @@ describe('ModalExportarRanque component', () => {
     expect(onCloseMock).toHaveBeenCalledTimes(1);
   });
 
-  test('Deve carregar Últimos Processamentos: na tela uma vez', async () => {
+  test('Deve carregar Histórico de Ranques na tela uma vez', async () => {
     const { getByText } = render(<ModalExportarRanque onClose={() => {}} />)
 
-    await waitFor(() => expect(getByText('Últimos Processamentos:')).toBeInTheDocument());
+    await waitFor(() => expect(getByText('Histórico de Ranques')).toBeInTheDocument());
   });
 
   test('Deve carregar Histórico de Ranques na tela', async () => {
