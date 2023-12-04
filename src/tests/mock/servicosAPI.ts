@@ -93,6 +93,8 @@ const server = setupServer(
   rest.post(poloUrl, (_, res, ctx) => res(
     ctx.status(200)
   )),
+  rest.delete(poloUrl, (_, res, ctx) =>
+      res(ctx.status(204))),
   rest.get(
     listarUsuarioPermissoes,
     (_, res, ctx) => res(ctx.json(Object.values(Permissao))),

@@ -179,4 +179,82 @@ describe("Gerenciar Polos", () => {
             buttonConfirmar.click()
         })
     })
+
+    it("Deve mostrar modal de excluir polo e confirmar", async () => {
+        autenticar(Permissao.PoloVisualizar, Permissao.PoloRemover)
+
+        const screen = setup()
+
+        await waitFor(() => expect(screen.getByText('Superintendência regional do DNIT em Alagoas')).toBeInTheDocument);
+
+        const deleteIcon = screen.getByTestId("table-row-delete-0")
+        await waitFor(() => expect(deleteIcon).toBeInTheDocument)
+
+        act(() => {
+            deleteIcon.click()
+        })
+
+        const overlay = screen.getByTestId("overlay")
+        const confirmButton = screen.getByTestId("botaoConfirmar")
+
+        await waitFor(() => expect(overlay).toBeInTheDocument)
+        await waitFor(() => expect(confirmButton).toBeInTheDocument)
+
+        act(() => {
+            confirmButton.click()
+        })
+
+        await waitFor(() => expect(overlay).not.toBeInTheDocument)
+    })
+
+
+    it("Deve mostrar modal de excluir polo e cancelar", async () => {
+        autenticar(Permissao.PoloVisualizar, Permissao.PoloRemover)
+
+        const screen = setup()
+
+        await waitFor(() => expect(screen.getByText('Superintendência regional do DNIT em Alagoas')).toBeInTheDocument);
+
+        const deleteIcon = screen.getByTestId("table-row-delete-0")
+        await waitFor(() => expect(deleteIcon).toBeInTheDocument)
+
+        act(() => {
+            deleteIcon.click()
+        })
+
+        const overlay = screen.getByTestId("overlay")
+        const buttonCancelar = screen.getByTestId("botaoCancelar")
+
+        await waitFor(() => expect(overlay).toBeInTheDocument)
+        await waitFor(() => expect(buttonCancelar).toBeInTheDocument)
+
+        act(() => {
+            buttonCancelar.click()
+        })
+
+        await waitFor(() => expect(overlay).not.toBeInTheDocument)
+    })
+
+
+    it("Deve mostrar modal de excluir polo e clicar fora", async () => {
+        autenticar(Permissao.PoloVisualizar, Permissao.PoloRemover)
+
+        const screen = setup()
+
+        await waitFor(() => expect(screen.getByText('Superintendência regional do DNIT em Alagoas')).toBeInTheDocument);
+
+        const deleteIcon = screen.getByTestId("table-row-delete-0")
+        await waitFor(() => expect(deleteIcon).toBeInTheDocument)
+
+        act(() => {
+            deleteIcon.click()
+        })
+
+        const overlay = screen.getByTestId("overlay")
+        await waitFor(() => expect(overlay).toBeInTheDocument)
+
+        act(() => {
+            overlay.click()
+        })
+    })
 })
