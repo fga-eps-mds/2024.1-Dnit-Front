@@ -37,7 +37,7 @@ function Ranque() {
   const paginas = [{ nome: "Logout", link: "/login" }];
   const [loading, setLoading] = useState(true);
   const [escolas, setEscolas] = useState<ListaPaginada<EscolaRanqueData> | null>(null);
-  const colunas = ['Posição', 'Pontuação', 'Escola', 'Etapas de Ensino', 'UF', 'Município', 'UF Superintendência', 'Custo Logístico'];
+  const colunas = ['Posição', 'Pontuação', 'Escola', 'Etapas de Ensino', 'UF', 'Município', 'UF Polo', 'Custo Logístico'];
 
   const [paginacao, setPaginacao] = useState({pagina: 1, tamanhoPagina: 10,});
   const [notificationApi, notificationContextHandler] = notification.useNotification();
@@ -166,8 +166,8 @@ function Ranque() {
                     '3': formatEtapaEnsino(e.escola.etapaEnsino),
                     '4': e.escola.uf?.sigla || '',
                     '5': e.escola.municipio?.nome || '',
-                    '6': e.escola.superintendencia?.uf || '' ,
-                    '7': formataCustoLogistico(e.escola.distanciaSuperintendencia),
+                    '6': e.escola.polo?.uf || '' ,
+                    '7': formataCustoLogistico(e.escola.distanciaPolo),
                   }}
                   hideTrashIcon={true}
                   hideEditIcon={true}

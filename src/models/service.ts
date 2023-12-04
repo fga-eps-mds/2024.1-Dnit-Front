@@ -116,8 +116,8 @@ export interface EscolaData {
   telefone: string;
   numeroTotalDeDocentes: number;
   observacao: string;
-  distanciaSuperintendencia: number;
-  superintendenciaId: number;
+  distanciaPolo: number;
+  poloId: number;
 }
 
 export interface FiltroEscolaData {
@@ -220,16 +220,6 @@ export interface UfModel {
   id: number;
   sigla: string;
   nome: string;
-}
-
-export interface Superintendencia{
-  id: number;
-  endereco: string;
-  cep: string;
-  latitude: string;
-  longitude: string;
-  uf: number;
-  siglaUf: string;
 }
 
 export interface Fatores {

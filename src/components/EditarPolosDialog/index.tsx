@@ -97,7 +97,7 @@ export default function EditarPolosDialog( { id, readOnly, listaUfs, closeDialog
 					<i className="fas fa-times" aria-hidden="true"></i>
 				</button>
       		</div>
-			<div style={ {height: "inherit"} }>
+			<div style={ {height: "fit-content"} }>
 				<div className="br-input edicao-polo">
 					<label>Nome</label>
 					<input id="input-default" data-testid="inputNome" type={"text"} readOnly={readOnly} onChange={e => setNome(e.target.value)} defaultValue={nome}/>
@@ -133,20 +133,20 @@ export default function EditarPolosDialog( { id, readOnly, listaUfs, closeDialog
 					buttonStyle={{ left: "150px" } } 
 					filtrarTodos={false}
 					definePlaceholder="Escolha a Unidade Federativa"
-					inputReadOnly={readOnly}
+					inputReadOnly={!readOnly}
 				/>
 				<Select 
 					items={listaMunicipios} 
 					value={newMunicipio} 
-					label={"Municipio"} 
+					label={"Município"} 
 					onChange={(municipio) => {
 					setNewMunicipio(municipio)}} 
 					inputStyle={{ width: "450px" }} 
 					dropdownStyle={{ width: "450px" }} 
 					buttonStyle={{ left: "150px" } } 
 					filtrarTodos={false}
-					definePlaceholder="Escolha o Municipio"
-					inputReadOnly={readOnly}
+					definePlaceholder="Escolha o Município"
+					inputReadOnly={!readOnly}
 				/>
 			</div>
 			{!readOnly &&
