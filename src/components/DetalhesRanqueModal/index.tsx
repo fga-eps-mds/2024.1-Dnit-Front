@@ -1,13 +1,11 @@
-import React, { ReactNode, useState, useEffect } from 'react';
+import React, { ReactNode, useState } from 'react';
 import "../../styles/App.css";
 import "../../pages/Ranque/";
 import Modal from "../../components/Modal/index";
 import { fetchAtualizarDescricaoRanque } from '../../service/ranqueApi';
-import { EscolaRanqueDetalhes, RanqueData, RanqueUpdateData } from '../../models/ranque';
-import ReactLoading from "react-loading";
+import { RanqueData, RanqueUpdateData } from '../../models/ranque';
 import "./index.css";
 import { notification } from 'antd';
-import { ranqueData } from '../../tests/stub/ranqueModelos';
 import { formatDate } from '../../utils/utils';
 
 interface ModalProps {
@@ -28,7 +26,7 @@ function Label({ children, className }: LabelProps) {
 }
 
 const ModalDetalhesRanque: React.FC<ModalProps> = ({ ranque, onEditDescription, onClose }) => {
-    const [notificationApi, contextHolder] = notification.useNotification();
+    const [_, contextHolder] = notification.useNotification();
 
     const [modoEdicao, setModoEdicao] = useState(false);
     const [novaDescricao, setNovaDescricao] = useState(ranque.descricao);
@@ -58,7 +56,7 @@ const ModalDetalhesRanque: React.FC<ModalProps> = ({ ranque, onEditDescription, 
                     <br />
                     <Label><strong>Fatores do processamento:</strong></Label>
                     <div className='d-flex flex-column'>
-                        {ranque.fatores.map(f => <Label className='ml-4'>Fator {f.nome}, Peso {f.peso}, Valor {f.valor}</Label>)}
+                        {ranque.fatores.map(f => <Label className='ml-4'>Fator: {f.nome}, Peso {f.peso}</Label>)}
                     </div>
                     <br />
                     <Label><strong>Descrição do Ranque:</strong></Label>

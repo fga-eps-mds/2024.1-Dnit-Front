@@ -5,11 +5,10 @@ import Modal from "../../components/Modal/index";
 import Table, { CustomTableRow } from '../../components/Table';
 import ModalDetalhesRanque from '../../components/DetalhesRanqueModal';
 import { fetchRanques } from '../../service/ranqueApi';
-import { EscolaRanqueDetalhes, RanqueData, ListaPaginada } from '../../models/ranque';
+import { RanqueData } from '../../models/ranque';
 import ReactLoading from "react-loading";
 import "./index.css";
 import { notification } from 'antd';
-import { ranqueData } from '../../tests/stub/ranqueModelos';
 import { urlAPIEscolas } from '../../consts/service';
 import { formatDate } from '../../utils/utils';
 
@@ -105,7 +104,7 @@ const ModalExportarRanque: React.FC<ModalProps> = ({ onClose }) => {
                                     data={{
                                         '0': `${formatDate(e.data)}`,
                                         '1': `${e.numEscolas}`,
-                                        '2': e.descricao || '',
+                                        '2': e.descricao ? `${e.descricao.substring(0, 30)}${e.descricao.length > 30 ? '...' : ''}` : '',
                                     }}
                                     hideTrashIcon={true}
                                     hideEditIcon={true}
