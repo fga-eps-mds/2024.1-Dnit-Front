@@ -24,9 +24,9 @@ const escola1: SolicitacaoEscolaData = {
   telefone: "32562393",
   numeroTotalDeDocentes: 200,
   siglaUf: "AC",
-  distanciaSuperintendencia: 369.04769287884994,
+  distanciaPolo: 369.04769287884994,
   idEtapasDeEnsino: 1,
-  superintendenciaId: 1,
+  poloId: 1,
 
 }
 
