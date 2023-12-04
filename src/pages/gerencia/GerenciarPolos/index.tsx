@@ -18,12 +18,13 @@ import { FilterOptions } from "../GerenciarUsuario";
 import {fetchMunicipio, fetchUnidadeFederativa} from "../../../service/escolaApi";
 import MultiSelect from "../../../components/MultiSelect";
 import Select, {SelectItem} from "../../../components/Select";
-import {fetchListarPolosFiltrados} from "../../../service/poloAPI";
+import {fetchListarPolosFiltrados} from "../../../service/poloApi";
 import {FiltroPoloData} from "../../../models/service";
 import {PoloModel, ListaPaginada} from "../../../models/polo";
+import EditarPolosDialog from "../../../components/EditarPolosDialog";
 
-interface EmpresaDialogArgs {
-  id: string | null;
+interface PoloDialogArgs {
+  id: number | null;
   readOnly: boolean;
 }
 
@@ -48,6 +49,9 @@ export default function GerenciarPolos() {
     const [listaPolos, setListaPolos] = useState<PoloModel[]>(pagina.items);
 
     const [notificationApi, notificationContextHandler] = notification.useNotification();
+
+    const [showPolo, setShowPolo] = useState<PoloDialogArgs | null>(null);
+
 
 	const navigate = useNavigate();
 
@@ -109,6 +113,7 @@ export default function GerenciarPolos() {
     return (
 		<div className="App">
 			{notificationContextHandler}
+            {showPolo && <EditarPolosDialog id={showPolo.id} listaUfs={listaUfs} readOnly={showPolo.readOnly} closeDialog={() => {setShowPolo(null);}}/>}
 			<Header/>
 			<TrilhaDeNavegacao elementosLi={paginas}/>
 			<div className="d-flex flex-column m-5">
@@ -123,7 +128,7 @@ export default function GerenciarPolos() {
                             onChange={id => setMunicipio(municipios.find(m => m.id == id) || null)}
                             dropdownStyle={{ marginLeft: "20px", width: "260px" }}
                             filtrarTodos={true} />
-					<ButtonComponent label="Cadastrar Polo" buttonStyle="primary" ></ButtonComponent>
+					<ButtonComponent label="Cadastrar Polo" buttonStyle="primary" onClick={() => setShowPolo({ id: null, readOnly: false })} ></ButtonComponent>
         		</div>
 				{listaPolos.length === 0 && <Table columsTitle={colunasTabela} initialItemsPerPage={10} title={tituloTabela}><></><></></Table>}
 				<Table 
@@ -152,8 +157,12 @@ export default function GerenciarPolos() {
 							<CustomTableRow
 								key={`${polo.endereco}`}
                                 id={index}
-                                onEditRow={() => {}}
-                                onDetailRow={() => {}}
+                                onEditRow={() => {
+									setShowPolo({id: polo.id, readOnly: false})
+								}}
+								onDetailRow={() => {
+									setShowPolo({id: polo.id, readOnly: true})
+								}}
                                 onDeleteRow={() => {}}
                                 onUsersRow={() => {}}
 								data={

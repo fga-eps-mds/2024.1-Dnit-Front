@@ -255,3 +255,13 @@ export interface PoloData {
     nome: string;
     uf: number;
 }
+
+export interface SalvarPoloData {
+  endereco: string;
+  cep: string;
+  latitude: string;
+  longitude: string;
+  municipioId: number;
+  nome: string;
+  idUf: number;
+}

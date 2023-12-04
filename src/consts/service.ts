@@ -46,3 +46,4 @@ export const listarSuperintendencia = `${urlAPIEscolas}/superintendencias`;
 export const listarEscolasRanque = `${urlAPIEscolas}/ranque/escolas`;
 export const ranqueamentoProcessamento = `${urlAPIEscolas}/ranque/processamento`;
 export const polosFiltradosUrl = `${urlAPIEscolas}/Polos/paginado`;
+export const poloUrl = `${urlAPIEscolas}/Polos`;
