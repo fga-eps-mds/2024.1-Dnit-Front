@@ -1,9 +1,6 @@
-import React from 'react';
-import { render, waitForElementToBeRemoved, fireEvent, screen, waitFor, getByText } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import ModalExportarRanque from '../components/ExportarRanqueModal';
-import userEvent from '@testing-library/user-event';
-import server from "./mock/servicosAPI";
-import { CustomTableRow } from '../components/Table';
+import server from './mock/servicosAPI';
 
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
@@ -23,7 +20,7 @@ describe('ModalExportarRanque component', () => {
   });
 
   test('Deve carregar Últimos Processamentos: na tela uma vez', async () => {
-    const { getByText } = render(<ModalExportarRanque {...(mockProps as any)} />);
+    const { getByText } = render(<ModalExportarRanque onClose={() => {}} />)
 
     await waitFor(() => expect(getByText('Últimos Processamentos:')).toBeInTheDocument());
   });
@@ -65,7 +62,7 @@ describe('ModalExportarRanque component', () => {
         onClose={() => { }} />
     );
     await waitFor(() => expect(screen.getByText("Histórico de Ranques")).toBeInTheDocument())
-    await waitFor(() => expect(screen.getByText("26/10/2023 19:44")).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText("7777")).toBeInTheDocument())
   });
 
   it("Deve paginar os ranques", async () => {
@@ -74,7 +71,7 @@ describe('ModalExportarRanque component', () => {
         onClose={() => { }} />
     );
 
-    await waitFor(() => expect(screen.getByText("26/10/2023 19:44")).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText("7777")).toBeInTheDocument());
     fireEvent.change(screen.getByTestId("items-per-page"), { target: { value: 1 } });
     fireEvent.change(screen.getByTestId("drop-select-page"), { target: { value: 1 } });
 
@@ -104,7 +101,7 @@ describe('ModalExportarRanque component', () => {
     );
 
     await waitFor(() => expect(screen.getByText("Carregando Tabela...")).toBeInTheDocument());
-    await waitFor(() => expect(screen.getByText("26/10/2023 19:44")).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText("7777")).toBeInTheDocument());
   })
 
 });

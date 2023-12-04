@@ -36,7 +36,6 @@ const obterEmpresaRequest = rest.get(
         const { cnpj } = req.params
         let empresa = empresas[0]
         empresa.cnpj = cnpj[0]
-        console.log(empresa)
         return res(
             ctx.status(200),
             ctx.json(empresa)

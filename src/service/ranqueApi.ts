@@ -21,6 +21,6 @@ export async function fetchRanques(pagina: number, tamanhoPagina: number): Promi
 }
 
 export async function fetchAtualizarDescricaoRanque(ranqueId: number, novaDescricao: RanqueUpdateData) {
-  const response: AxiosResponse<RanqueUpdateData> = await axios.put(`${URL.atualizarDescricaoRanque}/${ranqueId}`, novaDescricao);
+  await axios.put(`${URL.atualizarDescricaoRanque}/${ranqueId}`, novaDescricao);
 }
 

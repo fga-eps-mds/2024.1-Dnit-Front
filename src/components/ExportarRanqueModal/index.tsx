@@ -31,21 +31,23 @@ function Label({ children, className }: LabelProps) {
 const ModalExportarRanque: React.FC<ModalProps> = ({ onClose }) => {
     const [notificationApi, contextHolder] = notification.useNotification();
     const [ranqueAtual, setRanqueAtual] = useState<RanqueData | null>();
-    const colunas = ['Data e Hora', 'Número de escolas'];
-    const [listaRanques, setListaRanques] = useState<RanqueData[]>();
+    const colunas = ['Data e Hora', 'Número de escolas', 'Descrição'];
+    const [listaRanques, setListaRanques] = useState<RanqueData[] | null>(null);
     const [pagina, setPagina] = useState(1);
     const [tamanhoPagina, setTamanhoPagina] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
 
     useEffect(() => {
         fetchRanques(pagina, tamanhoPagina)
             .then((ranque) => {
                 setListaRanques(ranque.items);
                 setTotalPages(ranque.totalPaginas);
+                setTotalItems(ranque.total);
             })
-    }, []);
+    }, [pagina, tamanhoPagina]);
 
-    if (!listaRanques?.length) {
+    if (!listaRanques) {
         return (
             <Modal className="modal-title" closeModal={() => onClose()}>
                 <h4 className="text-center mt-2">Carregando Tabela...</h4>
@@ -80,17 +82,17 @@ const ModalExportarRanque: React.FC<ModalProps> = ({ onClose }) => {
                         title=''
                         initialItemsPerPage={5}
                         totalPages={totalPages}
-                        totalItems={100}
+                        totalItems={totalItems}
                         onNextPage={() => {
                             if (pagina === totalPages) return;
-                            setPagina(pagina + 1)
+                            setPagina(p => p + 1)
                         }}
                         onPreviousPage={() => {
-                            if (pagina === totalPages) return;
-                            setPagina(pagina - 1)
+                            if (pagina === 1) return;
+                            setPagina(p => p - 1)
                         }}
                         onPageResize={(newTamanhoPagina) => {
-                            setTotalPages(newTamanhoPagina)
+                            setTamanhoPagina(newTamanhoPagina)
                         }}
                         onPageSelect={(newPagina) => {
                             setPagina(newPagina)
@@ -103,6 +105,7 @@ const ModalExportarRanque: React.FC<ModalProps> = ({ onClose }) => {
                                     data={{
                                         '0': `${formatDate(e.data)}`,
                                         '1': `${e.numEscolas}`,
+                                        '2': e.descricao || '',
                                     }}
                                     hideTrashIcon={true}
                                     hideEditIcon={true}

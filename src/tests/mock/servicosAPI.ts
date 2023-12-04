@@ -903,46 +903,85 @@ const server = setupServer(
     (req, res, ctx) => res(ctx.status(200))
   ),
   rest.get(
-    `${escolasService}/listarRanques`,
-    (req, res, ctx) => {
-        return res(ctx.status(200), ctx.json([
-          {
-            pagina: 1,
-            itemsPorPagina: 2,
-            total: 2,
-            totalPaginas: 1,
-            items: [
-              {
-                id: 1,
-                numEscolas: 7777,
-                data: "2023-12-03T21:29:34.136Z",
-                descricao: "descrição 1",
-                fatores: [
-                  {
-                    nome: "fator x",
-                    peso: 0,
-                    valor: 0
-                  }
+    listarRanques,
+    (req, res, ctx) => res(
+      ctx.status(200),
+      ctx.json({
+        "pagina": 1,
+        "itemsPorPagina": 10,
+        "total": 2,
+        "totalPaginas": 1,
+        "items": [
+            {
+                "id": 1,
+                "numEscolas": 7777,
+                "data": "2023-11-22T13:49:28.28035+00:00",
+                "descricao": null,
+                "fatores": [
+                    {
+                        "nome": "UPS",
+                        "peso": 1,
+                        "valor": 0
+                    }
                 ]
-              },
-              {
-                id: 2,
-                numEscolas: 8888,
-                data: "2023-12-03T21:29:34.136Z",
-                descricao: "descrição 2",
-                fatores: [
-                  {
-                    nome: "fator y",
-                    peso: 0,
-                    valor: 0
-                  }
+            },
+            {
+                "id": 2,
+                "numEscolas": 8888,
+                "data": "2023-11-22T13:22:03.937386+00:00",
+                "descricao": "asasas",
+                "fatores": [
+                    {
+                        "nome": "UPS",
+                        "peso": 1,
+                        "valor": 0
+                    }
                 ]
-              }]
-          }
-        ])
-      );
-    }
-  ),
+            },
+        ]
+    })
+    )
+  )
 );
+
+// rest.get(
+//   listarRanques,
+//   (req, res, ctx) => res(ctx.status(200), ctx.json([
+//         {
+//           pagina: 1,
+//           itemsPorPagina: 2,
+//           total: 2,
+//           totalPaginas: 1,
+//           items: [
+//             {
+//               id: 1,
+//               numEscolas: 7777,
+//               data: "2023-12-03T21:29:34.136Z",
+//               descricao: "descrição 1",
+//               fatores: [
+//                 {
+//                   nome: "fator x",
+//                   peso: 0,
+//                   valor: 0
+//                 }
+//               ]
+//             },
+//             {
+//               id: 2,
+//               numEscolas: 8888,
+//               data: "2023-12-03T21:29:34.136Z",
+//               descricao: "descrição 2",
+//               fatores: [
+//                 {
+//                   nome: "fator y",
+//                   peso: 0,
+//                   valor: 0
+//                 }
+//               ]
+//             }]
+//         }
+//       ])
+//     )
+// ),
 
 export default server;
