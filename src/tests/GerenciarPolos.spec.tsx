@@ -257,4 +257,41 @@ describe("Gerenciar Polos", () => {
             overlay.click()
         })
     })
+
+
+    it("Deve mudar o número de polos mostrados na tabela e mudar a página", async () => {
+        autenticar(Permissao.PoloVisualizar)
+
+        const screen = setup()
+
+        await waitFor(() => expect(screen.getByText('Superintendência regional do DNIT em Alagoas')).toBeInTheDocument);
+
+        const select = screen.getByTestId("items-per-page")
+        act(() => {
+            fireEvent.change(select, {
+                target: {value: "1"},
+            })
+        })
+
+        const selectPagina = screen.getByTestId("drop-select-page")
+        act(() => {
+            fireEvent.change(selectPagina, {
+                target: {value: "2"}
+            })
+        })
+    })
+
+    it("Deve mostrar a notificação de falha na listagem de empresas", async () => {
+        const screen = setup()
+
+        await waitFor(() => expect(screen.getByText('Superintendência regional do DNIT em Alagoas')).toBeInTheDocument);
+
+        const filtroCep = screen.getByTestId("filtroCep")
+
+        act(() => {
+            fireEvent.change(filtroCep, {
+                target: {value: "-99999"}
+            })
+        })
+    })
 })
