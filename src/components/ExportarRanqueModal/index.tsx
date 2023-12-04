@@ -70,9 +70,6 @@ const ModalExportarRanque: React.FC<ModalProps> = ({ onClose }) => {
                 {ranqueAtual != null && <ModalDetalhesRanque onClose={() => { setRanqueAtual(null) }} onEditDescription={() => { }} ranque={ranqueAtual} />}
                 <div className="d-flex flex-column">
                     <h4 className="text-center mt-1">Histórico de Ranques</h4>
-                    <div className='d-flex flex-column '>
-                        <Label>Últimos Processamentos:</Label>
-                    </div>
                 </div>
 
                 <div style={{ maxHeight: '800px', overflowY: 'visible' }}>
