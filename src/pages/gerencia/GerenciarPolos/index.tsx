@@ -59,6 +59,19 @@ export default function GerenciarPolos() {
 	const navigate = useNavigate();
 
 	const { temPermissao } = useContext(AuthContext);
+	
+	const temPermissaoGerenciar = {
+		cadastrar: temPermissao(Permissao.PoloCadastrar),
+		visualizar: temPermissao(Permissao.PoloVisualizar),
+		remover: temPermissao(Permissao.PoloRemover),
+		editar: temPermissao(Permissao.PoloEditar),
+	}
+
+    useEffect(() => {
+        if (!temPermissao(Permissao.PoloVisualizar)) {
+          navigate("/dashboard");
+        }
+        }, []);
 
     // TODO: permissões polos
 
@@ -132,7 +145,7 @@ export default function GerenciarPolos() {
                             onChange={id => setMunicipio(municipios.find(m => m.id == id) || null)}
                             dropdownStyle={{ marginLeft: "20px", width: "260px" }}
                             filtrarTodos={true} />
-					<ButtonComponent label="Cadastrar Polo" buttonStyle="primary" onClick={() => setShowPolo({ id: null, readOnly: false })} ></ButtonComponent>
+					{temPermissaoGerenciar.cadastrar && <ButtonComponent label="Cadastrar Polo" buttonStyle="primary" onClick={() => setShowPolo({ id: null, readOnly: false })} ></ButtonComponent>}
         		</div>
 				{listaPolos.length === 0 && <Table columsTitle={colunasTabela} initialItemsPerPage={10} title={tituloTabela}><></><></></Table>}
 				<Table 
@@ -179,6 +192,9 @@ export default function GerenciarPolos() {
                                     '3': polo.municipio.nome,
                                     '4': polo.cep
                                 }}
+								hideEyeIcon = {!temPermissaoGerenciar.visualizar}
+								hideTrashIcon = {!temPermissaoGerenciar.remover}
+								hideEditIcon={!temPermissaoGerenciar.editar}
 							/>
 						))
 					}
