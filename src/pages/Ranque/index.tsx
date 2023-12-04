@@ -1,8 +1,9 @@
 import { useState, useEffect, useContext } from 'react';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
+import { ButtonComponent } from "../../components/Button";
 import "./styles.css";
-import {EtapasDeEnsinoData, RanqueInfo} from '../../models/service';
+import { EtapasDeEnsinoData, RanqueInfo } from '../../models/service';
 import {
   fetchEtapasDeEnsino,
   fetchMunicipio,
@@ -15,6 +16,7 @@ import { fetchEscolasRanque, fetchProcessamentoRanque } from '../../service/ranq
 import { EscolaRanqueData, EscolaRanqueFiltro, ListaPaginada, RanqueProcessamentoData } from '../../models/ranque';
 import { notification } from 'antd';
 import { FiltroNome } from '../../components/FiltroNome';
+import ModalExportarRanque from '../../components/ExportarRanqueModal';
 import Select, { SelectItem } from '../../components/Select';
 import ModalRanqueEscola from '../../components/EscolaRanqueModal';
 import { AuthContext } from '../../provider/Autenticacao';
@@ -39,12 +41,31 @@ function Ranque() {
   const [escolas, setEscolas] = useState<ListaPaginada<EscolaRanqueData> | null>(null);
   const colunas = ['Posição', 'Pontuação', 'Escola', 'Etapas de Ensino', 'UF', 'Município', 'Cidade polo mais próxima', 'Custo Logístico'];
 
-  const [paginacao, setPaginacao] = useState({pagina: 1, tamanhoPagina: 10,});
+  const [paginacao, setPaginacao] = useState({ pagina: 1, tamanhoPagina: 10, });
   const [notificationApi, notificationContextHandler] = notification.useNotification();
   const [escolaAtual, setEscolaAtual] = useState<EscolaRanqueData | null>();
 
+  const [showExportModal, setShowExportModal] = useState(false);
+
+  const openExportModal = () => {
+    setShowExportModal(true);
+  };
+
+  const closeExportModal = () => {
+    setShowExportModal(false);
+  };
+
   const navigate = useNavigate();
   const { temPermissao } = useContext(AuthContext);
+
+  const temPermissaoGerenciar = {
+    cadastrar: temPermissao(Permissao.EmpresaCadastrar),
+    visualizar: temPermissao(Permissao.EmpresaVisualizar),
+    remover: temPermissao(Permissao.EmpresaRemover),
+    editar: temPermissao(Permissao.EmpresaEditar),
+    visualizarUsuarios: temPermissao(Permissao.EmpresaVisualizarUsuarios),
+  }
+  const podeExportarRanque = temPermissao(Permissao.RanqueExportar);
 
   useEffect(() => {
     if (!temPermissao(Permissao.RanqueVisualizar)) {
@@ -94,15 +115,15 @@ function Ranque() {
       })
       .finally(() => setLoading(false));
   }, [nome, uf, municipio, etapa, paginacao]);
-  
 
-    const formatEtapaEnsino = (etapaEnsino: EtapasDeEnsinoData[], max = 2) => {
-        if (!etapaEnsino) {
-            return '';
-        }
-        return `${etapaEnsino.map(etapa => etapa.descricao).slice(0, max).join(', ')}${etapaEnsino.length > max ? '...' : ''}`;
+
+  const formatEtapaEnsino = (etapaEnsino: EtapasDeEnsinoData[], max = 2) => {
+    if (!etapaEnsino) {
+      return '';
     }
-    
+    return `${etapaEnsino.map(etapa => etapa.descricao).slice(0, max).join(', ')}${etapaEnsino.length > max ? '...' : ''}`;
+  }
+
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     const padZeros = (n: number) => n.toString().padStart(2, '0');
@@ -166,7 +187,7 @@ function Ranque() {
                     '3': formatEtapaEnsino(e.escola.etapaEnsino),
                     '4': e.escola.uf?.sigla || '',
                     '5': e.escola.municipio?.nome || '',
-                    '6': e.escola.superintendencia?.uf || '' ,
+                    '6': e.escola.superintendencia?.uf || '',
                     '7': formataCustoLogistico(e.escola.distanciaSuperintendencia),
                   }}
                   hideTrashIcon={true}
@@ -178,8 +199,17 @@ function Ranque() {
           </Table>
         }
 
-        {loading && <div className="d-flex justify-content-center w-100 m-5"><ReactLoading type="spinningBubbles" color="#000000" /></div>}
+        <div className='d-flex justify-content-end mt-4'>
+          <ButtonComponent label="Exportar Dados" buttonStyle="primary" onClick={openExportModal} disabled={!podeExportarRanque} />
         </div>
+
+        {showExportModal && (
+          <ModalExportarRanque onClose={closeExportModal} />
+        )}
+
+        {loading && <div className="d-flex justify-content-center w-100 m-5"><ReactLoading type="spinningBubbles" color="#000000" /></div>}
+      </div>
+
       <Footer />
     </div>
   );

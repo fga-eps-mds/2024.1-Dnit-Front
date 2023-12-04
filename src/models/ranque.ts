@@ -79,3 +79,21 @@ export interface SuperintendenciaModel {
     id: number;
     uf: string;
 }
+
+export interface FatorModel {
+    nome: string;
+    peso: number;
+    valor: number;
+}
+
+export interface RanqueData {
+    id: number;
+    numEscolas: number;
+    data: string;
+    descricao: string;
+    fatores: FatorModel[];
+}
+
+export interface RanqueUpdateData {
+    descricao: string;
+}

@@ -45,3 +45,6 @@ export const listarUsuariosEmpresaUrl = `${urlAPIUsuario}/empresa/listarUsuarios
 export const listarSuperintendencia = `${urlAPIEscolas}/superintendencias`;
 export const listarEscolasRanque = `${urlAPIEscolas}/ranque/escolas`;
 export const ranqueamentoProcessamento = `${urlAPIEscolas}/ranque/processamento`;
+export const listarRanques = `${urlAPIEscolas}/ranque`;
+export const atualizarDescricaoRanque = `${urlAPIEscolas}/ranque`;
+export const exportarEscolas = `${urlAPIEscolas}/escolas/exportar`;
