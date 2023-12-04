@@ -7,6 +7,7 @@ import {
     cadastrarPerfilUrl,
     excluiPerfil,
     listarEscolasRanque,
+    listarRanques,
     listarPerfis,
     listarPermissoesCategoria,
     listarUsuarioPermissoes,
