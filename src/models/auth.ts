@@ -3,6 +3,7 @@ export enum Permissao {
   EscolaEditar = "EscolaEditar",
   EscolaRemover = "EscolaRemover",
   EscolaVisualizar = "EscolaVisualizar",
+  EscolaExportar = "EscolaExportar",
   
   PerfilCadastrar = "PerfilCadastrar",
   PerfilEditar = "PerfilEditar",
@@ -12,6 +13,7 @@ export enum Permissao {
   UpsCalcularSinistro = "UpsCalcularSinistro",
   UpsCalcularEscola = "UpsCalcularEscola",
   RanqueVisualizar = "RanqueVisualizar",
+  RanqueExportar = "RanqueExportar",
 
   UsuarioCadastrar = "UsuarioCadastrar",
   UsuarioVisualizar = "UsuarioVisualizar",
