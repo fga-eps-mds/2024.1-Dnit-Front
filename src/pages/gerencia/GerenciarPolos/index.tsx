@@ -18,12 +18,14 @@ import { FilterOptions } from "../GerenciarUsuario";
 import {fetchMunicipio, fetchUnidadeFederativa} from "../../../service/escolaApi";
 import MultiSelect from "../../../components/MultiSelect";
 import Select, {SelectItem} from "../../../components/Select";
-import {fetchListarPolosFiltrados} from "../../../service/poloAPI";
+import {fetchListarPolosFiltrados} from "../../../service/poloApi";
 import {FiltroPoloData} from "../../../models/service";
 import {PoloModel, ListaPaginada} from "../../../models/polo";
+import EditarPolosDialog from "../../../components/EditarPolosDialog";
+import DeletarPoloDialog, { DeletarPoloDialogArgs } from "../../../components/DeletarPoloDialog";
 
-interface EmpresaDialogArgs {
-  id: string | null;
+interface PoloDialogArgs {
+  id: number | null;
   readOnly: boolean;
 }
 
@@ -49,11 +51,32 @@ export default function GerenciarPolos() {
 
     const [notificationApi, notificationContextHandler] = notification.useNotification();
 
+    const [showPolo, setShowPolo] = useState<PoloDialogArgs | null>(null);
+    const [showDeletePolo, setShowDeletePolo] = useState<DeletarPoloDialogArgs | null>(null);
+
+
+
 	const navigate = useNavigate();
 
 	const { temPermissao } = useContext(AuthContext);
+	
+	const temPermissaoGerenciar = {
+		cadastrar: temPermissao(Permissao.PoloCadastrar),
+		visualizar: temPermissao(Permissao.PoloVisualizar),
+		remover: temPermissao(Permissao.PoloRemover),
+		editar: temPermissao(Permissao.PoloEditar),
+	}
+
+    useEffect(() => {
+        if (!temPermissao(Permissao.PoloVisualizar)) {
+          navigate("/dashboard");
+        }
+        }, []);
 
     // TODO: permissões polos
+    const onPoloChange = (changed: boolean) => {
+		if (changed) buscarPolos(1);
+	}
 
     const buscarPolos = (proximaPagina: number, novoTamanhoPagina: number = tamanhoPagina) => {
         const filtro = { params: {
@@ -109,7 +132,9 @@ export default function GerenciarPolos() {
     return (
 		<div className="App">
 			{notificationContextHandler}
-			<Header/>
+            {showPolo && <EditarPolosDialog id={showPolo.id} listaUfs={listaUfs} readOnly={showPolo.readOnly} closeDialog={(salvou) => {setShowPolo(null); onPoloChange(salvou)}}/>}
+            {showDeletePolo && <DeletarPoloDialog id={showDeletePolo.id} nome={showDeletePolo.nome} closeDialog={(deletou) => {setShowDeletePolo(null); onPoloChange(deletou)}}/>}
+            <Header/>
 			<TrilhaDeNavegacao elementosLi={paginas}/>
 			<div className="d-flex flex-column m-5">
 				<div className="d-flex justify-content-left align-items-center mr-5">
@@ -123,7 +148,7 @@ export default function GerenciarPolos() {
                             onChange={id => setMunicipio(municipios.find(m => m.id == id) || null)}
                             dropdownStyle={{ marginLeft: "20px", width: "260px" }}
                             filtrarTodos={true} />
-					<ButtonComponent label="Cadastrar Polo" buttonStyle="primary" onClick={} ></ButtonComponent>
+					{temPermissaoGerenciar.cadastrar && <ButtonComponent label="Cadastrar Polo" buttonStyle="primary" onClick={() => setShowPolo({ id: null, readOnly: false })} ></ButtonComponent>}
         		</div>
 				{listaPolos.length === 0 && <Table columsTitle={colunasTabela} initialItemsPerPage={10} title={tituloTabela}><></><></></Table>}
 				<Table 
@@ -152,9 +177,15 @@ export default function GerenciarPolos() {
 							<CustomTableRow
 								key={`${polo.endereco}`}
                                 id={index}
-                                onEditRow={() => {}}
-                                onDetailRow={() => {}}
-                                onDeleteRow={() => {}}
+                                onEditRow={() => {
+									setShowPolo({id: polo.id, readOnly: false})
+								}}
+								onDetailRow={() => {
+									setShowPolo({id: polo.id, readOnly: true})
+								}}
+                                onDeleteRow={() => {
+									setShowDeletePolo({id: polo.id, nome: polo.nome})
+								}}
                                 onUsersRow={() => {}}
 								data={
                                 {
@@ -164,6 +195,9 @@ export default function GerenciarPolos() {
                                     '3': polo.municipio.nome,
                                     '4': polo.cep
                                 }}
+								hideEyeIcon = {!temPermissaoGerenciar.visualizar}
+								hideTrashIcon = {!temPermissaoGerenciar.remover}
+								hideEditIcon={!temPermissaoGerenciar.editar}
 							/>
 						))
 					}
@@ -172,4 +206,24 @@ export default function GerenciarPolos() {
 			<Footer/>
 		</div>
     )
+}
+
+export const formatCnpj = (input: string) => {
+	const cnpjNumeric = input.replace(/\D/g, '');
+
+	if (cnpjNumeric.length >= 13) {
+		return `${cnpjNumeric.slice(0, 2)}.${cnpjNumeric.slice(2, 5)}.${cnpjNumeric.slice(5, 8)}/${cnpjNumeric.slice(8, 12)}-${cnpjNumeric.slice(12)}`;
+	} 
+	else if (cnpjNumeric.length >= 9) {
+		return `${cnpjNumeric.slice(0, 2)}.${cnpjNumeric.slice(2, 5)}.${cnpjNumeric.slice(5, 8)}/${cnpjNumeric.slice(8)}`;
+	} 
+	else if (cnpjNumeric.length >= 6) {
+		return `${cnpjNumeric.slice(0, 2)}.${cnpjNumeric.slice(2, 5)}.${cnpjNumeric.slice(5)}`;
+	} 
+	else if (cnpjNumeric.length >= 3) {
+		return `${cnpjNumeric.slice(0, 2)}.${cnpjNumeric.slice(2)}`;
+	} 
+	else {
+		return cnpjNumeric;
+	}
 }

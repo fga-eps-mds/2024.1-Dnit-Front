@@ -116,8 +116,8 @@ export interface EscolaData {
   telefone: string;
   numeroTotalDeDocentes: number;
   observacao: string;
-  distanciaSuperintendencia: number;
-  superintendenciaId: number;
+  distanciaPolo: number;
+  poloId: number;
 }
 
 export interface FiltroEscolaData {
@@ -222,16 +222,6 @@ export interface UfModel {
   nome: string;
 }
 
-export interface Superintendencia{
-  id: number;
-  endereco: string;
-  cep: string;
-  latitude: string;
-  longitude: string;
-  uf: number;
-  siglaUf: string;
-}
-
 export interface Fatores {
   nome: string;
   peso: number;
@@ -254,4 +244,14 @@ export interface PoloData {
     nomeMunicipio: string;
     nome: string;
     uf: number;
+}
+
+export interface SalvarPoloData {
+  endereco: string;
+  cep: string;
+  latitude: string;
+  longitude: string;
+  municipioId: number;
+  nome: string;
+  idUf: number;
 }

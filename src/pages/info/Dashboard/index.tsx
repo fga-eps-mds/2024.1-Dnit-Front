@@ -50,6 +50,10 @@ export default function Dashboard() {
   const [podeGerenciarUsuario, setPodeGerenciarUsuario] = useState(
     temPermissao(Permissao.UsuarioVisualizar)
   );
+  
+  const [podeGerenciarPolos, setPodeGerenciarPolos] = useState(
+    temPermissao(Permissao.PoloVisualizar)
+  );
 
   useEffect(() => {
     fetchPermissoesDoUsuario().then((permissoes) => {
@@ -63,6 +67,7 @@ export default function Dashboard() {
       setPodeGerenciarUsuario(temPermissao(Permissao.UsuarioVisualizar));
       setPodeGerenciarPerfis(temPermissao(Permissao.PerfilVisualizar));
       setPodeGerenciarEmpresas(temPermissao(Permissao.EmpresaVisualizar));
+      setPodeGerenciarPolos(temPermissao(Permissao.PoloVisualizar));
     });
   }, []);
 
@@ -152,7 +157,7 @@ export default function Dashboard() {
               <p className="text">Gerenciar Perfis</p>
             </Card>
           )}
-            { /* TODO: podeGerenciarPolos, mudar a classe talvez, Rota*/ (
+            {podeGerenciarPolos && (
                 <Card className="card" onClick={() => navigate("/gerenciarPolos")}>
                     <img
                         className="iconPerfis"

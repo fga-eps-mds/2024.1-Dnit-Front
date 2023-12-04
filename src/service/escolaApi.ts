@@ -2,8 +2,6 @@ import axios, { AxiosResponse } from "axios";
 import * as URL from "../consts/service"
 import * as DATA from "../models/service";
 import { ResponseStatus, sendCadastros, update, fetchDados } from "./apiUtils";
-import {Superintendencia} from "../models/service";
-
 
 export async function fetchUnidadeFederativa(): Promise<DATA.UnidadeFederativaData[]> {
     return fetchDados<DATA.UnidadeFederativaData[]>(URL.unidadesFederativasURL);
@@ -20,10 +18,6 @@ export async function fetchMunicipio(UfId: number): Promise<DATA.MunicipioData[]
 
 export async function fetchSituacao(): Promise<DATA.SituacaoData[]> {
     return fetchDados<DATA.SituacaoData[]>(URL.situacaoURL);
-}
-
-export async function fetchSuperintendenciaData(id: any) {
-    return fetchDados<Superintendencia>(`${URL.listarSuperintendencia}/${id}`);
 }
 
 export async function sendCadastroEscolasPlanilha(data: FormData): Promise<any> {
