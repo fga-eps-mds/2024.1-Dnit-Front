@@ -207,23 +207,3 @@ export default function GerenciarPolos() {
 		</div>
     )
 }
-
-export const formatCnpj = (input: string) => {
-	const cnpjNumeric = input.replace(/\D/g, '');
-
-	if (cnpjNumeric.length >= 13) {
-		return `${cnpjNumeric.slice(0, 2)}.${cnpjNumeric.slice(2, 5)}.${cnpjNumeric.slice(5, 8)}/${cnpjNumeric.slice(8, 12)}-${cnpjNumeric.slice(12)}`;
-	} 
-	else if (cnpjNumeric.length >= 9) {
-		return `${cnpjNumeric.slice(0, 2)}.${cnpjNumeric.slice(2, 5)}.${cnpjNumeric.slice(5, 8)}/${cnpjNumeric.slice(8)}`;
-	} 
-	else if (cnpjNumeric.length >= 6) {
-		return `${cnpjNumeric.slice(0, 2)}.${cnpjNumeric.slice(2, 5)}.${cnpjNumeric.slice(5)}`;
-	} 
-	else if (cnpjNumeric.length >= 3) {
-		return `${cnpjNumeric.slice(0, 2)}.${cnpjNumeric.slice(2)}`;
-	} 
-	else {
-		return cnpjNumeric;
-	}
-}
