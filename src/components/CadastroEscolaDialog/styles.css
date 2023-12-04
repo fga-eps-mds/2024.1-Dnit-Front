@@ -16,7 +16,7 @@
   
   .custom-modal {
     --modal-size: var(--modal-large);
-    --modal-large: 65%;
+    --modal-large: 80%;
     --modal-auto: auto;
     background: var(--background);
     box-shadow: var(--surface-shadow-sm);

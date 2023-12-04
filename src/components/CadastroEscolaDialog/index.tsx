@@ -317,6 +317,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
 
                 <Form.Item name="municipio" label="Município" rules={regrasPreenchimento}>
                   <Select
+                    
                     data-testid={"selectMunicipio"}
                     disabled={erroCEP}
                     notFoundContent={<p>Carregando...</p>}
@@ -343,7 +344,9 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
               </div>
               <div className="bloco3">
                 <Form.Item name="localizacao" label="Localização" rules={regrasPreenchimento}>
-                  <Select data-testid={"selectLocalizacao"}>
+                  <Select 
+                  className="us"
+                  data-testid={"select-etapas-cadastro"}>
                     <Select value={1}>Rural</Select>
                     <Select value={2}>Urbana</Select>
                   </Select>
