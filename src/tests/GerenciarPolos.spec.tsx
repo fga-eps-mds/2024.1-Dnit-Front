@@ -121,7 +121,7 @@ describe("Gerenciar Polos", () => {
     })
 
 
-    it("Deve mostrar modal de visualização de empresa e fechar clicando fora", async () => {
+    it("Deve mostrar modal de visualização de polo e fechar clicando fora", async () => {
         autenticar(Permissao.PoloVisualizar)
 
         const screen = setup()
@@ -281,7 +281,7 @@ describe("Gerenciar Polos", () => {
         })
     })
 
-    it("Deve mostrar a notificação de falha na listagem de empresas", async () => {
+    it("Deve mostrar a notificação de falha na listagem de polos", async () => {
         const screen = setup()
 
         await waitFor(() => expect(screen.getByText('Superintendência regional do DNIT em Alagoas')).toBeInTheDocument);
