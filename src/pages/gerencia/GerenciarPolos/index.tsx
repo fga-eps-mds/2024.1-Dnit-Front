@@ -74,6 +74,9 @@ export default function GerenciarPolos() {
         }, []);
 
     // TODO: permissões polos
+    const onPoloChange = (changed: boolean) => {
+		if (changed) buscarPolos(1);
+	}
 
     const buscarPolos = (proximaPagina: number, novoTamanhoPagina: number = tamanhoPagina) => {
         const filtro = { params: {
@@ -129,8 +132,8 @@ export default function GerenciarPolos() {
     return (
 		<div className="App">
 			{notificationContextHandler}
-            {showPolo && <EditarPolosDialog id={showPolo.id} listaUfs={listaUfs} readOnly={showPolo.readOnly} closeDialog={() => {setShowPolo(null);}}/>}
-            {showDeletePolo && <DeletarPoloDialog id={showDeletePolo.id} nome={showDeletePolo.nome} closeDialog={(deletou) => {setShowDeletePolo(null);}}/>}
+            {showPolo && <EditarPolosDialog id={showPolo.id} listaUfs={listaUfs} readOnly={showPolo.readOnly} closeDialog={(salvou) => {setShowPolo(null); onPoloChange(salvou)}}/>}
+            {showDeletePolo && <DeletarPoloDialog id={showDeletePolo.id} nome={showDeletePolo.nome} closeDialog={(deletou) => {setShowDeletePolo(null); onPoloChange(deletou)}}/>}
             <Header/>
 			<TrilhaDeNavegacao elementosLi={paginas}/>
 			<div className="d-flex flex-column m-5">
