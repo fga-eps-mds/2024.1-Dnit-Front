@@ -47,7 +47,6 @@ const SolicitacoesDialog: React.FC<ModalProps> = ({ escolaSelecionada, onClose, 
                 <h4 className="text-center mt-1">Detalhes da Solicitação</h4>
                 <div className='d-flex flex-column '>
                     <Label>Nome Escola: {escolaSelecionada?.escola?.nomeEscola || escolaSelecionada?.nome} </Label>
-                    {/* <Label>Situação: {escolaSelecionada?.escola === undefined ? "Cadastrada no sistema" : "Não possui cadastro no sistema"}</Label> */}
                     <Label><strong>Dados</strong></Label>
                     <div className='row mb-2'>
                         <div className='col-12 col-md-6'>
@@ -74,7 +73,7 @@ const SolicitacoesDialog: React.FC<ModalProps> = ({ escolaSelecionada, onClose, 
                         </div>
                     </div>
                     <Label>Rede: {escolaSelecionada?.escola?.rede}</Label>
-                    <Label>Etapas de Ensino: {`${escolaSelecionada?.escola?.etapaEnsino}`}</Label>
+                    <Label>Etapas de Ensino: {escolaSelecionada?.escola?.etapaEnsino ? Object.values(escolaSelecionada?.escola?.etapaEnsino).join(', ') : ''}</Label>
                     <hr />
                     <div>
                         <div className='d-flex flex-column'>

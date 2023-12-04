@@ -37,7 +37,7 @@ export interface SolicitacaoEscolaData {
 export interface SolicitacoesData{
     id: string;
     escola?: SolicitacaoEscolaData;
-    escolaCodigoInep: string;
+    codigoEscola: string;
     escolaCadastrada: boolean;
     nome: string
     nomeSolicitante: string;

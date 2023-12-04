@@ -150,6 +150,8 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
     form.setFieldValue("uf", dadosSoliciatacao?.uf);
     form.setFieldValue("municipio", dadosSoliciatacao?.municipio.nome);
     form.setFieldValue("numeroAlunos", dadosSoliciatacao?.quantidadeAlunos);
+    form.setFieldValue("codigo", dadosSoliciatacao?.codigoEscola);
+
     setQtdAlunos(Number(dadosSoliciatacao?.quantidadeAlunos))
   }, [])
 

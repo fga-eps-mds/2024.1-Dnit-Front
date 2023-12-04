@@ -33,7 +33,7 @@ const escola1: SolicitacaoEscolaData = {
 export const solicitacao: SolicitacoesData = {
   id: '1234567',
   escola: escola1,
-  escolaCodigoInep: '41127226',
+  codigoEscola: '41127226',
   nome: 'Escola A',
   nomeSolicitante: 'Jhonas Teste',
   quantidadeAlunos: 49,
@@ -50,7 +50,7 @@ export const solicitacao: SolicitacoesData = {
 export const solicitacaoSemEscola: SolicitacoesData = {
   id: '1234567',
   escola: undefined,
-  escolaCodigoInep: '41127226',
+  codigoEscola: '41127226',
   nome: 'Outra Escola',
   nomeSolicitante: 'Outro Jhonas',
   quantidadeAlunos: 49,
