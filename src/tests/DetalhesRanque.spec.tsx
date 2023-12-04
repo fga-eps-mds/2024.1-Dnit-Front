@@ -108,5 +108,34 @@ describe('test DetalhesRanqueModal', () => {
       expect(labelElement).toBeInTheDocument();
     });
   });
+
+  test('Deve mudar descrição do ranque', async () => {
+    const mockRanque: RanqueData = {
+      id: 1,
+      numEscolas: 5,
+      data: '2023-12-01T08:00:00.000Z',
+      descricao: 'Descrição do ranque mock',
+      fatores: [
+        { nome: 'Fator 1', peso: 0.5, valor: 10 },
+        { nome: 'Fator 2', peso: 0.3, valor: 8 },
+      ],
+    };
+
+    const screen = render(
+      <ModalDetalhesRanque
+        ranque={mockRanque}
+        onClose={jest.fn()}
+        onEditDescription={jest.fn()}
+      />
+    );
+    
+    await waitFor(() => expect(screen.getByText("Editar Descrição")).toBeInTheDocument())
+    fireEvent.click(screen.getByText('Editar Descrição'));
+    await waitFor(() => expect(screen.getByTestId('descricao-ranque')).toBeInTheDocument());
+    fireEvent.click(screen.getByTestId('descricao-ranque'));
+    fireEvent.change(screen.getByTestId('descricao-ranque'), { target: { value: "nova descrição"}});
+    fireEvent.click(screen.getByText('Salvar Descrição'));
+    await waitFor(() => expect(screen.getByText("nova descrição")).toBeInTheDocument())
+  });
 });
  

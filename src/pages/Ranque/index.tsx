@@ -199,7 +199,7 @@ function Ranque() {
           </Table>
         }
 
-        <div style={{ marginLeft: '82%', float: 'right', width: 'auto' }}>
+        <div className='d-flex justify-content-end mt-4'>
           <ButtonComponent label="Exportar Dados" buttonStyle="primary" onClick={openExportModal} disabled={!podeExportarRanque} />
         </div>
 

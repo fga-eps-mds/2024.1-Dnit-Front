@@ -64,6 +64,7 @@ const ModalDetalhesRanque: React.FC<ModalProps> = ({ ranque, onEditDescription, 
                     <Label><strong>Descrição do Ranque:</strong></Label>
                     {modoEdicao ? (
                         <textarea
+                            data-testid="descricao-ranque"
                             value={novaDescricao}
                             onChange={(e) => setNovaDescricao(e.target.value)}
                             rows={9}

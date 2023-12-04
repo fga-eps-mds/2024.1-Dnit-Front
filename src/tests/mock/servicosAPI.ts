@@ -1,6 +1,6 @@
 import { rest } from "msw";
 import { setupServer } from "msw/node";
-import { atualizarTipoPerfil, atualizarTokenUrl, cadastrarPerfilUrl, excluiPerfil, listarEscolasRanque, listarPerfis, listarPermissoesCategoria, listarRanques, listarUsuarioPermissoes, listarUsuarios, municipioURL, obterPerfil, ranqueamentoProcessamento, unidadesFederativasURL, urlAPIEscolas, urlAPIUps } from "../../consts/service";
+import { atualizarDescricaoRanque, atualizarTipoPerfil, atualizarTokenUrl, cadastrarPerfilUrl, excluiPerfil, listarEscolasRanque, listarPerfis, listarPermissoesCategoria, listarRanques, listarUsuarioPermissoes, listarUsuarios, municipioURL, obterPerfil, ranqueamentoProcessamento, unidadesFederativasURL, urlAPIEscolas, urlAPIUps } from "../../consts/service";
 import empresaRequests from "./empresa/API";
 import { Permissao, TipoPerfil } from "../../models/auth";
 import { usuarios } from "../stub/usuarioModelos";
@@ -898,6 +898,10 @@ const server = setupServer(
       }
     ],
   }))),
+  rest.put(
+    `${atualizarDescricaoRanque}/1`,
+    (req, res, ctx) => res(ctx.status(200))
+  ),
   rest.get(
     `${escolasService}/listarRanques`,
     (req, res, ctx) => {
