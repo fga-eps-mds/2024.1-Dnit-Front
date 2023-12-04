@@ -1,0 +1,182 @@
+/* eslint-disable testing-library/no-unnecessary-act */
+/* eslint-disable testing-library/render-result-naming-convention */
+import { render, waitFor, act, fireEvent } from "@testing-library/react";
+import { Permissao } from "../models/auth";
+import { autenticar } from "./mock/autenticacao";
+import server from "./mock/servicosAPI";
+import { MemoryRouter } from "react-router-dom";
+import { AuthProvider } from "../provider/Autenticacao";
+import GerenciarPolos from "../pages/gerencia/GerenciarPolos";
+
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+
+function setup() {
+    return render(
+        <MemoryRouter>
+            <AuthProvider>
+                <GerenciarPolos />
+            </AuthProvider>
+        </MemoryRouter>
+    )
+}
+
+describe("Gerenciar Polos", () => {
+
+    it("Deve retornar a tela inicial se não tiver permissão de visualizar polos", async () => {
+        const screen = setup()
+    })
+
+    it("Deve listar polos", async () => {
+        autenticar(Permissao.PoloVisualizar);
+
+        const screen = setup()
+
+        await waitFor(() => expect(screen.getByText('Superintendência regional do DNIT em Alagoas')).toBeInTheDocument);
+    })
+
+
+    it("Deve mostrar modal de edição de polo e confirmar", async () => {
+        autenticar(Permissao.PoloVisualizar, Permissao.PoloEditar);
+
+        const screen = setup()
+
+        await waitFor(() => expect(screen.getByText('Superintendência regional do DNIT em Alagoas')).toBeInTheDocument);
+
+        act(() => {
+            screen.getByTestId('table-row-edit-0').click();
+        })
+
+        await waitFor(() => expect(screen.getByText('Atualizar Polo')).toBeInTheDocument);
+
+        const input = screen.getByTestId("inputNome")
+        const buttonConfirmar = screen.getByTestId("botaoConfirmar")
+        await waitFor(() => expect(input).toBeInTheDocument)
+
+        act(() => {
+            fireEvent.change(input, {
+                target: {value: "Polo Teste"}
+            })
+            buttonConfirmar.click()
+        })
+    })
+
+    it("Deve mostrar modal de edição de polo e cancelar", async () => {
+        autenticar(Permissao.PoloVisualizar, Permissao.PoloEditar);
+
+        const screen = setup()
+
+        await waitFor(() => expect(screen.getByText('Superintendência regional do DNIT em Alagoas')).toBeInTheDocument);
+
+        act(() => {
+            screen.getByTestId('table-row-edit-0').click();
+        })
+
+        await waitFor(() => expect(screen.getByText('Atualizar Polo')).toBeInTheDocument);
+
+        const buttonCancelar = screen.getByTestId("botaoCancelar")
+        act(() => {
+            buttonCancelar.click()
+        })
+    })
+
+    it("Deve mostrar modal de visualização de polo e fechar usando o botão voltar", async () => {
+        autenticar(Permissao.PoloVisualizar)
+
+        const screen = setup()
+
+        await waitFor(() => expect(screen.getByText('Superintendência regional do DNIT em Alagoas')).toBeInTheDocument);
+
+        act(() => {
+            screen.getByTestId('table-row-eye-0').click()
+        })
+
+        await waitFor(() => expect(screen.getByText('Informações do Polo')).toBeInTheDocument);
+
+        const buttonCancelar = screen.getByTestId("botaoCancelar")
+        act(() => {
+            buttonCancelar.click()
+        })
+    })
+
+
+    it("Deve mostrar modal de visualização de polo e fechar usando o botão x", async () => {
+        autenticar(Permissao.PoloVisualizar)
+
+        const screen = setup()
+
+        await waitFor(() => expect(screen.getByText('Superintendência regional do DNIT em Alagoas')).toBeInTheDocument);
+
+        act(() => {
+            screen.getByTestId('table-row-eye-0').click()
+        })
+
+        await waitFor(() => expect(screen.getByText('Informações do Polo')).toBeInTheDocument);
+
+        const buttonCancelar = screen.getByTestId("botaoFechar")
+        act(() => {
+            buttonCancelar.click()
+        })
+    })
+
+
+    it("Deve mostrar modal de visualização de empresa e fechar clicando fora", async () => {
+        autenticar(Permissao.PoloVisualizar)
+
+        const screen = setup()
+
+        await waitFor(() => expect(screen.getByText('Superintendência regional do DNIT em Alagoas')).toBeInTheDocument);
+
+        act(() => {
+            screen.getByTestId('table-row-eye-0').click()
+        })
+
+        await waitFor(() => expect(screen.getByText('Informações do Polo')).toBeInTheDocument);
+
+        const overlay = screen.getByTestId("overlay")
+
+        act(() => {
+            overlay.click()
+        })
+    })
+
+
+    it("Deve cadastrar novo polo", async () => {
+        autenticar(Permissao.PoloVisualizar, Permissao.PoloCadastrar);
+
+        const screen = setup()
+
+        const button = screen.getByText("Cadastrar Polo")
+        await waitFor(() => expect(button).toBeInTheDocument)
+
+        act(() => {
+            button.click()
+        })
+
+        const overlay = screen.getByTestId("overlay")
+        const inputNome = screen.getByTestId("inputNome")
+        const inputEndereco = screen.getByTestId("inputEndereco")
+        const inputLatitude = screen.getByTestId("inputLatitude")
+        const inputLongitude = screen.getByTestId("inputLongitude")
+        const inputCEP = screen.getByTestId("inputCEP")
+        const buttonConfirmar = screen.getByTestId("botaoConfirmar")
+
+        await waitFor(() => expect(overlay).toBeInTheDocument)
+        await waitFor(() => expect(inputNome).toBeInTheDocument)
+        await waitFor(() => expect(inputEndereco).toBeInTheDocument)
+        await waitFor(() => expect(inputLatitude).toBeInTheDocument)
+        await waitFor(() => expect(inputLongitude).toBeInTheDocument)
+        await waitFor(() => expect(inputCEP).toBeInTheDocument)
+        await waitFor(() => expect(buttonConfirmar).toBeInTheDocument)
+
+        act(() => {
+            fireEvent.change(inputNome, {target: {value: "Polo"}})
+            fireEvent.change(inputEndereco, {target: {value: "c"}})
+            fireEvent.change(inputLatitude, {target: {value: "1,2"}})
+            fireEvent.change(inputLongitude, {target: {value: "-1,2"}})
+            fireEvent.change(inputCEP, {target: {value: "70000-100"}})
+            buttonConfirmar.click()
+        })
+    })
+})
