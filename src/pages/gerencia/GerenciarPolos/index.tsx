@@ -22,6 +22,7 @@ import {fetchListarPolosFiltrados} from "../../../service/poloApi";
 import {FiltroPoloData} from "../../../models/service";
 import {PoloModel, ListaPaginada} from "../../../models/polo";
 import EditarPolosDialog from "../../../components/EditarPolosDialog";
+import DeletarPoloDialog, { DeletarPoloDialogArgs } from "../../../components/DeletarPoloDialog";
 
 interface PoloDialogArgs {
   id: number | null;
@@ -51,6 +52,8 @@ export default function GerenciarPolos() {
     const [notificationApi, notificationContextHandler] = notification.useNotification();
 
     const [showPolo, setShowPolo] = useState<PoloDialogArgs | null>(null);
+    const [showDeletePolo, setShowDeletePolo] = useState<DeletarPoloDialogArgs | null>(null);
+
 
 
 	const navigate = useNavigate();
@@ -114,7 +117,8 @@ export default function GerenciarPolos() {
 		<div className="App">
 			{notificationContextHandler}
             {showPolo && <EditarPolosDialog id={showPolo.id} listaUfs={listaUfs} readOnly={showPolo.readOnly} closeDialog={() => {setShowPolo(null);}}/>}
-			<Header/>
+            {showDeletePolo && <DeletarPoloDialog id={showDeletePolo.id} nome={showDeletePolo.nome} closeDialog={(deletou) => {setShowDeletePolo(null);}}/>}
+            <Header/>
 			<TrilhaDeNavegacao elementosLi={paginas}/>
 			<div className="d-flex flex-column m-5">
 				<div className="d-flex justify-content-left align-items-center mr-5">
@@ -163,7 +167,9 @@ export default function GerenciarPolos() {
 								onDetailRow={() => {
 									setShowPolo({id: polo.id, readOnly: true})
 								}}
-                                onDeleteRow={() => {}}
+                                onDeleteRow={() => {
+									setShowDeletePolo({id: polo.id, nome: polo.nome})
+								}}
                                 onUsersRow={() => {}}
 								data={
                                 {
