@@ -146,7 +146,7 @@ export default function GerenciarSolicitacoes() {
           <Select items={listaUfs} value={uf} label={"UF:"} onChange={setUf} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
           <Select items={listaMunicipios} value={municipio} label={"Municipios:"} onChange={setMunicipio} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
         </div>
-        {listaSolicitacoes.length === 0 && <Table columsTitle={['Escola', 'Qtd. de Alunos', 'UF', 'Municipio', 'Custo Logístico']} initialItemsPerPage={10} title="Usuários cadastrados"><></><></></Table>}
+        {listaSolicitacoes.length === 0 && <Table columsTitle={['Escola', 'Qtd. de Alunos', 'UF', 'Municipio', 'Custo Logístico']} initialItemsPerPage={10} title="Soliciatações de Ações"><></><></></Table>}
 
         <Table
           columsTitle={['Escola', 'Qtd. de Alunos', 'UF', 'Municipio', 'Custo Logístico']}
