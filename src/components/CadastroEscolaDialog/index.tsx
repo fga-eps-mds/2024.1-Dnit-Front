@@ -263,7 +263,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                   />
                 </Form.Item>
 
-                <Form.Item name="uf" rules={regrasPreenchimento} label="UF">
+                <Form.Item name="uf" label="UF">
                   <Select
                     data-testid={"selectUf"}
                     onChange={limpaMunicipio}
@@ -346,7 +346,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                   <Input className="custom-imput" />
                 </Form.Item>
 
-                <Form.Item name="municipio" label="Município" rules={regrasPreenchimento}>
+                <Form.Item name="municipio" label="Município">
                   <Select
 
                     data-testid={"selectMunicipio"}
