@@ -47,6 +47,32 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
     },
   ];
 
+  const parseCoordenadas = (value: string, name: string) => {
+    const parts = value.split(',').map(part => part.trim());
+    if (parts.length === 2) {
+      const latitude = parseFloat(parts[0]);
+      const longitude = parseFloat(parts[1]);
+
+      form.setFieldsValue({
+        latitude: latitude.toFixed(6),
+        longitude: longitude.toFixed(6)
+      });
+
+    } else if (name) {
+      const num = parseFloat(value);
+      if (!isNaN(num)) {
+        form.setFieldsValue({
+          [name]: num.toFixed(6)
+        });
+      }
+    }
+  };
+
+  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    parseCoordenadas(value, name);
+  };
+
   const consultaCEP = async (cep: string) => {
     try {
       if (cep.length === 8) {
@@ -88,6 +114,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
   const limpaMunicipio = () => {
     form.setFieldValue("municipio", undefined);
   };
+
 
   async function fetchUf(): Promise<void> {
     const listaUfs = await fetchUnidadeFederativa();
@@ -189,7 +216,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                 <Form.Item name="nome" label="Nome da Escola" rules={regrasPreenchimento}>
                   <Input
                     type="text"
-                    className="inputForm2"
+                    className="custom-imput"
                     value={"dadosSoliciatacao?.nomeSolicitante"}
                   />
                 </Form.Item>
@@ -213,7 +240,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                     },
                   ]}
                 >
-                  <Input className="inputForm2" />
+                  <Input className="custom-imput" />
                 </Form.Item>
 
                 <Form.Item
@@ -228,7 +255,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                   ]}
                 >
                   <Input
-                    className="inputForm2"
+                    className="custom-imput"
                     onChange={(event) => {
                       consultaCEP(event.target.value);
                     }}
@@ -269,7 +296,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                   },
                 ]}>
                   <Input
-                    className="inputForm2"
+                    className="custom-imput"
                   />
                 </Form.Item>
 
@@ -312,19 +339,18 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                   </Select>
                 </Form.Item>
                 <Form.Item name="endereco" label="Endereço" rules={regrasPreenchimento}>
-                  <Input className="inputForm2" />
+                  <Input className="custom-imput" />
                 </Form.Item>
 
                 <Form.Item name="municipio" label="Município" rules={regrasPreenchimento}>
                   <Select
-                    
+
                     data-testid={"selectMunicipio"}
                     disabled={erroCEP}
                     notFoundContent={<p>Carregando...</p>}
                     placement="bottomRight"
                     optionLabelProp="label"
                     className="uf"
-                  // onMouseDown={consultaMunicipio}
                   >
                     {listaMunicipios?.map((u) => (
                       <Select key={u.id} value={u.rotulo} >
@@ -344,12 +370,22 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
               </div>
               <div className="bloco3">
                 <Form.Item name="localizacao" label="Localização" rules={regrasPreenchimento}>
-                  <Select 
-                  className="us"
-                  data-testid={"select-etapas-cadastro"}>
+                  <Select
+                    data-testid={"select-etapas-cadastro"}>
                     <Select value={1}>Rural</Select>
                     <Select value={2}>Urbana</Select>
                   </Select>
+                </Form.Item>
+
+
+                <Form.Item
+                  name="latitude"
+                  label="Latitude"
+                  rules={regrasLatLong}>
+                  <Input
+                    className="custom-imput"
+                    onChange={handleBlur}
+                  />
                 </Form.Item>
 
                 <Form.Item
@@ -357,12 +393,12 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                   label="Longitude"
                   rules={regrasLatLong}
                 >
-                  <Input className="inputForm2" />
+                  <Input
+                    className="custom-imput"
+                    onChange={handleBlur}
+                  />
                 </Form.Item>
 
-                <Form.Item name="latitude" label="Latitude" rules={regrasLatLong}>
-                  <Input className="inputForm2" />
-                </Form.Item>
 
                 <Form.Item
                   name="numeroAlunos"
@@ -370,7 +406,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                   rules={regrasQtdAlunosDocentes}
                 >
                   <Input
-                    className="inputForm2"
+                    className="custom-imput"
                     onChange={e => setQtdAlunos(form.getFieldValue("numeroAlunos"))}
                   />
                 </Form.Item>
@@ -380,12 +416,11 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                   label="Número Total de Docentes"
                   rules={regrasQtdAlunosDocentes}
                 >
-                  <Input className="inputForm2" />
+                  <Input className="custom-imput" />
                 </Form.Item>
               </div>
             </div>
-            <div className="cancelar">
-              <Space size={735}>
+            <div className="custom-container">
                 <Button
                   data-testid="botaoCancelar"
                   className="custom-button"
@@ -406,7 +441,6 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                 >
                   Cadastrar
                 </Button>
-              </Space>
             </div>
           </Form>
         </div>
