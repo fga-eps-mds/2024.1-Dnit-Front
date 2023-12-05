@@ -163,7 +163,9 @@ export default function Dashboard() {
               <p className="text">Gerenciar Perfis</p>
             </Card>
           )}
-          { }
+          <Card className="card" onClick={() => navigate("/gerenciarPrioridades")}>
+            <p className="text">Gerenciar Prioridades</p>
+          </Card>
         </div>
       ),
     },
