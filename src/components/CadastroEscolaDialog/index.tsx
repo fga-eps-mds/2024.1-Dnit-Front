@@ -191,12 +191,13 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
     <div
       className="overlay "
       data-testid="overlay"
-      onClick={(e) => {
+      onMouseUp={() => {}}
+      onMouseDown={(e) => {
         if (e.target === e.currentTarget) {
           closeDialog(true);
         }
       }}
-      onKeyDown={() => { }}
+      onKeyDown={()=>{}}
     >
       <div className="custom-modal" style={{ width: "90%" }}>
         {contextHolder}
