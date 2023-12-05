@@ -139,7 +139,7 @@ export default function GerenciarAcoes() {
           
 
           {possuiPermissao && (
-            <div style={{ position: "absolute", right: "5%" }}>
+            <div style={{ right: "5%" }}>
               <ButtonComponent
                 label="Criar Novo Planejamento"
                 buttonStyle="primary"

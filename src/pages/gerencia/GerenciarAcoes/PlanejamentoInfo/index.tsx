@@ -7,6 +7,7 @@ import "./styles.css";
 import { EscolasPlanejamentoTabela } from "../../../../models/gerenciarAcoes";
 import { ButtonComponent } from "../../../../components/Button";
 import ModalAdicionarEscola from "../../../../components/GerenciarAcoesModal/AdicionarEscola";
+import DeletarEscolaDialog, {DeletarEscolaDialogArgs} from "../../../../components/DeletarEscolaDialog";
 export default function PlanejamentoInfo() {
   const colunas = [
     "UPS",
@@ -16,6 +17,8 @@ export default function PlanejamentoInfo() {
     "Custo logístico",
   ];
 
+  const [showDeletarEscolaPlanejamento, setShowDeletarEscolaPlanejamento] = useState<DeletarEscolaDialogArgs|null>(null);
+
   const [escolasPlanejamento, setEscolasPlanejamento] =
     useState<EscolasPlanejamentoTabela[]>(escolasTabela);
   
@@ -23,6 +26,14 @@ export default function PlanejamentoInfo() {
 
   return (
     <div>
+      {showDeletarEscolaPlanejamento && (
+        <DeletarEscolaDialog
+          id=""
+          nome={showDeletarEscolaPlanejamento.nome}
+          closeDialog={(deletou) => {
+            setShowDeletarEscolaPlanejamento(null);
+          }}/>
+      )}
       {modalAdicionarAcao && <ModalAdicionarEscola
           onClose={() => { setModalAdicionarAcao(false) }}
           onAdicionar={() => { }}
@@ -63,7 +74,9 @@ export default function PlanejamentoInfo() {
               }}
               hideEditIcon={true}
               hideChangeIcon={false}
-              onDeleteRow={() => {}}
+              onDeleteRow={() => {
+                setShowDeletarEscolaPlanejamento({ nome: e.nome, id: "" })
+              }}
             />
           ))}
         </Table>
