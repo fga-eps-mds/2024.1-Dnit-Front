@@ -311,7 +311,6 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                     notFoundContent={<p>Carregando...</p>}
                     placement="bottomRight"
                     optionLabelProp="label"
-                    className="select-etapas-cadastro"
                     showSearch={false}
                   >
                     {OpcoesEtapasDeEnsino?.map((u) => (
@@ -324,8 +323,11 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
 
                 <Form.Item name="porte" label="Porte" rules={regrasPreenchimento}>
                   <Select data-testid={"selectPorte"}>
-                    <Select value={1}>Até 50 matrículas de escolarização</Select>
-                    <Select value={2}>
+                    
+                    <Select value={1}>
+                      Até 50 matrículas de escolarização
+                    </Select>
+                    <Select value={2}> 
                       Entre 51 e 200 matrículas de escolarização
                     </Select>
                     <Select value={3}>
@@ -339,6 +341,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                     </Select>
                   </Select>
                 </Form.Item>
+
                 <Form.Item name="endereco" label="Endereço" rules={regrasPreenchimento}>
                   <Input className="custom-imput" />
                 </Form.Item>
