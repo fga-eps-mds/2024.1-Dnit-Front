@@ -10,11 +10,10 @@ export interface DeletarPlanejamentoDialogArgs{
 
 interface DeletarPlanejamentoDialogProps {
   readonly nome: string;
-  readonly qtdAcoes: number;
   readonly closeDialog: (deleted: boolean) => void;
 }
 
-export default function DeletarPlanejamentoDialog( { nome, qtdAcoes, closeDialog}: DeletarPlanejamentoDialogProps) {
+export default function DeletarPlanejamentoDialog( { nome, closeDialog}: DeletarPlanejamentoDialogProps) {
   const deletarPlanejamento = () => {
     deletePlanejamento(nome)
     .then(() => {

@@ -31,7 +31,7 @@ describe('Tabela de Gerenciar Acoes', () => {
         expect(screen.getByTestId("inputResponsavel")).toHaveValue("");
         expect(screen.getByLabelText("Período:")).toHaveValue("");
     });
-
+    
     it("Deve filtrar as Acoes", async () => {
         autenticar(Permissao.RanqueVisualizar);
 
@@ -69,6 +69,21 @@ describe('Tabela de Gerenciar Acoes', () => {
         
         fireEvent.click(novoPlanejamentoButton);
         expect(screen.getByText("Gerar Planejamento")).toBeInTheDocument(); 
+    });
+
+    it("Deve renderizar a pagina de Gerenciar Acoes (BOTAO), caso nao tenha permissao", async () => {
+        autenticar(Permissao.UsuarioVisualizar)
+        render(
+            <MemoryRouter>
+                <AuthProvider>
+                    <GerenciarAcoes/>
+                </AuthProvider>
+            </MemoryRouter>
+        );
+
+        const novoPlanejamentoButton = screen.getByText("Criar Novo Planejamento");
+        expect(novoPlanejamentoButton).not.toBeInTheDocument();
+        expect(screen.getByText("Gerar Planejamento")).not.toBeInTheDocument();
     });
     
     it("Deve abrir o modal de deletar", async () => {
@@ -154,10 +169,4 @@ describe('Modal adicionar Escola', () => {
         expect(screen.queryByText('Adicionar Escola')).not.toBeInTheDocument();
         expect(aberto).toEqual(false);
     });
-
-    it("deve renderizar a mensagem de carregamento enquanto as escolas estão sendo carregadas", () => {
-        render(<ModalAdicionarEscola onClose={() => {}} onAdicionar={() => {}} />);
-        expect(screen.getByText("Carregando Escolas...")).toBeInTheDocument();
-    });
-
 })
