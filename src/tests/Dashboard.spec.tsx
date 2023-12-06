@@ -2,7 +2,7 @@
 import { fireEvent, render } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import App from "../App";
-import { AuthProvider } from "../provider/Autenticacao";
+import { AuthProvider, temPermissao } from "../provider/Autenticacao";
 import localStorageMock from "./mock/memoriaLocal";
 import { autenticar } from "./mock/autenticacao";
 import { Permissao } from "../models/auth";
@@ -90,6 +90,8 @@ describe("Testes do dashboard", () => {
   });
 
   test("Visualisar Solicitações", async () => {
+    autenticar(Permissao.SolicitacaoVisualizar);
+    
     const screen = render(
       <MemoryRouter initialEntries={["/dashboard"]}>
         <AuthProvider>
@@ -100,6 +102,21 @@ describe("Testes do dashboard", () => {
 
     const escolas = screen.getByText("Solicitações");
     fireEvent.click(escolas);
+  })
+
+  test("Visualisar Solicitações sem Permissão", async () => {
+    autenticar();
+    
+    const screen = render(
+      <MemoryRouter initialEntries={["/dashboard"]}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </MemoryRouter>
+    );
+
+    const botao = screen.queryByText("Solicitações");
+    expect(botao).toBeNull();
   })
 
   test("Cadastrar Escolas", async () => {
