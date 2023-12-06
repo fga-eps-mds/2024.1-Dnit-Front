@@ -25,4 +25,17 @@ describe("Criar planejamento", () => {
       expect(screen.getByText("Mês final")).toBeInTheDocument();
       expect(screen.getByText("Quantidade de Ações")).toBeInTheDocument();
   });
+
+  it("Deve carregar o botão Gerar Planejamento", async() => {
+    render(
+      <MemoryRouter>
+        <AuthProvider>
+          <GerenciarAcoes/>
+        </AuthProvider>
+      </MemoryRouter>
+    );
+    const button = screen.getByText("Gerar Planejamento")
+    expect(button).toBeInTheDocument();
+  })
+
 })
