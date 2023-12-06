@@ -3,9 +3,9 @@ import Modal from "../../Modal";
 import ReactLoading from "react-loading";
 
 interface ModalProps {
-    escolaId: string
+    //escolaId: string
     onClose: () => void;
-    onSalvar: () => void;
+    //onSalvar: () => void;
 }
 
 //TODO VERIFICAR QUAIS OUTROS PARAMETROS VAI TER
@@ -18,7 +18,7 @@ interface Escola {
 
 const dados: Escola = { id: 1, nome: "Sigma", uf: "SP", qtdAlunos: 500};
 
-const ModalAlterarEscola: React.FC<ModalProps> = ({ onClose, onSalvar }) => {
+const ModalAlterarEscola: React.FC<ModalProps> = ({ onClose }) => {
     
     const [escola, setEscola] = useState<Escola | null>(dados);
 
@@ -54,7 +54,7 @@ const ModalAlterarEscola: React.FC<ModalProps> = ({ onClose, onSalvar }) => {
                     <button className="br-button secondary mr-3" type="button" onClick={() => onClose()}>
                         Cancelar
                     </button>
-                    <button className="br-button primary mr-3" type="button" onClick={() => { onSalvar()}} disabled>
+                    <button className="br-button primary mr-3" type="button" disabled>
                         Salvar
                     </button>
                 </div>

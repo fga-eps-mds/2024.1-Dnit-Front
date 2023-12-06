@@ -98,7 +98,7 @@ export function CustomTableRow({
               data-testid={`table-row-change-${id}`}
               className="fas fa-repeat"
               aria-hidden="true"
-              onClick={() => onDetailRow(id)}
+              onClick={() => onChangeRow(id)}
             />
           )}
           {!hideTrashIcon && (
