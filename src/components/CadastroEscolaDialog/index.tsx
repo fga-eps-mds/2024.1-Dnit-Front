@@ -202,9 +202,9 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
       }}
       onKeyDown={()=>{}}
     >
-      <div className="custom-modal" style={{ width: "90%" }}>
+      <div className="custom-modal overflow-auto">
         {contextHolder}
-        <div >
+        <div>
           <h2>Cadastrar Escola</h2>
           <Form
             form={form}
@@ -212,21 +212,32 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
             name="Cadastro Escola"
             layout="vertical"
             autoComplete="off"
-            className="form-email"
             preserve
           >
-            <div className="divScroll">
-              <div className="bloco">
-                <Form.Item name="nome" label="Nome da Escola" rules={regrasPreenchimento}>
+            <div className="row p-4">
+              <div className="col-4">
+                <Form.Item
+                  name="nome"
+                  label="Nome da Escola"
+                  className="col-x1-5"
+                  rules={regrasPreenchimento}
+                >
                   <Input
+                  className="custom-input"
                     type="text"
-                    className="custom-imput"
                     value={"dadosSoliciatacao?.nomeSolicitante"}
                   />
                 </Form.Item>
 
-                <Form.Item name="rede" label="Rede" rules={regrasPreenchimento}>
-                  <Select data-testid={"selectRede"}>
+                <Form.Item
+                  name="rede"
+                  label="Rede"
+                  className="col-x1-5"
+                  rules={regrasPreenchimento}
+                >
+                  <Select
+                    data-testid={"selectRede"}
+                  >
                     <Select value={1}>Municipal</Select>
                     <Select value={2}>Estadual</Select>
                     <Select value={3}>Privada</Select>
@@ -236,6 +247,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                 <Form.Item
                   name="codigo"
                   label="Codigo da Escola"
+                  className="col-x1-5"
                   rules={[
                     {
                       required: true,
@@ -244,12 +256,13 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                     },
                   ]}
                 >
-                  <Input className="custom-imput" />
+                  <Input className="custom-input"/>
                 </Form.Item>
 
                 <Form.Item
                   name="cep"
                   label="CEP"
+                  className="col-x1-5"
                   rules={[
                     {
                       required: true,
@@ -259,14 +272,19 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                   ]}
                 >
                   <Input
-                    className="custom-imput"
+                  className="custom-input"
                     onChange={(event) => {
                       consultaCEP(event.target.value);
                     }}
                   />
                 </Form.Item>
 
-                <Form.Item name="uf" label="UF">
+                <Form.Item 
+                name="uf" 
+                className="col-x1-5"
+                rules={regrasPreenchimento}
+                label="UF"
+                >
                   <Select
                     data-testid={"selectUf"}
                     onChange={limpaMunicipio}
@@ -274,7 +292,6 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                     notFoundContent={<p>Carregando...</p>}
                     placement="bottomRight"
                     optionLabelProp="label"
-                    className="uf"
                   >
                     {listaUfs?.map((u) => (
                       <Select key={u.id} value={u.rotulo} >
@@ -291,20 +308,28 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                   </Select>
                 </Form.Item>
               </div>
-              <div className="bloco2">
-                <Form.Item name="telefone" label="Telefone" rules={[
-                  {
-                    required: true,
-                    pattern: /^\d{10,11}$/,
-                    message: "O número de telefone deve conte 9 ou 8 digitos com DDD",
-                  },
-                ]}>
-                  <Input
-                    className="custom-imput"
-                  />
+              <div className="col-4">
+                <Form.Item
+                  name="telefone"
+                  label="Telefone"
+                  className="col-x1-5"
+                  rules={[
+                    {
+                      required: true,
+                      pattern: /^\d{10,11}$/,
+                      message: "O número de telefone deve conte 9 ou 8 digitos com DDD",
+                    },
+                  ]}>
+                  <Input className="custom-input"/>
                 </Form.Item>
 
-                <Form.Item name="ciclos" label="Etapas de Ensino" rules={regrasPreenchimento}>
+                <Form.Item
+                  name="ciclos"
+                  label="Etapas de Ensino"
+                  rules={regrasPreenchimento}
+                  className="col-x1-5"
+
+                >
                   <Select
                     data-testid={"selectEtapasEnsino"}
                     mode="multiple"
@@ -324,13 +349,17 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                   </Select>
                 </Form.Item>
 
-                <Form.Item name="porte" label="Porte" rules={regrasPreenchimento}>
-                  <Select data-testid={"selectPorte"}>
-                    
-                    <Select value={1}>
-                      Até 50 matrículas de escolarização
-                    </Select>
-                    <Select value={2}> 
+                <Form.Item
+                  name="porte"
+                  label="Porte"
+                  rules={regrasPreenchimento}
+                  className="col-x1-5"
+                >
+                  <Select
+                    data-testid={"selectPorte"}
+                  >
+                    <Select value={1}>Até 50 matrículas de escolarização</Select>
+                    <Select value={2}>
                       Entre 51 e 200 matrículas de escolarização
                     </Select>
                     <Select value={3}>
@@ -344,12 +373,21 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                     </Select>
                   </Select>
                 </Form.Item>
-
-                <Form.Item name="endereco" label="Endereço" rules={regrasPreenchimento}>
-                  <Input className="custom-imput" />
+                <Form.Item 
+                name="endereco" 
+                label="Endereço" 
+                className="col-x1-5"
+                rules={regrasPreenchimento}
+                >
+                  <Input className="custom-input"/>
                 </Form.Item>
 
-                <Form.Item name="municipio" label="Município">
+                <Form.Item 
+                name="municipio" 
+                label="Município" 
+                className="col-x1-5"
+                rules={regrasPreenchimento}
+                >
                   <Select
 
                     data-testid={"selectMunicipio"}
@@ -357,7 +395,6 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                     notFoundContent={<p>Carregando...</p>}
                     placement="bottomRight"
                     optionLabelProp="label"
-                    className="uf"
                   >
                     {listaMunicipios?.map((u) => (
                       <Select key={u.id} value={u.rotulo} >
@@ -375,8 +412,12 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                   </Select>
                 </Form.Item>
               </div>
-              <div className="bloco3">
-                <Form.Item name="localizacao" label="Localização" rules={regrasPreenchimento}>
+              <div className="col-4">
+                <Form.Item 
+                name="localizacao" 
+                label="Localização"
+                className="col-x1-5"
+                rules={regrasPreenchimento}>
                   <Select
                     data-testid={"select-etapas-cadastro"}>
                     <Select value={1}>Rural</Select>
@@ -384,50 +425,46 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                   </Select>
                 </Form.Item>
 
-
-                <Form.Item
-                  name="latitude"
-                  label="Latitude"
-                  rules={regrasLatLong}>
-                  <Input
-                    className="custom-imput"
-                    onPaste={handlePaste}
-                  />
-                </Form.Item>
-
                 <Form.Item
                   name="longitude"
                   label="Longitude"
+                  className="col-x1-5"
                   rules={regrasLatLong}
                 >
-                  <Input
-                    className="custom-imput"
-                    onPaste={handlePaste}
-                  />
+                  <Input className="custom-input"/>
                 </Form.Item>
 
+                <Form.Item 
+                name="latitude" 
+                label="Latitude" 
+                className="col-x1-5"
+                rules={regrasLatLong}>
+                  <Input className="custom-input" />
+                </Form.Item>
 
                 <Form.Item
                   name="numeroAlunos"
                   label="Número Total de Alunos"
+                  className="col-x1-5"
                   rules={regrasQtdAlunosDocentes}
                 >
                   <Input
-                    className="custom-imput"
-                    onChange={e => setQtdAlunos(form.getFieldValue("numeroAlunos"))}
+                  className="custom-input"
+                  onChange={e => setQtdAlunos(form.getFieldValue("numeroAlunos"))}
                   />
                 </Form.Item>
 
                 <Form.Item
                   name="numeroDocentes"
                   label="Número Total de Docentes"
+                  className="col-x1-5"
                   rules={regrasQtdAlunosDocentes}
                 >
-                  <Input className="custom-imput" />
+                  <Input className="custom-input" />
                 </Form.Item>
               </div>
             </div>
-            <div className="custom-container">
+            <div className="row justify-content-between">
                 <Button
                   data-testid="botaoCancelar"
                   className="custom-button"
@@ -440,7 +477,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                 </Button>
 
                 <Button
-                  className="custom-button"
+                  className="custom-button "
                   type="primary"
                   size="large"
                   htmlType="submit"

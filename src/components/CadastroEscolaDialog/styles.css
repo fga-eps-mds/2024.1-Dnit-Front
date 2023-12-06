@@ -23,8 +23,8 @@
     display: flex;
     flex-direction: column;
     max-width: var(--modal-size);
+    max-height: 95%;
     z-index: var(--z-index-layer-4);
-    border-radius: 10px;
 
   }
 
@@ -32,19 +32,12 @@
     zoom: 80%;
     width: 10em;
     background-color: #1351b4;
-    margin: 0 30%;
+    margin-right: 10%;
+    margin-left: 10%;
+    margin-bottom: 20px;
   }
 
-  .custom-container {
-    display: flex;           
-    justify-content: center; 
-    margin-bottom: 10px;   
-  }
-
-  .custom-imput {
-    width: 100%;
-    height: 30px;
-    font-weight: 350;
+  .custom-input {
     border: 1px solid var(--gray2);
     border-radius: 2px;
     background-color: var(--gray1);
