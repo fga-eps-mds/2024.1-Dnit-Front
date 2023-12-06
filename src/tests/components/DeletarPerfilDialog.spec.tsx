@@ -63,7 +63,8 @@ describe('DeletarPerfilDialog', () => {
       </MemoryRouter>
     );
 
-    screen.getByText('Confirmar').click();
+    const confirmar = screen.getByText('Confirmar');
+    fireEvent.click(confirmar);
     await waitFor(() => expect(screen.getByText('Deletando perfil perfil...')).toBeInTheDocument());
     await waitFor(() => expect(screen.queryAllByText('Perfil deletado com sucesso').length).toBeGreaterThan(0));
     expect(deletou).toBeTruthy();

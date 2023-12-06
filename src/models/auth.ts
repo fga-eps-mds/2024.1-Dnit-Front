@@ -25,6 +25,8 @@ export enum Permissao {
 
   SinistroCadastrar = "SinistroCadastrar",
 
+  SolicitacaoVisualizar = "SolicitacaoVisualizar",
+
   EmpresaGerenciar = "EmpresaGerenciar",
   EmpresaCadastrar = "EmpresaCadastrar",
   EmpresaVisualizar = "EmpresaVisualizar",
