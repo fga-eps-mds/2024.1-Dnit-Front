@@ -1,13 +1,22 @@
+import { useState, useEffect } from "react";
 import { Collapse, CollapseProps } from "antd";
 import Footer from "../../../components/Footer";
 import Header from "../../../components/Header";
 import TrilhaDeNavegacao from "../../../components/Navegacao";
 import "./styles.css"
 import FatorForm from "../../../components/FatorForm";
+import { fetchCustosLogisticos } from "../../../service/prioridadeApi";
+import { CustoLogisticoModel } from "../../../models/prioridade";
 
 export default function GerenciarPrioridades() {
+    const [parametrosCusto, setParametrosCusto] = useState<CustoLogisticoModel[]>([]);
     const paginas = [{nome: "Configuração de Pesos do Ranque", link: "/gerenciarPrioridades"}];
-
+    
+    const obterParametrosCusto = () => {
+        fetchCustosLogisticos()
+            .then(c => setParametrosCusto(c))
+    }
+    
     const items: CollapseProps['items'] = [
         {
             key: '1',
@@ -33,26 +42,23 @@ export default function GerenciarPrioridades() {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th>$</th>
-                                    <th>0 - <input className="br-input small"></input></th>
-                                    <th>50</th>
-                                </tr>
-                                <tr>
-                                    <th>$$</th>
-                                    <th><input className="br-input small"></input> - <input className="br-input small"></input></th>
-                                    <th>50</th>
-                                </tr>
-                                <tr>
-                                    <th>$$$</th>
-                                    <th><input className="br-input small"></input> - <input className="br-input small"></input></th>
-                                    <th>50</th>
-                                </tr>
-                                <tr>
-                                    <th>$$$$</th>
-                                    <th>Acima de XXX</th>
-                                    <th>50</th>
-                                </tr>
+                                {parametrosCusto.map((item) => (
+                                    <tr key={item.custo}>
+                                        <th>{"$".repeat(item.custo)}</th>
+                                        <th>
+                                            {
+                                                item.raioMax ?
+                                                <div>
+                                                    <span>{item.raioMin} - 
+                                                    <input defaultValue={item.raioMax} className="br-input small"></input>
+                                                    </span>
+                                                </div> :
+                                                <p>Acima de {item.raioMin}</p>
+                                            }
+                                        </th>
+                                        <th><input defaultValue={item.valor} className="br-input small"></input></th>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>
@@ -67,6 +73,10 @@ export default function GerenciarPrioridades() {
             )
         },
     ];
+
+    useEffect(() => {
+        obterParametrosCusto();
+    }, [])    
 
     return (
         <div className="App">
