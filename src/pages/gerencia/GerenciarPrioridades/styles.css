@@ -1,0 +1,11 @@
+.custo-logistico {
+    display: flex;
+}
+
+.custo-table {
+    margin-left: 50px;
+}
+
+.custo-table input {
+    max-width: 60px;
+}
