@@ -180,6 +180,30 @@ describe("Gerenciar Polos", () => {
         })
     })
 
+    test('Deve testar o parser de Latitude e Longitude', async () => {
+        autenticar(Permissao.PoloVisualizar, Permissao.PoloCadastrar);
+
+        const screen = setup()
+
+        const button = screen.getByText("Cadastrar Polo")
+        await waitFor(() => expect(button).toBeInTheDocument)
+
+        act(() => {
+            button.click()
+        })
+    
+        const latitude = screen.getByTestId("inputLatitude") as HTMLInputElement;
+        const longitude = screen.getByTestId("inputLongitude") as HTMLInputElement;
+        await waitFor(() => fireEvent.paste(latitude, {
+                clipboardData: {
+                getData: () => "-15.758173462592291, -47.90013307875956",
+                },
+            })
+        );
+        expect(latitude?.value).toBe('-15.758173');
+        expect(longitude?.value).toBe('-47.900133');
+      });
+
     it("Deve mostrar modal de excluir polo e confirmar", async () => {
         autenticar(Permissao.PoloVisualizar, Permissao.PoloRemover)
 
