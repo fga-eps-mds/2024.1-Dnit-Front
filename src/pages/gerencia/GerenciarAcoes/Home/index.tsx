@@ -1,11 +1,8 @@
 import React, {useContext, useEffect, useState} from "react";
-import { ListaPaginada, periodos } from "../../../../models/planejamento";
 import { notification } from "antd";
 import { AuthContext, temPermissao } from "../../../../provider/Autenticacao";
 import { useNavigate, useParams } from "react-router-dom";
 import { Permissao } from "../../../../models/auth";
-import { PlanejamentoMacroModel } from "../../../../models/planejamento";
-import { fetchPlanejamento } from "../../../../service/planejamentoApi";
 import Header from "../../../../components/Header";
 import Footer from "../../../../components/Footer";
 import TrilhaDeNavegacao from "../../../../components/Navegacao/index";
@@ -72,15 +69,17 @@ const dados: PlanejamentoRanque[] = [
 export default function GerenciarAcoes() {
   const { temPermissao } = useContext(AuthContext);
   const possuiPermissao = { excluir: temPermissao(Permissao.UsuarioEditar) };
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const paginas = [{ nome: "Gerenciar Ações", link: "/gerenciarAcoes" }];
   const colunas = ["Nome", "Período", "Quantidade de Ações", "Responsável"];
   
   const [notificationApi, notificationContextHandler] = 
       notification.useNotification();
+  
   const [showPlanejamento, setShowPlanejamento] =
     useState<PlanejamentoDialogArgs | null>(null);
+  
   const [showDeletePlanejamento, setShowDeletePlanejamento] =
     useState<DeletarPlanejamentoDialogArgs | null>(null);
   
@@ -89,12 +88,19 @@ export default function GerenciarAcoes() {
   const [nome, setNome] = useState("");
   const [periodo, setPeriodo] = useState("");
   const [responsavel, setResponsavel] = useState("");
+  const [planejamentoBanco, setPlanejamentoBanco] = useState<PlanejamentoRanque[]>(dados);
+  const [planejamentos, setPlanejamentos] = useState<PlanejamentoRanque[]>(planejamentoBanco);
 
-  const [planejamentos, setPlanejamentos] = useState<PlanejamentoRanque[]>(dados);
-
+  //TODO ADICIONAR O FETCH COM BANCO
+  // useEffect(() => {
+  //   fetchEscolasAcao()
+  //       .then(e => setPlanejamentoBanco(e))
+  //       .finally(() => setLoading(false));
+  // }, []);
+  
   useEffect(() => {
     setPlanejamentos(
-        dados.filter(index =>
+        planejamentoBanco.filter(index =>
           index.nome.toLowerCase().includes(nome.toLowerCase()) &&
           index.responsavel.toLowerCase().includes(responsavel.toLowerCase())
         )
@@ -107,7 +113,6 @@ export default function GerenciarAcoes() {
       {showDeletePlanejamento && (
         <DeletarPlanejamentoDialog
           nome={showDeletePlanejamento.nome}
-          qtdAcoes={showDeletePlanejamento.qtdAcoes || 0}
           closeDialog={(deletou) => {
             setShowDeletePlanejamento(null);
           }}
