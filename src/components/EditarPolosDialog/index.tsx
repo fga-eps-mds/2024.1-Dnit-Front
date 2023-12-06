@@ -26,6 +26,31 @@ export default function EditarPolosDialog( { id, readOnly, listaUfs, closeDialog
 	const [longitude, setLongitude] = useState("");
 	const [endereco, setEndereco] = useState("");
 	const [cep, setCEP] = useState("");
+	const [erroLatitude, setErroLatitude] = useState(false);
+	const [erroLongitude, setErroLongitude] = useState(false);
+
+	const parseCoordenadas = (value: string, name: string) => {
+		const parts = value.split(',').map(part => part.trim());
+		if (parts.length === 2) {
+		  const latitude = parts[0];
+		  const longitude = parts[1];
+
+		  setErroLatitude(!Boolean(latitude.length));
+		  setErroLongitude(!Boolean(longitude.length));
+
+		  setLatitude(latitude.substring(0, 10));
+		  setLongitude(longitude.substring(0, 10));
+		}
+	  };
+	
+	  const handlePaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
+		event.preventDefault();
+	
+		const pastedData = event.clipboardData.getData('text');    
+		const fieldName = event.currentTarget.name;
+	  
+		parseCoordenadas(pastedData, fieldName);
+	  };
 
 	async function fetchMunicipios(): Promise<void> {
 		const listaMunicipios = await fetchMunicipio(Number(newUF));
@@ -73,24 +98,31 @@ export default function EditarPolosDialog( { id, readOnly, listaUfs, closeDialog
 			idUf: newUF,
 			municipioId: Number(newMunicipio),
 		};
-		
-		if (!id)
-		{
-			sendCadastroPolo(polo)
-				.then(e => {
-				notification.success({message: 'O polo foi cadastrado com sucesso!'});
+
+		setErroLatitude(!Boolean(latitude.length));
+		setErroLongitude(!Boolean(longitude.length));
+
+		if (latitude.length > 0 && longitude.length > 0){
+			if (!id)
+			{
+				sendCadastroPolo(polo)
+					.then(e => {
+					notification.success({message: 'O polo foi cadastrado com sucesso!'});
+					closeDialog(true);
+				})
+				.catch(error => notificationApi.error({message: 'Falha no cadastro do polo. ' + (error?.response?.data?.message ?? ''), duration: 30}))
+				return;
+			}
+			
+			updatePolo(id, polo)
+			.then(e => {
+				notification.success({message: 'O polo foi alterado com sucesso!'});
 				closeDialog(true);
-			  })
-			  .catch(error => notificationApi.error({message: 'Falha no cadastro do polo. ' + (error?.response?.data ?? ''), duration: 30}))
-			return;
+			})
+			.catch(error => notificationApi.error({message: 'Falha na edição do polo. ' + (error?.response?.data?.message ?? ''), duration: 30}))
+		}else{
+			notification.error({message: 'Falha na confirmação dos dados. Insira as coordenadas', duration: 30})
 		}
-		
-		updatePolo(id, polo)
-		.then(e => {
-			notification.success({message: 'O polo foi alterado com sucesso!'});
-			closeDialog(true);
-		  })
-		  .catch(error => notificationApi.error({message: 'Falha na edição do polo. ' + (error?.response?.data ?? ''), duration: 30}))
 	}
 
 	useEffect(() => {
@@ -122,13 +154,22 @@ export default function EditarPolosDialog( { id, readOnly, listaUfs, closeDialog
 				</div>
 				<div className="br-input edicao-polo-cod ">
 					<label>Latitude</label>
-					<input id="input-default" type={"text"} readOnly={readOnly} onChange={e => setLatitude(e.target.value)} 
+					<input id="input-default" type={"text"} readOnly={readOnly} onChange={e => {
+						setLatitude(e.target.value);
+						setErroLatitude(!Boolean(e.target.value.length));
+					}} onPaste={handlePaste}
 						defaultValue={latitude} data-testid="inputLatitude" />
+					{erroLatitude && <span style={{color: "red"}}>Insira um número entre -90 e +90 com até 6 casas decimais</span>}
+
 				</div>
 				<div className="br-input edicao-polo-cod ">
 					<label>Longitude</label>
-					<input id="input-default" type={"text"} readOnly={readOnly} onChange={e => setLongitude(e.target.value)} 
+					<input id="input-default" type={"text"} readOnly={readOnly} onChange={e => {
+						setLatitude(e.target.value);
+						setErroLongitude(!Boolean(e.target.value.length));
+					}} onPaste={handlePaste}
 						defaultValue={longitude} data-testid="inputLongitude" />
+					{erroLongitude && <span style={{color: "red"}}>Insira um número entre -90 e +90 com até 6 casas decimais</span>}
 				</div>
 				<div className="br-input edicao-polo-cod ">
 					<label>CEP</label>
