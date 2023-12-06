@@ -1,6 +1,7 @@
 import { Permissao, PermissaoCategoria, PermissaoModel, TipoPerfil } from "../../models/auth";
 import { PerfilModel } from "../../models/perfil";
 import { UsuarioModel } from "../../models/usuario";
+import { empresas } from "./empresaModelos";
 
 const permissao: PermissaoModel[] = [
   {
@@ -31,7 +32,7 @@ const perfil: PerfilModel = {
 export const usuarios: UsuarioModel[] = [
   {
     id: "1",
-    cnpj: "cnpj1",
+    empresa: empresas[0],
     email: "Teste@email.com",
     nome: "usuario1",
     ufLotacao: 18,
@@ -41,7 +42,7 @@ export const usuarios: UsuarioModel[] = [
   },
   {
     id: "2",
-    cnpj: "cnpj2",
+    empresa: empresas[0],
     email: "Teste1@email.com",
     nome: "usuario2",
     ufLotacao: 27,
@@ -51,7 +52,7 @@ export const usuarios: UsuarioModel[] = [
   },
   {
     id: "3",
-    cnpj: "cnpj3",
+    empresa: empresas[1],
     email: "Teste3@email.com",
     nome: "usuario3",
     ufLotacao: 3,

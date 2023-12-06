@@ -1,3 +1,5 @@
+import { type } from "os";
+
 export interface UnidadeFederativaData {
   id: number;
   nome: string;
@@ -25,15 +27,15 @@ export interface MunicipioData {
   nome: string;
 }
 
-export interface SituacaoData {
+export interface EnumData {
   id: number;
   descricao: string;
 }
 
-export interface EtapasDeEnsinoData {
-  id: number;
-  descricao: string;
-}
+export type SituacaoData = EnumData;
+export type EtapasDeEnsinoData = EnumData;
+export type LocalizacaoData = EnumData;
+export type RedeData = EnumData;
 
 export interface LoginData {
   email: string;
@@ -114,6 +116,8 @@ export interface EscolaData {
   telefone: string;
   numeroTotalDeDocentes: number;
   observacao: string;
+  distanciaSuperintendencia: number;
+  superintendenciaId: number;
 }
 
 export interface FiltroEscolaData {
@@ -156,10 +160,12 @@ export interface EscolaInepData {
   nome: string;
 }
 
-export interface SolicitacaoDeAcaoData {
+export interface SolicitacaoDeAcaoDTO {
   Escola: string;
-  UF: string;
-  Municipio: string;
+  EscolaCodigoInep: string;
+  Uf: number;
+  Municipio: string
+  MunicipioId: number;
   NomeSolicitante: string;
   VinculoEscola: string;
   Email: string;
@@ -182,4 +188,43 @@ export interface CalcularUpsResponse {
   ups2021: number;
   ups2022: number;
   upsGeral: number;
+}
+
+export interface SalvarEmpresaData {
+  Cnpj: string;
+  RazaoSocial: string;
+  UFs: number[];
+}
+
+export interface GerenciarUsuarioEmpresaData {
+  cnpj: string;
+  usuarioid: string;
+}
+export interface UfModel {
+  id: number;
+  sigla: string;
+  nome: string;
+}
+
+export interface Superintendencia{
+  id: number;
+  endereco: string;
+  cep: string;
+  latitude: string;
+  longitude: string;
+  uf: number;
+  siglaUf: string;
+}
+
+export interface Fatores {
+  nome: string;
+  peso: number;
+  valor: number;
+}
+
+export interface RanqueInfo {
+  ranqueId: number;
+  pontuacao: number;
+  posicao: number;
+  fatores: Fatores[];
 }

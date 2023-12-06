@@ -11,7 +11,7 @@
   z-index: 999;
 }
 
-.br-modal {
+.br-modal-custom {
   --modal-auto: auto;
   --modal-width: 500px;
   --modal-height: 600px;

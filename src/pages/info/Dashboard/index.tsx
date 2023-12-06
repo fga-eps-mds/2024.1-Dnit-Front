@@ -5,6 +5,8 @@ import {
 } from "@ant-design/icons";
 import IconGerenciarPerfis from "../../../assets/icones/GerenciarPerfis.svg";
 import IconGerenciarUsuarios from "../../../assets/icones/GerenciarUsuarios.svg";
+import RankingEscolas from "../../../assets/icones/RankingEscolas.svg";
+import Solicitacoes from "../../../assets/icones/BotaoSolicitacao.svg";
 import { Card, Collapse, CollapseProps } from "antd";
 import { useNavigate } from "react-router";
 import Header from "../../../components/Header";
@@ -16,7 +18,7 @@ import "../../../components/Collapse/";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../provider/Autenticacao";
 import { Permissao } from "../../../models/auth";
-import {fetchPermissoesDoUsuario} from "../../../service/usuarioApi";
+import { fetchPermissoesDoUsuario } from "../../../service/usuarioApi";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -27,8 +29,8 @@ export default function Dashboard() {
   const [podeVisualizarEscola, setPodeVisualizarEscola] = useState(
     temPermissao(Permissao.EscolaVisualizar)
   );
-  const [podeVisualizarUps, setPodeVisualizarUps] = useState(
-    temPermissao(Permissao.UpsVisualizar)
+  const [podeVisualizarRanque, setPodeVisualizarRanque] = useState(
+    temPermissao(Permissao.RanqueVisualizar)
   );
   const [podeCadastrarEscola, setPodeCadastrarEscola] = useState(
     temPermissao(Permissao.EscolaCadastrar)
@@ -42,7 +44,7 @@ export default function Dashboard() {
   const [podeGerenciarPerfis, setPodeGerenciarPerfis] = useState(
     temPermissao(Permissao.PerfilVisualizar)
   );
-  const [podeCadastrarEmpresa, setPodeCadastrarEmpresa] = useState(
+  const [podeGerenciarEmpresas, setPodeGerenciarEmpresas] = useState(
     temPermissao(Permissao.EmpresaCadastrar)
   );
   const [podeGerenciarUsuario, setPodeGerenciarUsuario] = useState(
@@ -54,13 +56,13 @@ export default function Dashboard() {
       setPermissoes(permissoes);
 
       setPodeVisualizarEscola(temPermissao(Permissao.EscolaVisualizar));
-      setPodeVisualizarUps(temPermissao(Permissao.UpsVisualizar));
+      setPodeVisualizarRanque(temPermissao(Permissao.RanqueVisualizar));
       setPodeCadastrarEscola(temPermissao(Permissao.EscolaCadastrar));
       setPodeCadastrarSinistro(temPermissao(Permissao.SinistroCadastrar));
       setPodeCadastrarRodovias(temPermissao(Permissao.RodoviaCadastrar));
       setPodeGerenciarUsuario(temPermissao(Permissao.UsuarioVisualizar));
       setPodeGerenciarPerfis(temPermissao(Permissao.PerfilVisualizar));
-      setPodeCadastrarEmpresa(temPermissao(Permissao.EmpresaCadastrar));
+      setPodeGerenciarEmpresas(temPermissao(Permissao.EmpresaVisualizar));
     });
   }, []);
 
@@ -79,10 +81,21 @@ export default function Dashboard() {
               <p data-testid='visualizar-escola-option' className="text">Visualizar Escolas</p>
             </Card>
           )}
-          {podeVisualizarUps && (
-            <Card className="card" onClick={() => navigate("/telaUPS")}>
-              <FileTextOutlined className="icon" />
-              <p className="text">Visualizar Dados UPS</p>
+          {podeVisualizarRanque && (
+            <Card className="card" onClick={() => navigate("/ranque")}>
+              <img src={RankingEscolas} alt="ícone gerenciar usuarios" />
+              <p className="text">Ranking de escolas</p>
+            </Card>
+          )}
+          {
+            /*podeVisualizarSolicitacoes &&*/ (
+              <Card className="card" onClick={() => navigate("/solicitacoes")}>
+              <img
+                className="iconPerfis"
+                src={Solicitacoes}
+                alt="ícone solicitacoes"
+              />
+              <p className="text">Solicitações</p>
             </Card>
           )}
         </div>
@@ -125,10 +138,10 @@ export default function Dashboard() {
       label: "Ferramentas Administrativas",
       children: (
         <div className="collapse-item">
-          {podeCadastrarEmpresa && (
-            <Card className="disabled">
+          {podeGerenciarEmpresas && (
+            <Card className="card" onClick={() => navigate("/gerenciarEmpresas")}>
               <FileTextOutlined className="icon" />
-              <p className="text">Cadastrar empresas</p>
+              <p className="text">Gerenciar Empresas</p>
             </Card>
           )}
           {podeGerenciarUsuario &&
@@ -150,6 +163,7 @@ export default function Dashboard() {
               <p className="text">Gerenciar Perfis</p>
             </Card>
           )}
+          { }
         </div>
       ),
     },
@@ -157,7 +171,7 @@ export default function Dashboard() {
   return (
     <div className="App">
       <Header />
-      <div className="Main-content">
+      <div className="Main-content" data-testid="dashboard">
         <TrilhaDeNavegacao elementosLi={paginas} />
         <Collapse
           defaultActiveKey={["1", "2", "3"]}

@@ -122,11 +122,11 @@ export async function updateRedefineSenha(data: DATA.RedefinirSenhaData): Promis
 }
 
 export async function fetchUsuarios<T>(params: ListarUsuariosQueryParams): Promise<T> {
-    console.log({ params });
     if (params.nome === '') params.nome = undefined
     if (params.perfilId === '') params.perfilId = undefined
     if (params.ufLotacao === '') params.ufLotacao = undefined
     if (params.municipioId === '') params.municipioId = undefined
+    if (params.empresa === '') params.empresa = undefined
     try {
         const response: AxiosResponse<T> = await axios.get(URL.listarUsuarios, {
             params

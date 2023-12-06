@@ -1,0 +1,32 @@
+.edicao-empresa .br-modal-body {
+	overflow: hidden;
+}
+
+.edicao-empresa {
+	display: block !important;
+}
+
+.br-modal-body .br-select {
+	display: block;
+	margin: 5px 10px;
+	padding: 10px;
+}
+
+.br-modal-body .br-select .br-input {
+	padding: 0px;
+	margin: 0px;
+}
+
+.br-modal-body .erro {
+	height: 20px;
+}
+
+.br-modal-body .erro p {
+	color: red;
+	font-size: 0.8rem;
+}
+
+.edicao-empresa .required-label:after {
+	content: " *";
+	color: red;
+  }
