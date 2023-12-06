@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, getByRole, getByTestId, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { AuthProvider } from "../provider/Autenticacao";
 import server from "./mock/servicosAPI";
@@ -81,4 +81,41 @@ describe("Criar planejamento", () => {
       await waitFor(() => expect(screen.getByText('O nome do planejamento deve conter pelo menos 5 caracteres')).toBeInTheDocument());
     }
   })
+
+  it("Deve renderizar o select com meses do ano", async() => {
+    render(
+      <MemoryRouter>
+        <AuthProvider>
+          <GerenciarAcoes/>
+        </AuthProvider>
+      </MemoryRouter>
+    );
+
+    const button = screen.getByText("Gerar Planejamento")
+
+    const selectElement = screen.getAllByRole('combobox')[0];
+
+    fireEvent.change(selectElement, {target: { value: 'Fevereiro'}});
+    expect(selectElement).toBeInTheDocument();
+  })
+
+  // it("Deve subir erro Escolha Quantidade de ações caso ações forem iguais à zero", async() => {
+  //   render(
+  //     <MemoryRouter>
+  //       <AuthProvider>
+  //         <GerenciarAcoes/>
+  //       </AuthProvider>
+  //     </MemoryRouter>
+  //   );
+
+  //   const qtdAcoes = screen.getByTestId('qtd-actions-field')
+
+  //   const textQtdAcoes = qtdAcoes.textContent || qtdAcoes.innerText
+  //   const number = parseInt(textQtdAcoes)
+
+  //   if(!isNaN(number) && number === 0){
+  //     await waitFor(() => expect(screen.getByText("Escolha a quantidade de ações")).toBeInTheDocument())
+  //   }
+
+  // })
 })
