@@ -117,7 +117,6 @@ describe('Modal adicionar Escola', () => {
             <div>
                 {aberto && <ModalAdicionarEscola
                     onClose={() => { aberto = false; }}
-                    onAdicionar={() => { }}
                 />}
             </div>
         );
@@ -136,7 +135,6 @@ describe('Modal adicionar Escola', () => {
             <div>
                 {aberto && <ModalAdicionarEscola
                     onClose={() => { aberto = false; }}
-                    onAdicionar={() => { }}
                 />}
             </div>
         );
@@ -159,7 +157,6 @@ describe('Modal adicionar Escola', () => {
             <div>
                 {aberto && <ModalAdicionarEscola
                     onClose={() => { aberto = false; }}
-                    onAdicionar={() => { }}
                 />}
             </div>
         );
