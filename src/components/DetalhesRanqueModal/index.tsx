@@ -74,7 +74,7 @@ const ModalDetalhesRanque: React.FC<ModalProps> = ({ ranque, onEditDescription, 
                             maxLength={100}
                         />
                     ) : (
-                        <Label>{ranque.descricao}</Label>
+                        <Label className="texto-descricao">{ranque.descricao}</Label>
                     )}
                     <div className='d-flex flex-column '>
                     </div>
