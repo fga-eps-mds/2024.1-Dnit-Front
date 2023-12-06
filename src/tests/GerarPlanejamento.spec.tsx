@@ -38,4 +38,23 @@ describe("Criar planejamento", () => {
     expect(button).toBeInTheDocument();
   })
 
+  it("Deve subir erro de nome obrigatório ao clicar no botão com label Título vazia", async() => {
+    render(
+      <MemoryRouter>
+        <AuthProvider>
+          <GerenciarAcoes/>
+        </AuthProvider>
+      </MemoryRouter>
+    );
+
+    const button = screen.getByText("Gerar Planejamento")
+    const vazio = screen.getByTestId("inputTitulo");
+
+    fireEvent.click(button);
+    if(vazio === null) { 
+      await waitFor(() => expect(screen.getByText("O nome é obrigatório")).toBeInTheDocument());
+    }
+
+  })
+  
 })
