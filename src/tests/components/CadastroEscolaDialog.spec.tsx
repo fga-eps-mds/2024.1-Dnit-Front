@@ -41,7 +41,7 @@ describe("Testes para o componente CadastroEscolaDialog", () => {
     await expect(screen.getByText("Cadastrar Escola")).toBeInTheDocument();
 
     const modalContent = screen.getByTestId('overlay');
-    fireEvent.click(modalContent);
+    fireEvent.mouseDown(modalContent);
   })
   test("Deve fechar o componente", () => {
     const closeMock = jest.fn();
@@ -110,7 +110,7 @@ describe("Testes para o componente CadastroEscolaDialog", () => {
     fireEvent.click(localSelecionado)
 
     const latitude = screen.getByLabelText("Latitude");
-    fireEvent.change(latitude, { target: { value: "-15,88431" } });
+    fireEvent.change(latitude, { target: { value: "-15.88431" } });
 
     const longitude = screen.getByLabelText("Longitude");
     fireEvent.change(longitude, { target: { value: "-48.08813" } });
@@ -125,7 +125,7 @@ describe("Testes para o componente CadastroEscolaDialog", () => {
     fireEvent.click(cadastrar);
     expect(closeMock).not.toHaveBeenCalled();
 
-  })
+  });
   test('Deve fazer cadastro com lat e lonj vazios', async () => {
     const closeMock = jest.fn();
 
@@ -188,7 +188,26 @@ describe("Testes para o componente CadastroEscolaDialog", () => {
     fireEvent.click(cadastrar);
     expect(closeMock).not.toHaveBeenCalled();
 
-  })
+  });
+  test('Deve testar o parser de Latitude e Longitude', async () => {
+    const screen = render(
+      <CadastroEscolaDialog
+        closeDialog={() => { }}
+        dadosSoliciatacao={solicitacao}
+      />
+    );
+
+    await waitFor(() => expect(screen.getByText("Cadastrar Escola")).toBeInTheDocument());
+
+    const latitude = screen.getByLabelText("Latitude");
+    fireEvent.paste(latitude, { clipboardData: { getData: () => "-15.758173462592291, -47.90013307875956" } });
+
+    await waitFor(() => {
+      const updatedLatitude = screen.getByDisplayValue("-15.75817346");
+      expect(updatedLatitude).toBeInTheDocument();
+    });
+  });
+
   test('Deve clicar nos drodowns de uf e municipio', async () => {
     const screen = render(
       <CadastroEscolaDialog
@@ -215,8 +234,7 @@ describe("Testes para o componente CadastroEscolaDialog", () => {
       expect(screen.queryByText("Carregando...")).not.toBeInTheDocument()
     );
     const muncipioOption = await screen.findAllByText("Brasília");
-    const municipioValue = muncipioOption[0]; 
+    const municipioValue = muncipioOption[2];
     fireEvent.click(municipioValue);
-  })
-
+  });
 })

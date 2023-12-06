@@ -182,7 +182,7 @@ export default function GerenciarSolicitacoes() {
                 hideEyeIcon={false}
                 hideTrashIcon={true}
                 hideEditIcon={true}
-                hidePlusIcon={solicitacao.escola === null ? false : true}
+                hidePlusIcon={solicitacao.escola === null && temPermissao(Permissao.EscolaCadastrar) ? false : true}
                 onDetailRow={_ => setSolicitacaoAtual(solicitacao)}
                 onPlusRow={_ => setCadastrarEscola(solicitacao)}
 

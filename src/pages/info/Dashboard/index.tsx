@@ -55,6 +55,9 @@ export default function Dashboard() {
   const [podeGerenciarPolos, setPodeGerenciarPolos] = useState(
     temPermissao(Permissao.PoloVisualizar)
   );
+  const [podeGerenciarSolicitacao, setPodeGerenciarSolicitacao] = useState(
+    temPermissao(Permissao.SolicitacaoVisualizar)
+  );
 
   useEffect(() => {
     fetchPermissoesDoUsuario().then((permissoes) => {
@@ -69,6 +72,7 @@ export default function Dashboard() {
       setPodeGerenciarPerfis(temPermissao(Permissao.PerfilVisualizar));
       setPodeGerenciarEmpresas(temPermissao(Permissao.EmpresaVisualizar));
       setPodeGerenciarPolos(temPermissao(Permissao.PoloVisualizar));
+      setPodeGerenciarSolicitacao(temPermissao(Permissao.SolicitacaoVisualizar));
     });
   }, []);
 
@@ -94,7 +98,7 @@ export default function Dashboard() {
             </Card>
           )}
           {
-            /*podeVisualizarSolicitacoes &&*/ (
+            podeGerenciarSolicitacao && (
               <Card className="card" onClick={() => navigate("/solicitacoes")}>
               <img
                 className="iconPerfis"
