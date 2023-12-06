@@ -34,8 +34,8 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
   const regrasLatLong = [
     {
       required: false,
-      pattern: /^-?([1-8]?\d|90)(.\d{1,12})?$/,
-      message: "Insira um número entre -90 e +90 com até 12 decimais, utilizando ponto",
+      pattern: /^-?([1-8]?\d|90)(.\d{1,8})?$/,
+      message: "Insira um número entre -90 e +90 com até 8 casas decimais, utilizando ponto",
     },
   ];
 
@@ -54,19 +54,22 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
       const longitude = parseFloat(parts[1]);
 
       form.setFieldsValue({
-        latitude: latitude.toFixed(6),
-        longitude: longitude.toFixed(6)
+        latitude: latitude.toFixed(8),
+        longitude: longitude.toFixed(8)
       });
-
-    } else if (name) {
-      const num = parseFloat(value);
-      if (!isNaN(num)) {
-        form.setFieldsValue({
-          [name]: num.toFixed(6)
-        });
-      }
     }
   };
+
+  const handlePaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
+    event.preventDefault();
+
+    const pastedData = event.clipboardData.getData('text');    
+    const fieldName = event.currentTarget.name;
+  
+    parseCoordenadas(pastedData, fieldName);
+  };
+  
+  
 
   const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -388,7 +391,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                   rules={regrasLatLong}>
                   <Input
                     className="custom-imput"
-                    onChange={handleBlur}
+                    onPaste={handlePaste}
                   />
                 </Form.Item>
 
@@ -399,7 +402,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                 >
                   <Input
                     className="custom-imput"
-                    onChange={handleBlur}
+                    onPaste={handlePaste}
                   />
                 </Form.Item>
 

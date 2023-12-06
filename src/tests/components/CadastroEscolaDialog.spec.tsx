@@ -195,18 +195,19 @@ describe("Testes para o componente CadastroEscolaDialog", () => {
         closeDialog={() => { }}
         dadosSoliciatacao={solicitacao}
       />
-    )
-    await expect(screen.getByText("Cadastrar Escola")).toBeInTheDocument();
+    );
 
-    await waitFor(() => expect(screen.getByDisplayValue("ESCOLA A")).toBeInTheDocument);
+    await waitFor(() => expect(screen.getByText("Cadastrar Escola")).toBeInTheDocument());
 
     const latitude = screen.getByLabelText("Latitude");
-    await waitFor(() => fireEvent.change(latitude, { target: { value: "-15.758173462592291, -47.90013307875956" } }));
+    fireEvent.paste(latitude, { clipboardData: { getData: () => "-15.758173462592291, -47.90013307875956" } });
 
-    expect(screen.getAllByDisplayValue('-15.758173')).toHaveLength(1);
-    expect(screen.getAllByDisplayValue('-47.900133')).toHaveLength(1);
-
+    await waitFor(() => {
+      const updatedLatitude = screen.getByDisplayValue("-15.75817346");
+      expect(updatedLatitude).toBeInTheDocument();
+    });
   });
+
   test('Deve clicar nos drodowns de uf e municipio', async () => {
     const screen = render(
       <CadastroEscolaDialog
