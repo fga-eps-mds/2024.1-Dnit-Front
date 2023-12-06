@@ -51,6 +51,10 @@ export default function Dashboard() {
     temPermissao(Permissao.UsuarioVisualizar)
   );
 
+  const [podeGerenciarSolicitacao, setPodeGerenciarSolicitacao] = useState(
+    temPermissao(Permissao.SolicitacaoVisualizar)
+  );
+
   useEffect(() => {
     fetchPermissoesDoUsuario().then((permissoes) => {
       setPermissoes(permissoes);
@@ -63,6 +67,7 @@ export default function Dashboard() {
       setPodeGerenciarUsuario(temPermissao(Permissao.UsuarioVisualizar));
       setPodeGerenciarPerfis(temPermissao(Permissao.PerfilVisualizar));
       setPodeGerenciarEmpresas(temPermissao(Permissao.EmpresaVisualizar));
+      setPodeGerenciarSolicitacao(temPermissao(Permissao.SolicitacaoVisualizar));
     });
   }, []);
 
@@ -88,7 +93,7 @@ export default function Dashboard() {
             </Card>
           )}
           {
-            /*podeVisualizarSolicitacoes &&*/ (
+            podeGerenciarSolicitacao && (
               <Card className="card" onClick={() => navigate("/solicitacoes")}>
               <img
                 className="iconPerfis"
