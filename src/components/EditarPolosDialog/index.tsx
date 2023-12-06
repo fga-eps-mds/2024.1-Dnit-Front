@@ -7,6 +7,7 @@ import Select from "../Select";
 import { PoloModel } from "../../models/polo";
 import { fetchPolo, sendCadastroPolo, updatePolo } from "../../service/poloApi";
 import { fetchMunicipio } from "../../service/escolaApi";
+import { fetchCEP } from "../../service/apiUtils";
 
 interface EditarPolosDialogProps {
 	readonly id: number | null;
@@ -36,6 +37,18 @@ export default function EditarPolosDialog( { id, readOnly, listaUfs, closeDialog
 		fetchMunicipios();
 	}, [newUF]);
 	
+	const consultaCEP = async (cep: string) => {
+		setCEP(cep);
+		try {
+		  if (cep.length === 8) {
+			const res = await fetchCEP(cep);
+			if (!res.erro) {
+				//setEndereco(res.bairro + ", " + res.logradouro + ", " + res.complemento);
+				setNewUF(Number(listaUfs.find(obj => obj.rotulo === res.uf)?.id));
+				setNewMunicipio(res.ibge);
+			}}
+	} catch (error) { }
+	  };
 
 	async function buscarPolo(id : any) {
 		fetchPolo(id)
@@ -54,9 +67,9 @@ export default function EditarPolosDialog( { id, readOnly, listaUfs, closeDialog
 		const polo = {
 			nome: nome.trim(),
 			endereco: endereco.trim(),
-			cep: cep.trim(),
-			latitude: latitude.trim(),
-			longitude: longitude.trim(),
+			cep: cep.trim().replace(/^(\d{5})(\d{3})$/gm, "$1-$2"),
+			latitude: latitude.trim().replace(".", ","),
+			longitude: longitude.trim().replace(".", ","),
 			idUf: newUF,
 			municipioId: Number(newMunicipio),
 		};
@@ -119,7 +132,7 @@ export default function EditarPolosDialog( { id, readOnly, listaUfs, closeDialog
 				</div>
 				<div className="br-input edicao-polo-cod ">
 					<label>CEP</label>
-					<input id="input-default" type={"text"} readOnly={readOnly} onChange={e => setCEP(e.target.value)} 
+					<input id="input-default" type={"text"} readOnly={readOnly} onChange={e => consultaCEP(e.target.value)} 
 						 data-testid="inputCEP" defaultValue={cep}/>
 				</div>
 				<Select 

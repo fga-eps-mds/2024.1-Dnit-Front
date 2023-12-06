@@ -89,9 +89,7 @@ export default function GerenciarPolos() {
 
         fetchListarPolosFiltrados(filtro)
             .then(p => {
-                console.log(p)
                 setPagina(p)
-                console.log(pagina)
                 setListaPolos(p.items)
                 setTamanhoPagina(p.itemsPorPagina)
             })
@@ -119,7 +117,6 @@ export default function GerenciarPolos() {
             return;
         }
         const listaMunicipios = await fetchMunicipio(Number(uf.id));
-        console.log(listaMunicipios);
         const novoMunicipio = listaMunicipios.map((u) => ({ id: '' + u.id, rotulo: u.nome }));
         setMunicipios(novoMunicipio);
     }
