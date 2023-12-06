@@ -42,7 +42,6 @@ export default function PlanejamentoInfo() {
       />}
       {modalAdicionarAcao && <ModalAdicionarEscola
           onClose={() => { setModalAdicionarAcao(false) }}
-          onAdicionar={() => { }}
       />}
       <div className="planning-info">
         <div className="months-cards">

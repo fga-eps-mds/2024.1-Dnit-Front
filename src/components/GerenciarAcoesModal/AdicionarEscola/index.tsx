@@ -5,7 +5,6 @@ import SelectSchoolCard from "../../SelectSchoolCard";
 
 interface ModalProps {
     onClose: () => void;
-    onAdicionar: () => void;
 }
 
 interface Escola {
@@ -28,7 +27,7 @@ const dados: Escola[] = [
     { id: 10, nome: "Iota", uf: "GO", qtdAlunos: 720 }
 ];
 
-export default function ModalAdicionarEscola({ onClose, onAdicionar }: ModalProps) {
+export default function ModalAdicionarEscola({ onClose }: ModalProps) {
     const [escolasBanco, setEscolasBanco] = useState<Escola[]>(dados);
     const [escolas, setEscolas] = useState<Escola[] | null>(escolasBanco);
     const [nome, setNome] = useState("");
@@ -133,8 +132,7 @@ export default function ModalAdicionarEscola({ onClose, onAdicionar }: ModalProp
                             Cancelar
                         </button>
                         <button className="br-button primary" type="button" onClick={() => {
-                            console.log(listaEscolasSelecionadas);
-                            onAdicionar();
+                            //TODO putEscolas(listaEscolasSelecionadas)
                             onClose();
                         }}>
                             Adicionar
