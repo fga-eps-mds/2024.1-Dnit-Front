@@ -46,7 +46,7 @@ describe('Testes para a pagina de Solicitacoes', () => {
     expect((await screen.findAllByText("Escola A")).length).toBe(1);
   });
 
-  test('Deve utilizar o filtro de qtd alunos', async () => {
+  test('Deve filtrar por qtd alunos', async () => {
     autenticar(Permissao.SolicitacaoVisualizar, Permissao.EscolaCadastrar);
 
     const screen = render(
@@ -58,39 +58,25 @@ describe('Testes para a pagina de Solicitacoes', () => {
     );
     await waitFor(() => screen.getByText("Soliciatações de Ações"));
 
-    const tamanhoPaginaSelector = screen.getByTestId('items-per-page');
-    fireEvent.change(tamanhoPaginaSelector, { target: { value: '1' } });
-
     const qtdAlunos = screen.getByTestId("Qtd. Alunos:customSelect");
 
     await fireEvent.click(qtdAlunos);
-    fireEvent.click(screen.getByLabelText('Até 50'));
-
-    await waitFor(() => expect(screen.findAllByText('Escola A')).not.toBeInTheDocument);
+    fireEvent.click(screen.getByText('Até 50'));
     
     await fireEvent.click(qtdAlunos);
-    fireEvent.click(screen.getByLabelText('Entre 51 e 200'));
-
-    await waitFor(() => expect(screen.findAllByText('Escola A')).toBeInTheDocument);
-
+    fireEvent.click(screen.getByText('Entre 51 e 200'));
 
     await fireEvent.click(qtdAlunos);
-    fireEvent.click(screen.getByLabelText('Entre 201 e 500'));
-
-    await waitFor(() => expect(screen.findAllByText('Escola A')).not.toBeInTheDocument);
+    fireEvent.click(screen.getByText('Entre 201 e 500'));
 
     await fireEvent.click(qtdAlunos);
-    fireEvent.click(screen.getByLabelText('Entre 501 e 1000'));
-
-    await waitFor(() => expect(screen.findAllByText('Escola A')).not.toBeInTheDocument);
+    fireEvent.click(screen.getByText('Entre 501 e 1000'));
 
     await fireEvent.click(qtdAlunos);
-    fireEvent.click(screen.getByLabelText('Mais que 1001'));
-
-    await waitFor(() => expect(screen.findAllByText('Escola A')).not.toBeInTheDocument);
+    fireEvent.click(screen.getByText('Mais que 1001'));
     
     await fireEvent.click(qtdAlunos);
-    fireEvent.click(screen.getByLabelText('Todos'));
+    fireEvent.click(screen.getByText('Todos'));
 
     await waitFor(() => expect(screen.findAllByText('Escola A')).toBeInTheDocument);
 
