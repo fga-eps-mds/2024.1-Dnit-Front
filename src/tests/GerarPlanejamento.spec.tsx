@@ -82,7 +82,7 @@ describe("Criar planejamento", () => {
     }
   })
 
-  it("Deve renderizar o select com meses do ano", async() => {
+  it("Deve renderizar o select mês inicial com meses do ano", async() => {
     render(
       <MemoryRouter>
         <AuthProvider>
@@ -99,23 +99,20 @@ describe("Criar planejamento", () => {
     expect(selectElement).toBeInTheDocument();
   })
 
-  // it("Deve subir erro Escolha Quantidade de ações caso ações forem iguais à zero", async() => {
-  //   render(
-  //     <MemoryRouter>
-  //       <AuthProvider>
-  //         <GerenciarAcoes/>
-  //       </AuthProvider>
-  //     </MemoryRouter>
-  //   );
+  it("Deve renderizar o select mês final com meses do ano", async() => {
+    render(
+      <MemoryRouter>
+        <AuthProvider>
+          <GerenciarAcoes/>
+        </AuthProvider>
+      </MemoryRouter>
+    );
 
-  //   const qtdAcoes = screen.getByTestId('qtd-actions-field')
+    const button = screen.getByText("Gerar Planejamento")
 
-  //   const textQtdAcoes = qtdAcoes.textContent || qtdAcoes.innerText
-  //   const number = parseInt(textQtdAcoes)
+    const selectElement = screen.getAllByRole('combobox')[1];
 
-  //   if(!isNaN(number) && number === 0){
-  //     await waitFor(() => expect(screen.getByText("Escolha a quantidade de ações")).toBeInTheDocument())
-  //   }
-
-  // })
+    fireEvent.change(selectElement, {target: { value: 'Fevereiro'}});
+    expect(selectElement).toBeInTheDocument();
+  })
 })
