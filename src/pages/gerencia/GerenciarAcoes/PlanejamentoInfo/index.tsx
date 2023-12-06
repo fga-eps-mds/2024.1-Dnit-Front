@@ -8,6 +8,7 @@ import { EscolasPlanejamentoTabela } from "../../../../models/gerenciarAcoes";
 import { ButtonComponent } from "../../../../components/Button";
 import ModalAdicionarEscola from "../../../../components/GerenciarAcoesModal/AdicionarEscola";
 import DeletarEscolaDialog, {DeletarEscolaDialogArgs} from "../../../../components/DeletarEscolaDialog";
+import ModalAlterarEscola from "../../../../components/GerenciarAcoesModal/AlterarEscola";
 export default function PlanejamentoInfo() {
   const colunas = [
     "UPS",
@@ -16,6 +17,8 @@ export default function PlanejamentoInfo() {
     "Quantidade de Alunos",
     "Custo logístico",
   ];
+
+  const [showAlterarMesEscola, setShowAlterarMesEscola] = useState<boolean>(false);
 
   const [showDeletarEscolaPlanejamento, setShowDeletarEscolaPlanejamento] = useState<DeletarEscolaDialogArgs|null>(null);
 
@@ -34,6 +37,9 @@ export default function PlanejamentoInfo() {
             setShowDeletarEscolaPlanejamento(null);
           }}/>
       )}
+      {showAlterarMesEscola && <ModalAlterarEscola
+        onClose={()=> {setShowAlterarMesEscola(false)}}
+      />}
       {modalAdicionarAcao && <ModalAdicionarEscola
           onClose={() => { setModalAdicionarAcao(false) }}
       />}
@@ -73,6 +79,9 @@ export default function PlanejamentoInfo() {
               }}
               hideEditIcon={true}
               hideChangeIcon={false}
+              onChangeRow={() => {
+                setShowAlterarMesEscola(true)
+              }}
               onDeleteRow={() => {
                 setShowDeletarEscolaPlanejamento({ nome: e.nome, id: "" })
               }}
