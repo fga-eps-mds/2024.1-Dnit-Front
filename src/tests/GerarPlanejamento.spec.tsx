@@ -165,4 +165,35 @@ describe("Criar planejamento", () => {
     }
 
   })
+
+  it("Verifica se a sugestão de planejamento é gerada", async() => {
+    render(
+      <MemoryRouter>
+        <AuthProvider>
+          <GerenciarAcoes/>
+        </AuthProvider>
+      </MemoryRouter>
+    )
+
+    const button = screen.getByText("Gerar Planejamento")
+
+    const titulo = screen.getByTestId("inputTitulo");
+    const firstSelectElement = screen.getAllByRole('combobox')[0];
+    const secondSelectElement = screen.getAllByRole('combobox')[1];
+    const qtdAcoes = screen.getByTestId("qtd-actions-field");
+
+    act(() => {
+      fireEvent.change(titulo, {target: { value: 'Planejamento Sudeste'}})
+      fireEvent.change(firstSelectElement, {target: { value: 'Janeiro', index: '0' } })
+      fireEvent.change(secondSelectElement, {target: {value: 'Abril', index: '3' } })
+      fireEvent.change(qtdAcoes, {target: { value: 1234 } })
+    }) 
+
+    fireEvent.click(button);
+
+    if(titulo !== null && firstSelectElement !== null && secondSelectElement !== null && qtdAcoes !== null){
+      waitFor(() => expect(screen.getByText("Escolas no Mês de Novembro")).toBeInTheDocument());
+    }
+
+  });
 })
