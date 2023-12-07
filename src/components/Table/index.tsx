@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 import "./styles.css";
-//
+
 interface CustomTableProps {
   title: string;
   initialItemsPerPage: number;
