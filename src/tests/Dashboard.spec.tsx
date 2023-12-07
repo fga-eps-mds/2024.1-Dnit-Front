@@ -268,4 +268,34 @@ describe("Testes do dashboard", () => {
     const botao = screen.queryByText("Gerenciar Perfis");
     expect(botao).toBeNull();
   });
+
+  test("Gerenciar Polos", async () => {
+    autenticar(Permissao.PoloVisualizar);
+
+    const screen = render(
+      <MemoryRouter initialEntries={["/dashboard"]}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </MemoryRouter>
+    );
+
+    const botao = screen.getByText("Gerenciar Polos");
+    fireEvent.click(botao);
+  });
+
+  test("Gerenciar Polos Sem Permissão", async () => {
+    autenticar();
+
+    const screen = render(
+      <MemoryRouter initialEntries={["/dashboard"]}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </MemoryRouter>
+    );
+
+    const botao = screen.queryByText("Gerenciar Polos");
+    expect(botao).toBeNull();
+  });
 });

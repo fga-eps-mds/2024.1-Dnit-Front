@@ -37,7 +37,7 @@ describe("Modal Component", () => {
     );
 
     const overlay = getByTestId('overlay');
-    fireEvent.mouseDown(overlay); 
+    fireEvent.click(overlay); 
     expect(closeModalMock).toHaveBeenCalledWith(false); 
   });
 

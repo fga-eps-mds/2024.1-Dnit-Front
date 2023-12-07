@@ -116,8 +116,8 @@ export interface EscolaData {
   telefone: string;
   numeroTotalDeDocentes: number;
   observacao: string;
-  distanciaSuperintendencia: number;
-  superintendenciaId: number;
+  distanciaPolo: number;
+  poloId: number;
 }
 
 export interface FiltroEscolaData {
@@ -131,11 +131,29 @@ export interface FiltroEscolaData {
   };
 }
 
+export interface FiltroPoloData {
+    params: {
+        Pagina: number;
+        TamanhoPagina: number;
+        Nome: string;
+        Cep: string;
+        idUf: string | number;
+        idMunicipio: string | number;
+    };
+}
+
 export interface EscolasFiltradasResponse {
   escolas: EscolaData[];
   escolasPorPagina: number;
   totalEscolas: number;
   totalPaginas: number;
+}
+
+export interface PolosFiltradosResponse {
+    polos: PoloData[];
+    polosPorPagina: number;
+    totalPolos: number;
+    totalPaginas: number;
 }
 
 export interface AlterarDadosEscolaData {
@@ -206,16 +224,6 @@ export interface UfModel {
   nome: string;
 }
 
-export interface Superintendencia{
-  id: number;
-  endereco: string;
-  cep: string;
-  latitude: string;
-  longitude: string;
-  uf: number;
-  siglaUf: string;
-}
-
 export interface Fatores {
   nome: string;
   peso: number;
@@ -227,4 +235,25 @@ export interface RanqueInfo {
   pontuacao: number;
   posicao: number;
   fatores: Fatores[];
+}
+
+export interface PoloData {
+    id: number;
+    endereco: string;
+    cep: string;
+    latitude: string;
+    longitude: string;
+    nomeMunicipio: string;
+    nome: string;
+    uf: number;
+}
+
+export interface SalvarPoloData {
+  endereco: string;
+  cep: string;
+  latitude: string;
+  longitude: string;
+  municipioId: number;
+  nome: string;
+  idUf: number;
 }

@@ -3,12 +3,12 @@ import "../../styles/App.css";
 import "../../pages/Ranque/";
 import Modal from "../../components/Modal/index";
 import { fetchEscolaRanque } from '../../service/ranqueApi';
-import { fetchSuperintendenciaData } from '../../service/escolaApi';
 import { EscolaRanqueDetalhes } from '../../models/ranque';
 import ReactLoading from "react-loading";
-import { Superintendencia } from '../../models/service';
 import { formataCustoLogistico } from '../../utils/utils';
 import "./index.css";
+import { fetchPolo } from '../../service/poloApi';
+import { PoloModel } from '../../models/polo';
 
 interface ModalProps {
     onClose: () => void;
@@ -30,18 +30,18 @@ function Label({ children, className }: LabelProps) {
 const ModalRanqueEscola: React.FC<ModalProps> = ({ escolaId, onClose, onCreateAcao }) => {
 
     const [escolaSelecionada, setEscolaSelecionada] = useState<EscolaRanqueDetalhes | null>(null);
-    const [superintendenciaSelecionada, setSuperintendenciaSelecionada] = useState<Superintendencia | undefined>();
+    const [poloSelecionado, setPoloSelecionado] = useState<PoloModel | undefined>();
 
-    const fetchSuperintendenciaSelecionada = async (superintendenciaId?: number) => {
-        const superintendencia = await fetchSuperintendenciaData(superintendenciaId);
-        setSuperintendenciaSelecionada(superintendencia);
+    const fetchPoloSelecionado = async (poloId?: number) => {
+        const polo = await fetchPolo(poloId);
+        setPoloSelecionado(polo);
     }
 
     useEffect(() => {
         fetchEscolaRanque(escolaId)
             .then((escola) => {
                 setEscolaSelecionada(escola);
-                fetchSuperintendenciaSelecionada(escola.superintendencia?.id);
+                fetchPoloSelecionado(escola.polo?.id);
             }
             )
 
@@ -70,7 +70,7 @@ const ModalRanqueEscola: React.FC<ModalProps> = ({ escolaId, onClose, onCreateAc
                     <Label>Pontuação:</Label>
                     <div className='d-flex flex-column'>
                         {escolaSelecionada.ranqueInfo.fatores.map(f => <Label className='ml-4'>Fator {f.nome}, Peso {f.peso}, Valor {f.valor}</Label>)}
-                        <Label className='ml-4'>Custo Logístico: {formataCustoLogistico(escolaSelecionada.distanciaSuperintendencia)}</Label>
+                        <Label className='ml-4'>Custo Logístico: {formataCustoLogistico(escolaSelecionada.distanciaPolo)}</Label>
                     </div>
                     <Label>Total: {escolaSelecionada.ranqueInfo.pontuacao}</Label>
                     <Label>Solicitação: {escolaSelecionada.temSolicitacao ? "Esta escola possui solicitação de ação" : "Não há registro de solicitacao"}</Label>
@@ -119,12 +119,11 @@ const ModalRanqueEscola: React.FC<ModalProps> = ({ escolaId, onClose, onCreateAc
                     </div>
                     <hr />
                     <div className='d-flex flex-column '>
-                        {/* <Label><strong>Superintendência</strong></Label> */}
-                        <Label><strong>Cidade polo mais próxima</strong></Label>
-                        <Label>Distância: {escolaSelecionada.distanciaSuperintendencia?.toFixed(2)} Km</Label>
-                        <Label>Endereço: {superintendenciaSelecionada?.endereco}</Label>
-                        <Label>Cep: {superintendenciaSelecionada?.cep}</Label>
-                        <Label>UF: {superintendenciaSelecionada?.uf}</Label>
+                        <Label><strong>Polo mais próximo</strong></Label>
+                        <Label>Distância: {escolaSelecionada.distanciaPolo?.toFixed(2)} Km</Label>
+                        <Label>Endereço: {poloSelecionado?.endereco}</Label>
+                        <Label>Cep: {poloSelecionado?.cep}</Label>
+                        <Label>UF: {poloSelecionado?.uf.sigla}</Label>
                     </div>
                 </div>
             </div>

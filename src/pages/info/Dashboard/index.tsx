@@ -19,6 +19,7 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../provider/Autenticacao";
 import { Permissao } from "../../../models/auth";
 import { fetchPermissoesDoUsuario } from "../../../service/usuarioApi";
+import IconGerenciarPolos from "../../../assets/icones/GerenciarPolos.svg"
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -51,6 +52,9 @@ export default function Dashboard() {
     temPermissao(Permissao.UsuarioVisualizar)
   );
 
+  const [podeGerenciarPolos, setPodeGerenciarPolos] = useState(
+    temPermissao(Permissao.PoloVisualizar)
+  );
   const [podeGerenciarSolicitacao, setPodeGerenciarSolicitacao] = useState(
     temPermissao(Permissao.SolicitacaoVisualizar)
   );
@@ -67,6 +71,7 @@ export default function Dashboard() {
       setPodeGerenciarUsuario(temPermissao(Permissao.UsuarioVisualizar));
       setPodeGerenciarPerfis(temPermissao(Permissao.PerfilVisualizar));
       setPodeGerenciarEmpresas(temPermissao(Permissao.EmpresaVisualizar));
+      setPodeGerenciarPolos(temPermissao(Permissao.PoloVisualizar));
       setPodeGerenciarSolicitacao(temPermissao(Permissao.SolicitacaoVisualizar));
     });
   }, []);
@@ -168,7 +173,16 @@ export default function Dashboard() {
               <p className="text">Gerenciar Perfis</p>
             </Card>
           )}
-          { }
+            {podeGerenciarPolos && (
+                <Card className="card" onClick={() => navigate("/gerenciarPolos")}>
+                    <img
+                        className="iconPerfis"
+                        src={IconGerenciarPolos}
+                        alt="ícone gerenciar polos"
+                    />
+                    <p className="text">Gerenciar Polos</p>
+                </Card>
+            )}
         </div>
       ),
     },
