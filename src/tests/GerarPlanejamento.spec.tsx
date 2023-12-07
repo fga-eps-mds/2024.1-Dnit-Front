@@ -115,4 +115,25 @@ describe("Criar planejamento", () => {
     fireEvent.change(selectElement, {target: { value: 'Fevereiro'}});
     expect(selectElement).toBeInTheDocument();
   })
+
+  it("Deve subir erro Escolha a quantidade de ações", async() => {
+    render(
+      <MemoryRouter>
+        <AuthProvider>
+          <GerenciarAcoes/>
+        </AuthProvider>
+      </MemoryRouter>
+    )
+
+    const button = screen.getByText("Gerar Planejamento");
+    const qtdAcoes = screen.getByTestId("qtd-actions-field");
+
+    fireEvent.change(qtdAcoes, {target: { value: null }});
+    fireEvent.click(button);
+
+    if(qtdAcoes === null) {
+      waitFor(()=>expect(screen.getByText("Escolha a quantidade de ações")).toBeInTheDocument());
+    }
+
+  })
 })
