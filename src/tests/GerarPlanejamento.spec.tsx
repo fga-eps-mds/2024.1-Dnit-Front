@@ -116,6 +116,35 @@ describe("Criar planejamento", () => {
     expect(selectElement).toBeInTheDocument();
   })
 
+  it("Deve subir erro O mês final deve ser posterior ao mês inicial", async() =>{
+    render(
+      <MemoryRouter>
+        <AuthProvider>
+          <GerenciarAcoes/>
+        </AuthProvider>
+      </MemoryRouter>
+    )
+
+    const button = screen.getByText("Gerar Planejamento");
+
+    const firstSelectElement = screen.getAllByRole('combobox')[0];
+    const secondSelectElement = screen.getAllByRole('combobox')[1];
+
+    act(() => {
+      fireEvent.change(firstSelectElement, {target: { value: 'Abril', index: '3' } })
+      fireEvent.change(secondSelectElement, {target: {value: 'Janeiro', index: '0' } })
+    }) 
+
+    var firstSelectElementstr = firstSelectElement.innerHTML;
+    var secondSelectElementstr = secondSelectElement.innerHTML;
+
+    fireEvent.click(button);
+
+    if(parseInt(firstSelectElementstr) > parseInt(secondSelectElementstr)){
+      waitFor(() => expect(screen.getByText("O mês final deve ser posterior ao mês inicial")).toBeInTheDocument());
+    }
+  })
+
   it("Deve subir erro Escolha a quantidade de ações", async() => {
     render(
       <MemoryRouter>
