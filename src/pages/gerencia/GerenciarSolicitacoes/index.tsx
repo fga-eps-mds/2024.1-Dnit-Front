@@ -177,12 +177,12 @@ export default function GerenciarSolicitacoes() {
                   '1': solicitacao.escola?.numeroTotalDeAlunos !== undefined ? `${solicitacao.escola.numeroTotalDeAlunos}` : `${solicitacao.quantidadeAlunos}`,
                   '2': solicitacao.escola?.siglaUf !== undefined ? `${solicitacao.escola?.siglaUf}` : solicitacao.uf,
                   '3': solicitacao.escola?.idMunicipio !== undefined ? `${solicitacao.escola?.nomeMunicipio}` : solicitacao.municipio.nome,
-                  '4': solicitacao.escola?.distanciaSuperintendencia !== undefined ? formataCustoLogistico(solicitacao.escola.distanciaSuperintendencia) : 'Escola não Cadastrada'
+                  '4': solicitacao.escola?.distanciaPolo !== undefined ? formataCustoLogistico(solicitacao.escola.distanciaPolo) : 'Escola não Cadastrada'
                 }}
                 hideEyeIcon={false}
                 hideTrashIcon={true}
                 hideEditIcon={true}
-                hidePlusIcon={solicitacao.escola === null ? false : true}
+                hidePlusIcon={solicitacao.escola === null && temPermissao(Permissao.EscolaCadastrar) ? false : true}
                 onDetailRow={_ => setSolicitacaoAtual(solicitacao)}
                 onPlusRow={_ => setCadastrarEscola(solicitacao)}
 
