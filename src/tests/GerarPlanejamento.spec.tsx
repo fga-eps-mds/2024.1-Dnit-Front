@@ -134,7 +134,7 @@ describe("Criar planejamento", () => {
       fireEvent.change(firstSelectElement, {target: { value: 'Abril', index: '3' } })
       fireEvent.change(secondSelectElement, {target: {value: 'Janeiro', index: '0' } })
     }) 
-
+    console.log(firstSelectElement.tabIndex)
     var firstSelectElementstr = firstSelectElement.innerHTML;
     var secondSelectElementstr = secondSelectElement.innerHTML;
 
@@ -166,6 +166,24 @@ describe("Criar planejamento", () => {
 
   })
 
+  it("Deve retornar NaN caso uma string seja passada na label de ações", async() => {
+    render(
+      <MemoryRouter>
+        <AuthProvider>
+          <GerenciarAcoes/>
+        </AuthProvider>
+      </MemoryRouter>
+    )
+
+    const qtdAcoes = screen.getByTestId("qtd-actions-field");
+
+    fireEvent.click(qtdAcoes);
+    fireEvent.change(qtdAcoes, {target: { value: 'string'} })
+
+    waitFor(()=>expect(screen.getByText("NaN")).toBeInTheDocument());
+
+  })
+
   it("Verifica se a sugestão de planejamento é gerada", async() => {
     render(
       <MemoryRouter>
@@ -191,7 +209,10 @@ describe("Criar planejamento", () => {
 
     fireEvent.click(button);
 
-    if(titulo !== null && firstSelectElement !== null && secondSelectElement !== null && qtdAcoes !== null){
+    var tituloStr = titulo.innerHTML;
+    var qtdAcoesStr = qtdAcoes.innerHTML;
+    var qtdAcoesNumber = parseInt(qtdAcoesStr);
+    if((tituloStr !== null && tituloStr.length >= 5) && firstSelectElement !== null && secondSelectElement !== null && qtdAcoesNumber > 0){
       waitFor(() => expect(screen.getByText("Escolas no Mês de Novembro")).toBeInTheDocument());
     }
 
