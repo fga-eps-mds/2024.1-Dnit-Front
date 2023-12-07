@@ -28,6 +28,9 @@ export default function EditarPolosDialog( { id, readOnly, listaUfs, closeDialog
 	const [cep, setCEP] = useState("");
 	const [erroLatitude, setErroLatitude] = useState(false);
 	const [erroLongitude, setErroLongitude] = useState(false);
+	const [erroNome, setErroNome] = useState(false);
+	const [erroEndereco, setErroEndereco] = useState(false);
+	const [erroCep, setErroCep] = useState(false);
 
 	const parseCoordenadas = (value: string, name: string) => {
 		const parts = value.split(',').map(part => part.trim());
@@ -64,6 +67,7 @@ export default function EditarPolosDialog( { id, readOnly, listaUfs, closeDialog
 	
 	const consultaCEP = async (cep: string) => {
 		setCEP(cep);
+		setErroCep(!Boolean(cep.length));
 		try {
 		  if (cep.length === 8) {
 			const res = await fetchCEP(cep);
@@ -99,10 +103,13 @@ export default function EditarPolosDialog( { id, readOnly, listaUfs, closeDialog
 			municipioId: Number(newMunicipio),
 		};
 
+		setErroNome(!Boolean(nome.length));
+		setErroEndereco(!Boolean(endereco.length));
+		setErroCep(!Boolean(cep.length));
 		setErroLatitude(!Boolean(latitude.length));
 		setErroLongitude(!Boolean(longitude.length));
 
-		if (latitude.length > 0 && longitude.length > 0){
+		if (nome.length > 0 && endereco.length > 0 && cep.length > 0 && latitude.length > 0 && longitude.length > 0){
 			if (!id)
 			{
 				sendCadastroPolo(polo)
@@ -121,7 +128,7 @@ export default function EditarPolosDialog( { id, readOnly, listaUfs, closeDialog
 			})
 			.catch(error => notificationApi.error({message: 'Falha na edição do polo. ' + (error?.response?.data?.message ?? ''), duration: 30}))
 		}else{
-			notification.error({message: 'Falha na confirmação dos dados. Insira as coordenadas', duration: 30})
+			notification.error({message: 'Falha na confirmação dos dados. Insira os dados do polo', duration: 30})
 		}
 	}
 
@@ -145,12 +152,19 @@ export default function EditarPolosDialog( { id, readOnly, listaUfs, closeDialog
 			<div style={ {height: "fit-content"} }>
 				<div className="br-input edicao-polo">
 					<label>Nome</label>
-					<input id="input-default" data-testid="inputNome" type={"text"} readOnly={readOnly} onChange={e => setNome(e.target.value)} defaultValue={nome}/>
+					<input id="input-default" data-testid="inputNome" type={"text"} readOnly={readOnly} onChange={e => {
+						setNome(e.target.value);
+						setErroNome(!Boolean(e.target.value.length));
+					}} defaultValue={nome}/>
+					{erroNome && <span style={{color: "red"}}>Insira um nome para o polo</span>}
 				</div>
 				<div className="br-input edicao-polo">
 					<label>Endereço</label>
-					<input id="input-default" type={"text"} readOnly={readOnly} onChange={e => setEndereco(e.target.value)} 
-						defaultValue={endereco} data-testid="inputEndereco" />
+					<input id="input-default" type={"text"} readOnly={readOnly} onChange={e => {
+						setEndereco(e.target.value);
+						setErroEndereco(!Boolean(e.target.value.length));
+					}} defaultValue={endereco} data-testid="inputEndereco" />
+					{erroEndereco && <span style={{color: "red"}}>Insira um endereço para o polo</span>}
 				</div>
 				<div className="br-input edicao-polo-cod ">
 					<label>Latitude</label>
@@ -160,12 +174,11 @@ export default function EditarPolosDialog( { id, readOnly, listaUfs, closeDialog
 					}} onPaste={handlePaste}
 						defaultValue={latitude} data-testid="inputLatitude" />
 					{erroLatitude && <span style={{color: "red"}}>Insira um número entre -90 e +90 com até 6 casas decimais</span>}
-
 				</div>
 				<div className="br-input edicao-polo-cod ">
 					<label>Longitude</label>
 					<input id="input-default" type={"text"} readOnly={readOnly} onChange={e => {
-						setLatitude(e.target.value);
+						setLongitude(e.target.value);
 						setErroLongitude(!Boolean(e.target.value.length));
 					}} onPaste={handlePaste}
 						defaultValue={longitude} data-testid="inputLongitude" />
@@ -175,6 +188,7 @@ export default function EditarPolosDialog( { id, readOnly, listaUfs, closeDialog
 					<label>CEP</label>
 					<input id="input-default" type={"text"} readOnly={readOnly} onChange={e => consultaCEP(e.target.value)} 
 						 data-testid="inputCEP" defaultValue={cep}/>
+					{erroCep && <span style={{color: "red"}}>Insira um CEP para o polo</span>}
 				</div>
 				<Select 
 					items={listaUfs} 
