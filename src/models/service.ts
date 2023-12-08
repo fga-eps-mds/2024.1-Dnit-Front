@@ -1,5 +1,3 @@
-import { type } from "os";
-
 export interface UnidadeFederativaData {
   id: number;
   nome: string;
@@ -225,4 +223,15 @@ export interface RanqueInfo {
   pontuacao: number;
   posicao: number;
   fatores: Fatores[];
+}
+
+
+export interface CriarPlanejamentoRequest {
+  nome: string;
+  responsavel: string;
+  mesInicio: number;
+  mesFim: number;
+  anoInicio: string;
+  anoFim: string;
+  quantidadeAcoes: number;
 }
