@@ -10,7 +10,7 @@ export interface Condicao {
     propriedade: string;
     operador: number;
     valor: string;
-    fatorPriorizacaoId: string | null;
+    fatorPriorizacaoId?: string;
 }
 
 export interface FatorModel {
