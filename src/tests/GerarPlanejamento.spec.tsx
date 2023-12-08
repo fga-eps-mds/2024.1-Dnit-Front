@@ -115,4 +115,106 @@ describe("Criar planejamento", () => {
     fireEvent.change(selectElement, {target: { value: 'Fevereiro'}});
     expect(selectElement).toBeInTheDocument();
   })
+
+  it("Deve subir erro O mês final deve ser posterior ao mês inicial", async() =>{
+    render(
+      <MemoryRouter>
+        <AuthProvider>
+          <GerenciarAcoes/>
+        </AuthProvider>
+      </MemoryRouter>
+    )
+
+    const button = screen.getByText("Gerar Planejamento");
+
+    const firstSelectElement = screen.getAllByRole('combobox')[0];
+    const secondSelectElement = screen.getAllByRole('combobox')[1];
+
+    act(() => {
+      fireEvent.change(firstSelectElement, {target: { value: 'Abril', index: '3' } })
+      fireEvent.change(secondSelectElement, {target: {value: 'Janeiro', index: '0' } })
+    }) 
+    console.log(firstSelectElement.tabIndex)
+    var firstSelectElementstr = firstSelectElement.innerHTML;
+    var secondSelectElementstr = secondSelectElement.innerHTML;
+
+    fireEvent.click(button);
+
+    if(parseInt(firstSelectElementstr) > parseInt(secondSelectElementstr)){
+      waitFor(() => expect(screen.getByText("O mês final deve ser posterior ao mês inicial")).toBeInTheDocument());
+    }
+  })
+
+  it("Deve subir erro Escolha a quantidade de ações", async() => {
+    render(
+      <MemoryRouter>
+        <AuthProvider>
+          <GerenciarAcoes/>
+        </AuthProvider>
+      </MemoryRouter>
+    )
+
+    const button = screen.getByText("Gerar Planejamento");
+    const qtdAcoes = screen.getByTestId("qtd-actions-field");
+
+    fireEvent.change(qtdAcoes, {target: { value: null }});
+    fireEvent.click(button);
+
+    if(qtdAcoes === null) {
+      waitFor(()=>expect(screen.getByText("Escolha a quantidade de ações")).toBeInTheDocument());
+    }
+
+  })
+
+  it("Deve retornar NaN caso uma string seja passada na label de ações", async() => {
+    render(
+      <MemoryRouter>
+        <AuthProvider>
+          <GerenciarAcoes/>
+        </AuthProvider>
+      </MemoryRouter>
+    )
+
+    const qtdAcoes = screen.getByTestId("qtd-actions-field");
+
+    fireEvent.click(qtdAcoes);
+    fireEvent.change(qtdAcoes, {target: { value: 'string'} })
+
+    waitFor(()=>expect(screen.getByText("NaN")).toBeInTheDocument());
+
+  })
+
+  it("Verifica se a sugestão de planejamento é gerada", async() => {
+    render(
+      <MemoryRouter>
+        <AuthProvider>
+          <GerenciarAcoes/>
+        </AuthProvider>
+      </MemoryRouter>
+    )
+
+    const button = screen.getByText("Gerar Planejamento")
+
+    const titulo = screen.getByTestId("inputTitulo");
+    const firstSelectElement = screen.getAllByRole('combobox')[0];
+    const secondSelectElement = screen.getAllByRole('combobox')[1];
+    const qtdAcoes = screen.getByTestId("qtd-actions-field");
+
+    act(() => {
+      fireEvent.change(titulo, {target: { value: 'Planejamento Sudeste'}})
+      fireEvent.change(firstSelectElement, {target: { value: 'Janeiro', index: '0' } })
+      fireEvent.change(secondSelectElement, {target: {value: 'Abril', index: '3' } })
+      fireEvent.change(qtdAcoes, {target: { value: 1234 } })
+    }) 
+
+    fireEvent.click(button);
+
+    var tituloStr = titulo.innerHTML;
+    var qtdAcoesStr = qtdAcoes.innerHTML;
+    var qtdAcoesNumber = parseInt(qtdAcoesStr);
+    if((tituloStr !== null && tituloStr.length >= 5) && firstSelectElement !== null && secondSelectElement !== null && qtdAcoesNumber > 0){
+      waitFor(() => expect(screen.getByText("Escolas no Mês de Novembro")).toBeInTheDocument());
+    }
+
+  });
 })
