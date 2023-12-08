@@ -5,25 +5,31 @@ export interface UfCardGroupProps {
 }
 
 export interface UfCardProps {
-  readonly title: string;
-  readonly info: string;
+  readonly uf: string;
+  readonly quantidadeEscolasTotal: number;
 }
 
 export default function UfCardGroup({ cardsData }: UfCardGroupProps) {
   return (
     <div className="select-cards-group">
       {cardsData.map((card) => (
-        <UfCard title={card.title} info={card.info} />
+        <UfCard
+          uf={card.uf}
+          quantidadeEscolasTotal={card.quantidadeEscolasTotal}
+        />
       ))}
     </div>
   );
 }
 
-export function UfCard({ title, info }: UfCardProps) {
+export function UfCard({ uf, quantidadeEscolasTotal }: UfCardProps) {
   return (
     <div className="uf-card">
-      <span className="uf-card-title">{title}</span>
-      <span className="uf-card-info">{info}</span>
+      <span className="uf-card-title">{uf}</span>
+      <span className="uf-card-info">
+        {quantidadeEscolasTotal}{" "}
+        {quantidadeEscolasTotal <= 1 ? "Escola" : "Escolas"}
+      </span>
     </div>
   );
 }

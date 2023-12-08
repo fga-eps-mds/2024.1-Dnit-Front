@@ -11,6 +11,7 @@ export interface SelectCardProps {
 export interface SelectCardGroupProps {
   readonly cardsData: SelectCardData[];
   readonly isSmallCard?: boolean;
+  readonly onClick: (id: number) => void;
 }
 
 export interface SelectCardData {
@@ -22,11 +23,13 @@ export interface SelectCardData {
 export default function SelectCardGroup({
   cardsData,
   isSmallCard = false,
+  onClick,
 }: SelectCardGroupProps) {
   const [selectedCard, setSelectedCard] = useState(cardsData[0].id);
 
   const handleCardClick = (cardId: number) => {
     setSelectedCard(cardId);
+    onClick(cardId);
   };
 
   return (
