@@ -4,3 +4,20 @@ export interface CustoLogisticoModel {
     raioMax: number | null;
     valor: number;
 }
+
+export interface Condicao {
+    id?: string;
+    propriedade: string;
+    operador: number;
+    valor: string;
+    fatorPriorizacaoId: string | null;
+}
+
+export interface FatorModel {
+    id?: string;
+    nome: string;
+    peso: number;
+    ativo: boolean;
+    primario: boolean;
+    fatorCondicoes: Condicao[];
+}
