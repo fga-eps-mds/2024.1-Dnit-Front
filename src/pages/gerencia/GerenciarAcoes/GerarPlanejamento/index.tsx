@@ -6,26 +6,19 @@ import "./styles.css";
 import { ButtonComponent } from "../../../../components/Button";
 import MonthSelect from "../../../../components/MonthSelect";
 import PlanejamentoInfo from "../PlanejamentoInfo";
+import { sendPlanejamento } from "../../../../service/gerenciarAcoes";
+import * as DATA from "../../../../models/service";
+import { AuthLocalStorage } from "../../../../provider/Autenticacao";
+import { PlanejamentoMacro } from "../../../../models/gerenciarAcoes";
+import { meses } from "../fixtures";
+
 export default function GerenciarAcoes() {
   const paginas = [
     { nome: "Gerenciar Ações", link: "/gerenciarAcoes" },
     { nome: "Criar Planejamento", link: "/gerenciarAcoes/criarPlanejamento" },
   ];
 
-  const meses = [
-    "Janeiro",
-    "Fevereiro",
-    "Março",
-    "Abril",
-    "Maio",
-    "Junho",
-    "Julho",
-    "Agosto",
-    "Setembro",
-    "Outubro",
-    "Novembro",
-    "Dezembro",
-  ];
+  const userEmail = localStorage.getItem(AuthLocalStorage.Email);
 
   const [savedTitle, setSavedTitle] = useState("");
   const [title, setTitle] = useState("");
@@ -40,6 +33,8 @@ export default function GerenciarAcoes() {
   });
 
   const [isPlanningGenerated, setIsPlanningGenerated] = useState(false);
+  const [planejamentoInfo, setPlanejamentoInfo] =
+    useState<PlanejamentoMacro | null>(null);
 
   const validateForm = () => {
     var isValid = true;
@@ -94,10 +89,9 @@ export default function GerenciarAcoes() {
     return isValid;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (validateForm()) {
-      // Envie a solicitação para o servidor
-      console.log("Envio da request");
+      await createPlanejamento();
       setIsPlanningGenerated(true);
       setSavedTitle(title);
     }
@@ -107,6 +101,23 @@ export default function GerenciarAcoes() {
     // Enviar request para update do nome
     setSavedTitle(title);
   };
+
+  async function createPlanejamento(): Promise<void> {
+    let planejamento: DATA.CriarPlanejamentoRequest = {
+      nome: title,
+      responsavel: userEmail ?? "",
+      anoInicio: "2023",
+      anoFim: "2024",
+      mesInicio: meses.indexOf(initialMonth) + 1,
+      mesFim: meses.indexOf(finalMonth) + 1,
+      quantidadeAcoes: qtdActions,
+    };
+
+    const planejamentoCriado = (await sendPlanejamento(
+      planejamento
+    )) as unknown as PlanejamentoMacro;
+    setPlanejamentoInfo(planejamentoCriado);
+  }
 
   return (
     <div className="App">
@@ -182,7 +193,9 @@ export default function GerenciarAcoes() {
             </div>
           ) : null}
 
-          {isPlanningGenerated ? <PlanejamentoInfo /> : null}
+          {isPlanningGenerated && planejamentoInfo ? (
+            <PlanejamentoInfo planejamento={planejamentoInfo} />
+          ) : null}
         </div>
       </div>
 
