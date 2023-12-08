@@ -78,7 +78,7 @@ export interface EscolaRanqueDetalhes {
 
 export interface PoloModel {
     id: number;
-    uf: string;
+    uf: UnidadeFederativaData;
 }
 
 export interface FatorModel {

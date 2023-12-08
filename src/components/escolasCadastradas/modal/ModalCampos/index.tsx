@@ -222,7 +222,7 @@ const ModalCampos = ({
           <input
               id="input-default"
               type="text"
-              placeholder={poloSelecionado?.cep}
+              placeholder={data.distanciaPolo ? poloSelecionado?.cep : '-'}
               disabled
           />
         </div>
@@ -235,7 +235,7 @@ const ModalCampos = ({
           <input
               id="input-default"
               type="text"
-              placeholder={poloSelecionado?.endereco}
+              placeholder={data.distanciaPolo ? poloSelecionado?.endereco : '-'}
               disabled
           />
         </div>
@@ -373,7 +373,7 @@ const ModalCampos = ({
           <input
               id="input-default"
               type="text"
-              placeholder={formataCustoLogistico(data.distanciaPolo)}
+              placeholder={data.distanciaPolo ? formataCustoLogistico(data.distanciaPolo) : '-'}
               disabled
           />
         </div>
