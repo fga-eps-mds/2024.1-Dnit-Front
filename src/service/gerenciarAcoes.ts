@@ -1,4 +1,4 @@
-import {fetchDados, ResponseStatus, sendCadastros} from "./apiUtils";
+import {fetchDados, ResponseStatus, sendCadastros, update} from "./apiUtils";
 import * as DATA from "../models/service";
 import * as URL from "../consts/service"
 import {PlanejamentoMacro} from "../models/gerenciarAcoes";
@@ -28,3 +28,7 @@ export async function deletePlanejamentoMacro({id_planejamento}: DATA.ExcluirPla
         throw error;
     }
 }
+
+export async function updatePlanejamento(id: string, data: PlanejamentoMacro): Promise<ResponseStatus> {
+    return update<PlanejamentoMacro>(`${URL.criaPlanejamento}/${id}`, data);
+} 
