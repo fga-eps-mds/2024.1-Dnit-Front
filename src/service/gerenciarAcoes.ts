@@ -10,3 +10,7 @@ export async function sendPlanejamento(data: DATA.CriarPlanejamentoRequest): Pro
 export async function fetchPlanejamento(){
     return fetchDados<PlanejamentoMacro[]>(`${URL.criaPlanejamento}`);
 }
+
+export async function fetchPlanejamentoId(id: string): Promise<PlanejamentoMacro> {
+    return fetchDados<PlanejamentoMacro>(`${URL.criaPlanejamento}/${id}`);
+}
