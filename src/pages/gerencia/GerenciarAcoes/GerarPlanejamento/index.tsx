@@ -161,7 +161,7 @@ export default function GerenciarAcoes() {
           {isPlanningGenerated ? null : (
             <div className="planning-button">
               <ButtonComponent
-                label="Criar Planejamento"
+                label="Gerar Planejamento"
                 buttonStyle="outlined"
                 buttonType="default"
                 padding="37px"
