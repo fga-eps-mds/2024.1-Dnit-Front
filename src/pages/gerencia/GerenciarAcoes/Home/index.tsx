@@ -122,7 +122,7 @@ export default function GerenciarAcoes() {
       <TrilhaDeNavegacao elementosLi={paginas} />
       <div className="d-flex flex-column m-5">
         <div className="d-flex justify-content-left align-items-center mr-5">
-          <div className={"inputNome"} style={{ margin: "20px" }}>
+          <div style={{ margin: "20px" }}>
             <InputFilter onChange={setNome} label="Nome" />
           </div>
           <Select
@@ -133,13 +133,13 @@ export default function GerenciarAcoes() {
             dropdownStyle={{ marginLeft: "20px", width: "260px" }}
             filtrarTodos={true}
           />
-          <div className={"inputResponsavel"}>
+          <div data-testid="inputResponsavel">
             <InputFilter onChange={setResponsavel} label="Responsável" />
           </div>
           
 
           {possuiPermissao && (
-            <div style={{ right: "5%" }}>
+            <div data-testid="botaoPossuiPermissao" style={{ right: "5%" }}>
               <ButtonComponent
                 label="Criar Novo Planejamento"
                 buttonStyle="primary"
