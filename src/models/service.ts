@@ -235,3 +235,7 @@ export interface CriarPlanejamentoRequest {
   anoFim: string;
   quantidadeAcoes: number;
 }
+
+export interface ExcluirPlanejamentoData {
+  id_planejamento: string;
+}
