@@ -58,13 +58,6 @@ function Ranque() {
   const navigate = useNavigate();
   const { temPermissao } = useContext(AuthContext);
 
-  const temPermissaoGerenciar = {
-    cadastrar: temPermissao(Permissao.EmpresaCadastrar),
-    visualizar: temPermissao(Permissao.EmpresaVisualizar),
-    remover: temPermissao(Permissao.EmpresaRemover),
-    editar: temPermissao(Permissao.EmpresaEditar),
-    visualizarUsuarios: temPermissao(Permissao.EmpresaVisualizarUsuarios),
-  }
   const podeExportarRanque = temPermissao(Permissao.RanqueExportar);
 
   useEffect(() => {
@@ -187,8 +180,8 @@ function Ranque() {
                     '3': formatEtapaEnsino(e.escola.etapaEnsino),
                     '4': e.escola.uf?.sigla || '',
                     '5': e.escola.municipio?.nome || '',
-                    '6': e.escola.polo?.uf || '',
-                    '7': formataCustoLogistico(e.escola.distanciaPolo),
+                    '6': e.escola.distanciaPolo? e.escola.polo?.uf.sigla : '-',
+                    '7': e.escola.distanciaPolo? formataCustoLogistico(e.escola.distanciaPolo) : '-',
                   }}
                   hideTrashIcon={true}
                   hideEditIcon={true}

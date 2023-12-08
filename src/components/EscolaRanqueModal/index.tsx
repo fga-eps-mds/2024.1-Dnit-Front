@@ -70,7 +70,7 @@ const ModalRanqueEscola: React.FC<ModalProps> = ({ escolaId, onClose, onCreateAc
                     <Label>Pontuação:</Label>
                     <div className='d-flex flex-column'>
                         {escolaSelecionada.ranqueInfo.fatores.map(f => <Label className='ml-4'>Fator {f.nome}, Peso {f.peso}, Valor {f.valor}</Label>)}
-                        <Label className='ml-4'>Custo Logístico: {formataCustoLogistico(escolaSelecionada.distanciaPolo)}</Label>
+                        <Label className='ml-4'>Custo Logístico: {escolaSelecionada.distanciaPolo ? formataCustoLogistico(escolaSelecionada.distanciaPolo) : '-'}</Label>
                     </div>
                     <Label>Total: {escolaSelecionada.ranqueInfo.pontuacao}</Label>
                     <Label>Solicitação: {escolaSelecionada.temSolicitacao ? "Esta escola possui solicitação de ação" : "Não há registro de solicitacao"}</Label>
@@ -121,9 +121,9 @@ const ModalRanqueEscola: React.FC<ModalProps> = ({ escolaId, onClose, onCreateAc
                     <div className='d-flex flex-column '>
                         <Label><strong>Polo mais próximo</strong></Label>
                         <Label>Distância: {escolaSelecionada.distanciaPolo?.toFixed(2)} Km</Label>
-                        <Label>Endereço: {poloSelecionado?.endereco}</Label>
-                        <Label>Cep: {poloSelecionado?.cep}</Label>
-                        <Label>UF: {poloSelecionado?.uf.sigla}</Label>
+                        <Label>Endereço: {escolaSelecionada.distanciaPolo ? poloSelecionado?.endereco : '-'}</Label>
+                        <Label>Cep: {escolaSelecionada.distanciaPolo ? poloSelecionado?.cep : '-'}</Label>
+                        <Label>UF: {escolaSelecionada.distanciaPolo ? poloSelecionado?.uf.sigla : '-'}</Label>
                     </div>
                 </div>
             </div>
