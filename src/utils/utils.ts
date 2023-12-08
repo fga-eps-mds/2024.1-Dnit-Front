@@ -14,5 +14,5 @@ export function formataCustoLogistico(distancia: number){
 export function formatDate(dateStr: string) {
     const date = new Date(dateStr);
     const padZeros = (n: number) => n.toString().padStart(2, '0');
-    return `${padZeros(date.getDate())}/${padZeros(date.getMonth())}/${date.getFullYear()} ${padZeros(date.getHours())}:${padZeros(date.getMinutes())}`
+    return `${padZeros(date.getDate())}/${padZeros(date.getMonth() + 1)}/${date.getFullYear()} ${padZeros(date.getHours())}:${padZeros(date.getMinutes())}`
 }
