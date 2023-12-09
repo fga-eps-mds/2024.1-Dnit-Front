@@ -17,10 +17,10 @@ export async function fetchPlanejamentoId(id: string): Promise<PlanejamentoMacro
     return fetchDados<PlanejamentoMacro>(`${URL.criaPlanejamento}/${id}`);
 }
 
-export async function deletePlanejamentoMacro({id_planejamento}: DATA.ExcluirPlanejamentoData): Promise<ResponseStatus>{
+export async function deletePlanejamentoMacro(idPlanejamento: string): Promise<ResponseStatus>{
     try{
         const response: AxiosResponse<ResponseStatus> = await axios.delete(
-            URL.excluiPlanejamento, { params: { id: id_planejamento}}
+            URL.excluiPlanejamento, { params: { id: idPlanejamento}}
         );
         return response.data;
     } catch (error){

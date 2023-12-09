@@ -123,8 +123,8 @@ export default function GerenciarAcoes() {
   const [showPlanejamento, setShowPlanejamento] =
       useState<PlanejamentoDialogArgs | null>(null);
 
-  const [showDeletePlanejamento, setShowDeletePlanejamento] =
-      useState<DeletarPlanejamentoDialogArgs | null>(null);
+  const [deletePlanejamento, setDeletePlanejamento] =
+      useState<PlanejamentoMacro | null>(null);
 
   const [listaPeriodo, setListaPeriodo] = useState<FilterOptions[]>([]);
 
@@ -152,11 +152,11 @@ export default function GerenciarAcoes() {
   return (
       <div className="App">
         {notificationContextHandler}
-        {showDeletePlanejamento && (
+        {deletePlanejamento && (
             <DeletarPlanejamentoDialog
-                nome={showDeletePlanejamento.nome}
+                planejamento={deletePlanejamento}
                 closeDialog={(deletou) => {
-                  setShowDeletePlanejamento(null);
+                  setDeletePlanejamento(null);
                 }}
             />
         )}
@@ -211,7 +211,7 @@ export default function GerenciarAcoes() {
                         hideEditIcon={true}
                         onDetailRow={_ => console.log("teste")}
                         onDeleteRow={() => {
-                          setShowDeletePlanejamento({ nome: e.nome, qtdAcoes: e.quantidadeAcoes });
+                          setDeletePlanejamento(e);
                         }}
                     />
                 ))}

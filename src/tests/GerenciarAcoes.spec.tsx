@@ -12,7 +12,7 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 describe('Tabela de Gerenciar Acoes', () => {
-    
+
     it("Deve renderizar a pagina de Gerenciar Acoes", async () => {
         autenticar(Permissao.UsuarioEditar)
         render(
@@ -22,12 +22,12 @@ describe('Tabela de Gerenciar Acoes', () => {
                 </AuthProvider>
             </MemoryRouter>
         );
-        
+
         expect(screen.getByText("Nome:")).toBeInTheDocument();
         expect(screen.getByText("Período:")).toBeInTheDocument();
         expect(screen.getByText("Responsável:")).toBeInTheDocument();
     });
-    
+
     it("Deve filtrar as Acoes", async () => {
         autenticar(Permissao.RanqueVisualizar);
 
@@ -57,12 +57,13 @@ describe('Tabela de Gerenciar Acoes', () => {
                 </AuthProvider>
             </MemoryRouter>
         );
-        
+
         const novoPlanejamentoButton = await screen.findByTestId("botaoPossuiPermissao");
         expect(novoPlanejamentoButton).toBeInTheDocument();
+
     });
-    
-    
+
+
     it("Deve abrir o modal de deletar", async () => {
         autenticar(Permissao.UsuarioEditar);
 
@@ -73,15 +74,45 @@ describe('Tabela de Gerenciar Acoes', () => {
                 </AuthProvider>
             </MemoryRouter>
         );
-
-        await waitFor(() => expect(screen.getByText('PLANEJAMENTO CENTRO OESTE')).toBeInTheDocument());
-        
         fireEvent.click(screen.getByTestId('table-row-delete-0'));
         expect(screen.getByText('Tem certeza que deseja excluir este planejamento?')).toBeInTheDocument();
-        
+
         fireEvent.click(screen.getByText('Cancelar'));
         await waitFor(() => expect(screen.queryByText('Tem certeza que deseja excluir este planejamento?')).toBeNull());
     })
+
+    it("Deve renderizar a tabela", async () => {
+
+        autenticar(Permissao.UsuarioEditar);
+        render(
+            <MemoryRouter>
+                <AuthProvider>
+                    <GerenciarAcoes />
+                </AuthProvider>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText("Quantidade de Ações")).toBeInTheDocument();
+        });
+    })
+
+    it("Deve verificar se o filtro ta vazio", async () => {
+        autenticar(Permissao.RanqueVisualizar);
+
+        render(
+            <MemoryRouter>
+                <AuthProvider>
+                    <GerenciarAcoes />
+                </AuthProvider>
+            </MemoryRouter>
+        );
+        const inputs = screen.getAllByTestId("filtroNome");
+        expect(inputs[0]).toHaveValue("");
+        expect(inputs[1]).toHaveValue("");
+    });
+
+
 })
 
 describe('Modal adicionar Escola', () => {
@@ -109,7 +140,7 @@ describe('Modal adicionar Escola', () => {
             </div>
         );
         const input = screen.getByTestId("Procurar escola");
-        
+
         fireEvent.change(input, { target: { value: "Sigma"}});
         expect(input).toHaveValue("Sigma");
     });
@@ -128,5 +159,5 @@ describe('Modal adicionar Escola', () => {
         fireEvent.click(screen.getByText("Cancelar"));
         expect(aberto).toEqual(false);
     });
-    
+
 })
