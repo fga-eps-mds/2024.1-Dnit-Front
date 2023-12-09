@@ -3,6 +3,7 @@ import * as DATA from "../models/service";
 import * as URL from "../consts/service"
 import {PlanejamentoMacro} from "../models/gerenciarAcoes";
 import axios, { AxiosResponse } from "axios";
+import {obterPlanejamento} from "../consts/service";
 
 //envia cadastro de planejamento macro
 export async function sendPlanejamento(data: DATA.CriarPlanejamentoRequest): Promise<ResponseStatus> {
@@ -10,20 +11,21 @@ export async function sendPlanejamento(data: DATA.CriarPlanejamentoRequest): Pro
 }
 //busca lista de planejamentos macro
 export async function fetchPlanejamentos(){
-    return fetchDados<PlanejamentoMacro[]>(`${URL.criaPlanejamento}`);
+    return fetchDados<PlanejamentoMacro[]>(`${URL.obterPlanejamento}`);
 }
 //busca planejamento macro específico por id
 export async function fetchPlanejamentoId(id: string): Promise<PlanejamentoMacro> {
-    return fetchDados<PlanejamentoMacro>(`${URL.criaPlanejamento}/${id}`);
+    return fetchDados<PlanejamentoMacro>(`${URL.obterPlanejamento}/${id}`);
 }
 
 export async function deletePlanejamentoMacro(idPlanejamento: string): Promise<ResponseStatus>{
     try{
         const response: AxiosResponse<ResponseStatus> = await axios.delete(
-            URL.excluiPlanejamento, { params: { id: idPlanejamento}}
+            URL.excluiPlanejamento + "/" + idPlanejamento
         );
         return response.data;
-    } catch (error){
+    } 
+    catch (error){
         console.error(error);
         throw error;
     }
