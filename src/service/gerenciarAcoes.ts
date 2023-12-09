@@ -2,7 +2,7 @@ import {fetchDados, ResponseStatus, sendCadastros, update} from "./apiUtils";
 import * as DATA from "../models/service";
 import * as URL from "../consts/service"
 import {PlanejamentoMacro} from "../models/gerenciarAcoes";
-import axios, { AxiosResponse } from "axios";
+import axios, { Axios, AxiosResponse } from "axios";
 
 //envia cadastro de planejamento macro
 export async function sendPlanejamento(data: DATA.CriarPlanejamentoRequest): Promise<ResponseStatus> {
@@ -23,6 +23,18 @@ export async function deletePlanejamentoMacro(idPlanejamento: string): Promise<R
             URL.excluiPlanejamento, { params: { id: idPlanejamento}}
         );
         return response.data;
+    } catch (error){
+        console.error(error);
+        throw error;
+    }
+}
+
+export async function deleteEscolaPlanejamento(idEscola: string): Promise<ResponseStatus>{
+    try{
+        const response: AxiosResponse<ResponseStatus> = await axios.delete(
+            URL.excluiEscolaPlanejamento, { params: { id: idEscola}}
+        ) ;
+        return response.data
     } catch (error){
         console.error(error);
         throw error;
