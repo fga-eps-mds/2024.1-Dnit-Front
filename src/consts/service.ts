@@ -48,3 +48,4 @@ export const ranqueamentoProcessamento = `${urlAPIEscolas}/ranque/processamento`
 export const criaPlanejamento = `${urlAPIEscolas}/planejamento`;
 export const obterPlanejamento = `${urlAPIEscolas}/planejamento`;
 export const excluiPlanejamento = `${urlAPIEscolas}/planejamento`;
+export const excluiEscolaPlanejamento = `${urlAPIEscolas}/planejamento`;

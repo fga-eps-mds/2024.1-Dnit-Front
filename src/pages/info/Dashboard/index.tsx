@@ -90,13 +90,6 @@ export default function Dashboard() {
               <p data-testid='visualizar-escola-option' className="text">Visualizar Escolas</p>
             </Card>
           )}
-          {
-            podeVisualizarAcoes && 
-            <Card className="card" onClick={() => navigate("/visualizarAcoes")}>
-              <img className="iconPerfis" src={IconPlay} alt="ícone visualizar acoes" />
-              <p className="text">Visualizar Ações</p>
-            </Card>
-          }
           {podeVisualizarRanque && (
             <Card className="card" onClick={() => navigate("/ranque")}>
               <img src={RankingEscolas} alt="ícone gerenciar usuarios"/>
