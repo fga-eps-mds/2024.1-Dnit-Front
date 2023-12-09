@@ -26,3 +26,20 @@ export interface Propriedade {
     id: string;
     rotulo: string;
 }
+
+export enum Operador {
+    igual = "1",
+    maior = "2",
+    menor = "3",
+}
+
+export enum Rede {
+    Municipal = "1",
+    Estadual = "2",
+    Privada = "3",
+}
+
+export enum Localizacao{
+    Rural = "1",
+    Urbana = "2",
+}
