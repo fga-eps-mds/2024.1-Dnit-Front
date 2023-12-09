@@ -1,7 +1,7 @@
 import "./styles.css"
 import Select from "../Select";
 import MultiSelect from "../MultiSelect";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { fetchUnidadeFederativa } from "../../service/escolaApi";
 import { FilterOptions } from "../../pages/gerencia/GerenciarUsuario";
 
@@ -19,6 +19,26 @@ interface FatorProps {
 export default function FatorForm ({ nome, primario, condicaoUfs, propriedades, municipios, situacoes, etapasEnsino }: FatorProps) {
     const [valor, setValor] = useState<string[]>([]);
     const [propriedadeSelecionada, setPropriedadeSelecionada] = useState<string>('');
+    const [listaPropriedade, setListaPropriedade] = useState<FilterOptions[]>([])
+
+    const SelecionarPropriedade = function(propriedade:string){
+        
+        if(propriedade == "2" && situacoes)
+        {
+            setListaPropriedade(situacoes)
+        }else if(propriedade == "4" && condicaoUfs)
+        {
+            setListaPropriedade(condicaoUfs)
+        }else if(propriedade == "7" && etapasEnsino)
+        {
+            setListaPropriedade(etapasEnsino)
+        }
+        
+    }
+
+    useEffect(() =>{
+        SelecionarPropriedade(propriedadeSelecionada)
+        }, [propriedadeSelecionada])
 
     return (
         <div className="fator-form">
@@ -34,10 +54,7 @@ export default function FatorForm ({ nome, primario, condicaoUfs, propriedades, 
                 <label>Condição:</label>
                 <Select items={propriedades ? propriedades : []} value= {propriedadeSelecionada} onChange={setPropriedadeSelecionada} />
                 <Select items={[{id: "1", rotulo: "igual a"}, {id: "2", rotulo: "maior que"}]} value="" onChange={() => {}} />
-                {/* <MultiSelect items={(condicaoUfs ? condicaoUfs : [])} value={valor} onChange={setValor} /> */}
-                {/* <MultiSelect items={(municipios ? municipios : [])} value={valor} onChange={setValor} /> */}
-                {/* <MultiSelect items={(situacoes ? situacoes : [])} value={valor} onChange={setValor} /> */}
-                <MultiSelect items={(etapasEnsino ? etapasEnsino : [])} value={valor} onChange={setValor} />
+                <MultiSelect items={listaPropriedade} value={valor} onChange={setValor} />
             </div>}
             <div className="br-switch icon">
                 <input id="switch-icon" type="checkbox" defaultChecked={true}/>
