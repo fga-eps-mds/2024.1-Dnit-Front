@@ -47,6 +47,6 @@ export interface EscolaPlanejamentoModel {
   ups: number;
   nome: string;
   uf: string;
-  quantidadeAlunos: 94;
+  quantidadeAlunos: number;
   distanciaPolo: number;
 }

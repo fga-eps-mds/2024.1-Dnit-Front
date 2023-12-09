@@ -9,7 +9,7 @@ export async function sendPlanejamento(data: DATA.CriarPlanejamentoRequest): Pro
     return sendCadastros<DATA.CriarPlanejamentoRequest>(URL.criaPlanejamento, data);
 }
 //busca lista de planejamentos macro
-export async function fetchPlanejamento(){
+export async function fetchPlanejamentos(){
     return fetchDados<PlanejamentoMacro[]>(`${URL.criaPlanejamento}`);
 }
 //busca planejamento macro específico por id
