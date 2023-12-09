@@ -1,4 +1,4 @@
-import { CustoLogisticoModel, FatorModel } from "../models/prioridade";
+import { CustoLogisticoModel, FatorModel, Propriedade } from "../models/prioridade";
 import * as URL from "../consts/service"
 import { ResponseStatus, fetchDados, sendCadastros, update } from "./apiUtils";
 import axios, { AxiosResponse } from "axios";
@@ -36,4 +36,8 @@ export async function deletarFatorPriorizacao(id: string): Promise<ResponseStatu
 
 export async function editarCustosLogisticos(items: CustoLogisticoModel[]): Promise<ResponseStatus>{
     return update(URL.editarCustosLogisticos, items);
+}
+
+export async function fetchPropriedades(): Promise<Propriedade[]> { 
+    return fetchDados(URL.ObterPropriedades)
 }

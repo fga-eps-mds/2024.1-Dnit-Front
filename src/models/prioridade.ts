@@ -21,3 +21,8 @@ export interface FatorModel {
     primario: boolean;
     fatorCondicoes: Condicao[];
 }
+
+export interface Propriedade {
+    id: string;
+    rotulo: string;
+}

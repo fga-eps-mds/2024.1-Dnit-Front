@@ -5,17 +5,70 @@ import Header from "../../../components/Header";
 import TrilhaDeNavegacao from "../../../components/Navegacao";
 import "./styles.css"
 import FatorForm from "../../../components/FatorForm";
-import { fetchCustosLogisticos } from "../../../service/prioridadeApi";
+import { fetchCustosLogisticos, fetchPropriedades } from "../../../service/prioridadeApi";
 import { CustoLogisticoModel } from "../../../models/prioridade";
+import { FilterOptions } from "../GerenciarUsuario";
+import { fetchMunicipio, fetchSituacao, fetchUnidadeFederativa } from "../../../service/escolaApi";
+import { SituacaoData } from "../../../models/service";
 
 export default function GerenciarPrioridades() {
     const [parametrosCusto, setParametrosCusto] = useState<CustoLogisticoModel[]>([]);
     const paginas = [{nome: "Configuração de Pesos do Ranque", link: "/gerenciarPrioridades"}];
+    const [propriedades, setPropriedades] = useState<FilterOptions[]>([]);
+    const [ListaUfs, setListaUfs] = useState<FilterOptions[]>([]);
+    const [listaMunicipios, setListaMunicipios] = useState<FilterOptions[]>([]);
+    const [uf, setUF] = useState('');
+    const [SituacaoPesquisada, setSituacaoPesquisada] = useState("");
+    const [opcoesSituacao, setOpcoesSituacao] = useState<SituacaoData[]>([]);
     
+    const ObterPropriedadesCondicao = () => {
+        fetchPropriedades()
+            .then(c =>setPropriedades(c))
+    }
+    
+    async function fetchMunicipios(): Promise<void> {
+        const listaMunicipios = await fetchMunicipio(Number(uf));
+        const novoMunicipio = listaMunicipios.map((u) => ({ id: '' + u.id, rotulo: u.nome }));
+        setListaMunicipios(novoMunicipio);
+    }
+
+    async function fetchUf(): Promise<void> {
+        const listaUfs = await fetchUnidadeFederativa();
+        const novaUf = listaUfs.map((u) => ({ id: '' + u.id, rotulo: u.sigla }));
+        setListaUfs(novaUf);
+    }
+
     const obterParametrosCusto = () => {
         fetchCustosLogisticos()
             .then(c => setParametrosCusto(c))
     }
+
+    const getSituacao = async () => {
+        try {
+          const resposta = await fetchSituacao();
+          setOpcoesSituacao(resposta);
+        } catch (error) {}
+    };
+
+    useEffect(() => {
+        getSituacao();
+    },[]);
+
+    useEffect(() => {
+        obterParametrosCusto();
+    }, [])
+
+    useEffect(() =>{
+        fetchUf();
+    },[])
+
+    useEffect(() =>{
+        ObterPropriedadesCondicao();
+    },[])
+
+    useEffect(() => {
+        fetchMunicipios();
+      }, [uf]);
     
     const items: CollapseProps['items'] = [
         {
@@ -69,14 +122,12 @@ export default function GerenciarPrioridades() {
             key: '3',
             label: "Outros fatores",
             children: (
-                <FatorForm nome="Teste"></FatorForm>
+                <FatorForm nome="Teste" condicaoUfs={ListaUfs} propriedades={propriedades} municipios={listaMunicipios} situacoes ={opcoesSituacao.map(s => ({id : s.id.toString(), rotulo: s.descricao}))}></FatorForm>
             )
         },
     ];
 
-    useEffect(() => {
-        obterParametrosCusto();
-    }, [])    
+      
 
     return (
         <div className="App">

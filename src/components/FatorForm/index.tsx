@@ -1,12 +1,24 @@
 import "./styles.css"
 import Select from "../Select";
+import MultiSelect from "../MultiSelect";
+import { useState } from "react";
+import { fetchUnidadeFederativa } from "../../service/escolaApi";
+import { FilterOptions } from "../../pages/gerencia/GerenciarUsuario";
 
 interface FatorProps {
     nome: string;
     primario?: boolean;
+    condicaoUfs?: FilterOptions[];
+    propriedades?: FilterOptions[];
+    municipios?: FilterOptions[];
+    situacoes?: FilterOptions[];
 }
 
-export default function FatorForm ({ nome, primario }: FatorProps) {
+
+export default function FatorForm ({ nome, primario, condicaoUfs, propriedades, municipios, situacoes }: FatorProps) {
+    const [valor, setValor] = useState<string[]>([]);
+    const [propriedadeSelecionada, setPropriedadeSelecionada] = useState<string>('');
+
     return (
         <div className="fator-form">
             <div className="br-input input-inline">
@@ -19,9 +31,11 @@ export default function FatorForm ({ nome, primario }: FatorProps) {
             </div>
             {!primario && <div className="br-input input-inline" style={{width: "700px"}}>
                 <label>Condição:</label>
-                <Select items={[{id: "1", rotulo: "UF"}, {id: "2", rotulo: "Município"}]} value="" onChange={() => {}} />
+                <Select items={propriedades ? propriedades : []} value= {propriedadeSelecionada} onChange={setPropriedadeSelecionada} />
                 <Select items={[{id: "1", rotulo: "igual a"}, {id: "2", rotulo: "maior que"}]} value="" onChange={() => {}} />
-                <Select items={[{id: "1", rotulo: "DF"}, {id: "2", rotulo: "5"}]} value="" onChange={() => {}} />
+                {/* <MultiSelect items={(condicaoUfs ? condicaoUfs : [])} value={valor} onChange={setValor} /> */}
+                {/* <MultiSelect items={(municipios ? municipios : [])} value={valor} onChange={setValor} /> */}
+                <MultiSelect items={(situacoes ? situacoes : [])} value={valor} onChange={setValor} />
             </div>}
             <div className="br-switch icon">
                 <input id="switch-icon" type="checkbox" defaultChecked={true}/>
