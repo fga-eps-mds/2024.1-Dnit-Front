@@ -4,6 +4,7 @@ import MultiSelect from "../MultiSelect";
 import { useEffect, useState } from "react";
 import { fetchUnidadeFederativa } from "../../service/escolaApi";
 import { FilterOptions } from "../../pages/gerencia/GerenciarUsuario";
+import { Operador } from "../../models/prioridade";
 
 interface FatorProps {
     nome: string;
@@ -19,20 +20,38 @@ interface FatorProps {
 export default function FatorForm ({ nome, primario, condicaoUfs, propriedades, municipios, situacoes, etapasEnsino }: FatorProps) {
     const [valor, setValor] = useState<string[]>([]);
     const [propriedadeSelecionada, setPropriedadeSelecionada] = useState<string>('');
-    const [listaPropriedade, setListaPropriedade] = useState<FilterOptions[]>([])
+    const [listaPropriedade, setListaPropriedade] = useState<FilterOptions[]>([]);
+    const [operadorSelecionado, setOperadorSelecionado] = useState<string>('');
+    const [listaOperadores, setListaOperadores] = useState<FilterOptions[]>([]);
 
     const SelecionarPropriedade = function(propriedade:string){
-        
-        if(propriedade == "2" && situacoes)
-        {
-            setListaPropriedade(situacoes)
-        }else if(propriedade == "4" && condicaoUfs)
-        {
-            setListaPropriedade(condicaoUfs)
-        }else if(propriedade == "7" && etapasEnsino)
-        {
-            setListaPropriedade(etapasEnsino)
-        }
+            
+            if(propriedade == "2" && situacoes)
+            {
+                setListaPropriedade(situacoes)
+            }else if(propriedade == "4" && condicaoUfs)
+            {
+                setListaPropriedade(condicaoUfs)
+            }else if(propriedade == "7" && etapasEnsino)
+            {
+                setListaPropriedade(etapasEnsino)
+            }
+            if(propriedade == "6")
+            {
+                setListaOperadores([{
+                    id: Operador.maior,
+                    rotulo: "maior que",
+                },
+                {
+                    id: Operador.menor,
+                    rotulo: "menor que",
+                }])
+            }else if(propriedadeSelecionada){
+                setListaOperadores([ {
+                    id: Operador.igual,
+                    rotulo: "igual a",
+                },])
+            }
         
     }
 
@@ -53,7 +72,7 @@ export default function FatorForm ({ nome, primario, condicaoUfs, propriedades, 
             {!primario && <div className="br-input input-inline" style={{width: "700px"}}>
                 <label>Condição:</label>
                 <Select items={propriedades ? propriedades : []} value= {propriedadeSelecionada} onChange={setPropriedadeSelecionada} />
-                <Select items={[{id: "1", rotulo: "igual a"}, {id: "2", rotulo: "maior que"}]} value="" onChange={() => {}} />
+                <Select items={listaOperadores} value={operadorSelecionado} onChange={setOperadorSelecionado} />
                 <MultiSelect items={listaPropriedade} value={valor} onChange={setValor} />
             </div>}
             <div className="br-switch icon">

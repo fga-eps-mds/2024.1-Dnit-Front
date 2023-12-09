@@ -26,3 +26,9 @@ export interface Propriedade {
     id: string;
     rotulo: string;
 }
+
+export enum Operador {
+    igual = "1",
+    maior = "2",
+    menor = "3",
+}
