@@ -11,9 +11,7 @@ import Select from "../../../../components/Select";
 import Table, { CustomTableRow } from "../../../../components/Table";
 import ReactLoading from "react-loading";
 import { ButtonComponent } from "../../../../components/Button";
-import DeletarPlanejamentoDialog, {
-  DeletarPlanejamentoDialogArgs,
-} from "../../../../components/DeletarPlanejamentoDialog";
+import DeletarPlanejamentoDialog from "../../../../components/DeletarPlanejamentoDialog";
 import {fetchPlanejamentos} from "../../../../service/gerenciarAcoes";
 import {PlanejamentoMacro} from "../../../../models/gerenciarAcoes";
 import {meses} from "../fixtures";
