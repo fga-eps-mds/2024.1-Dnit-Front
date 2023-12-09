@@ -12,10 +12,11 @@ interface FatorProps {
     propriedades?: FilterOptions[];
     municipios?: FilterOptions[];
     situacoes?: FilterOptions[];
+    etapasEnsino?: FilterOptions[];
 }
 
 
-export default function FatorForm ({ nome, primario, condicaoUfs, propriedades, municipios, situacoes }: FatorProps) {
+export default function FatorForm ({ nome, primario, condicaoUfs, propriedades, municipios, situacoes, etapasEnsino }: FatorProps) {
     const [valor, setValor] = useState<string[]>([]);
     const [propriedadeSelecionada, setPropriedadeSelecionada] = useState<string>('');
 
@@ -35,7 +36,8 @@ export default function FatorForm ({ nome, primario, condicaoUfs, propriedades, 
                 <Select items={[{id: "1", rotulo: "igual a"}, {id: "2", rotulo: "maior que"}]} value="" onChange={() => {}} />
                 {/* <MultiSelect items={(condicaoUfs ? condicaoUfs : [])} value={valor} onChange={setValor} /> */}
                 {/* <MultiSelect items={(municipios ? municipios : [])} value={valor} onChange={setValor} /> */}
-                <MultiSelect items={(situacoes ? situacoes : [])} value={valor} onChange={setValor} />
+                {/* <MultiSelect items={(situacoes ? situacoes : [])} value={valor} onChange={setValor} /> */}
+                <MultiSelect items={(etapasEnsino ? etapasEnsino : [])} value={valor} onChange={setValor} />
             </div>}
             <div className="br-switch icon">
                 <input id="switch-icon" type="checkbox" defaultChecked={true}/>

@@ -8,8 +8,9 @@ import FatorForm from "../../../components/FatorForm";
 import { fetchCustosLogisticos, fetchPropriedades } from "../../../service/prioridadeApi";
 import { CustoLogisticoModel } from "../../../models/prioridade";
 import { FilterOptions } from "../GerenciarUsuario";
-import { fetchMunicipio, fetchSituacao, fetchUnidadeFederativa } from "../../../service/escolaApi";
+import { fetchEtapasDeEnsino, fetchMunicipio, fetchSituacao, fetchUnidadeFederativa } from "../../../service/escolaApi";
 import { SituacaoData } from "../../../models/service";
+import { SelectItem } from "../../../components/Select";
 
 export default function GerenciarPrioridades() {
     const [parametrosCusto, setParametrosCusto] = useState<CustoLogisticoModel[]>([]);
@@ -18,8 +19,8 @@ export default function GerenciarPrioridades() {
     const [ListaUfs, setListaUfs] = useState<FilterOptions[]>([]);
     const [listaMunicipios, setListaMunicipios] = useState<FilterOptions[]>([]);
     const [uf, setUF] = useState('');
-    const [SituacaoPesquisada, setSituacaoPesquisada] = useState("");
     const [opcoesSituacao, setOpcoesSituacao] = useState<SituacaoData[]>([]);
+    const [etapas, setEtapas] = useState<SelectItem[]>([]);
     
     const ObterPropriedadesCondicao = () => {
         fetchPropriedades()
@@ -49,6 +50,14 @@ export default function GerenciarPrioridades() {
           setOpcoesSituacao(resposta);
         } catch (error) {}
     };
+
+    useEffect(() => {
+        fetchEtapasDeEnsino()
+            .then(etapas => {
+            etapas.sort((a, b) => b.descricao.localeCompare(a.descricao));
+            setEtapas(etapas.map(e => ({ id: e.id.toString(), rotulo: e.descricao })));
+            });;
+    },[])
 
     useEffect(() => {
         getSituacao();
@@ -122,7 +131,7 @@ export default function GerenciarPrioridades() {
             key: '3',
             label: "Outros fatores",
             children: (
-                <FatorForm nome="Teste" condicaoUfs={ListaUfs} propriedades={propriedades} municipios={listaMunicipios} situacoes ={opcoesSituacao.map(s => ({id : s.id.toString(), rotulo: s.descricao}))}></FatorForm>
+                <FatorForm nome="Teste" condicaoUfs={ListaUfs} propriedades={propriedades} municipios={listaMunicipios} situacoes ={opcoesSituacao.map(s => ({id : s.id.toString(), rotulo: s.descricao}))} etapasEnsino = {etapas}></FatorForm>
             )
         },
     ];
