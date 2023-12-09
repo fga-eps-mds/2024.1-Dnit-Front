@@ -4,7 +4,7 @@ import MultiSelect from "../MultiSelect";
 import { useEffect, useState } from "react";
 import { fetchUnidadeFederativa } from "../../service/escolaApi";
 import { FilterOptions } from "../../pages/gerencia/GerenciarUsuario";
-import { Operador } from "../../models/prioridade";
+import { Localizacao, Operador, Rede } from "../../models/prioridade";
 
 interface FatorProps {
     nome: string;
@@ -35,6 +35,30 @@ export default function FatorForm ({ nome, primario, condicaoUfs, propriedades, 
             }else if(propriedade == "7" && etapasEnsino)
             {
                 setListaPropriedade(etapasEnsino)
+            }else if(propriedade == "8")
+            {
+                setListaPropriedade([{
+                    id: Rede.Estadual,
+                    rotulo: "Estadual",
+                },
+                {
+                    id: Rede.Municipal,
+                    rotulo: "Municipal",
+                },
+                {
+                    id: Rede.Privada,
+                    rotulo:"Privada"
+                }])
+            }else if(propriedade == "5")
+            {
+                setListaPropriedade([{
+                    id: Localizacao.Rural,
+                    rotulo: "Rural",
+                },
+                {
+                    id: Localizacao.Urbana,
+                    rotulo: "Urbana",
+                }])
             }
             if(propriedade == "6")
             {

@@ -32,3 +32,14 @@ export enum Operador {
     maior = "2",
     menor = "3",
 }
+
+export enum Rede {
+    Municipal = "1",
+    Estadual = "2",
+    Privada = "3",
+}
+
+export enum Localizacao{
+    Rural = "1",
+    Urbana = "2",
+}
