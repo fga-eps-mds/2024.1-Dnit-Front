@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Modal from "../Modal";
-import { deleteEscola } from "../../service/escolaApi";
+import { deleteEscolaPlanejamento } from "../../service/gerenciarAcoes";
 import { notification } from "antd";
 import "./styles.css"
 export interface DeletarEscolaDialogArgs {
@@ -14,9 +14,17 @@ interface DeletarEscolaDialogProps {
   readonly closeDialog: (deleted : boolean) => void
 }
 
-export default function DeletarEscolaDialog( { nome, closeDialog} : DeletarEscolaDialogProps) {
+export default function DeletarEscolaDialog( { id, nome, closeDialog} : DeletarEscolaDialogProps) {
   const deletarEscola = () => {
-    
+    deleteEscolaPlanejamento(id).then(() => {
+      notification.success({ message: "Escola deletada com sucesso!"});
+      closeDialog(true);
+    })
+    .catch((error) => {
+      notification.error({
+        message: "Falha na exclusão da escola" + (error?.response?.data ?? "")
+      })
+    }) 
   }
 
   return (
@@ -29,10 +37,10 @@ export default function DeletarEscolaDialog( { nome, closeDialog} : DeletarEscol
       </p>
       <div className="d-flex w-100 justify-content-center">
         <button className="br-button secondary" type="button" onClick={() => closeDialog(false)} data-testid="botaoCancelar">
-        Cancelar
+          Cancelar
        </button>
-        <button className="br-button primary" disabled type="button"onClick={deletarEscola} data-testid="botaoConfirmar">
-        Confirmar
+        <button className="br-button primary" type="button"onClick={deletarEscola} data-testid="botaoConfirmar">
+          Confirmar
         </button>
       </div>
     </Modal>
