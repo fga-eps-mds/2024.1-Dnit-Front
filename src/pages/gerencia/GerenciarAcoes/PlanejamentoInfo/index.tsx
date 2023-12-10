@@ -18,8 +18,8 @@ import DeletarEscolaDialog, {
 } from "../../../../components/DeletarEscolaDialog";
 import ModalAlterarEscola from "../../../../components/GerenciarAcoesModal/AlterarEscola";
 import { numeroCustoLogistico } from "../../../../utils/utils";
-import {fetchListarEscolasFiltradas} from "../../../../service/escolaApi";
-import {EscolaData} from "../../../../models/service";
+import { fetchListarEscolasFiltradas } from "../../../../service/escolaApi";
+import { EscolaData } from "../../../../models/service";
 import ModalRanqueEscola from "../../../../components/EscolaRanqueModal";
 
 interface PlanejamentoInfoProps {
@@ -50,7 +50,7 @@ export default function PlanejamentoInfo({
   const selectCardData: SelectCardData[] = [];
   const [escolaAtual, setEscolaAtual] = useState<EscolaData | null>();
   const [escolasBanco, setEscolasBanco] = useState<EscolaData[]>();
-  
+
   useEffect(() => {
     fetchListarEscolasFiltradas({
       params: {
@@ -61,13 +61,11 @@ export default function PlanejamentoInfo({
         IdMunicipio: "",
         IdUf: "",
       },
-    })
-        .then((escolas) => {
-          setEscolasBanco(escolas.escolas);
-        })
-
+    }).then((escolas) => {
+      setEscolasBanco(escolas.escolas);
+    });
   }, []);
-  
+
   useEffect(() => {
     let escolasArray: EscolasPlanejamentoTabela[] = [];
 
@@ -120,14 +118,16 @@ export default function PlanejamentoInfo({
 
   return (
     <div className="planning-info-container">
-      {escolaAtual != null && 
-          <ModalRanqueEscola 
-              onClose={() => { setEscolaAtual(null) }} 
-              onCreateAcao={() => { }} 
-              escolaId={escolaAtual.idEscola.toString()} 
-          />
-      }
-      {showDeletarEscolaPlanejamento && (
+      {escolaAtual != null && (
+        <ModalRanqueEscola
+          onClose={() => {
+            setEscolaAtual(null);
+          }}
+          onCreateAcao={() => {}}
+          escolaId={escolaAtual.idEscola.toString()}
+        />
+      )}
+      {/* {showDeletarEscolaPlanejamento && (
         <DeletarEscolaDialog
           id=""
           nome={showDeletarEscolaPlanejamento.nome}
@@ -135,7 +135,7 @@ export default function PlanejamentoInfo({
             setShowDeletarEscolaPlanejamento(null);
           }}
         />
-      )}
+      )} */}
       {showAlterarMesEscola && (
         <ModalAlterarEscola
           onClose={() => {
@@ -210,16 +210,16 @@ export default function PlanejamentoInfo({
                         id: "",
                       });
                     }}
-                    onDetailRow={_ => {
+                    onDetailRow={(_) => {
                       const escolaEncontrada = escolasBanco?.find((escola) => {
                         return (
-                            escola.nomeEscola === e.nome &&
-                            escola.siglaUf === e.uf &&
-                            escola.numeroTotalDeAlunos === e.quantidadeAlunos
+                          escola.nomeEscola === e.nome &&
+                          escola.siglaUf === e.uf &&
+                          escola.numeroTotalDeAlunos === e.quantidadeAlunos
                         );
                       });
-                      if(escolaEncontrada && escolaEncontrada.idEscola) setEscolaAtual(escolaEncontrada);
-                      
+                      if (escolaEncontrada && escolaEncontrada.idEscola)
+                        setEscolaAtual(escolaEncontrada);
                     }}
                   />
                 ))}
