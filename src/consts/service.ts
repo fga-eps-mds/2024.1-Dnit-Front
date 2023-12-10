@@ -9,6 +9,7 @@ export const situacaoURL = `${urlAPIEscolas}/dominio/situacao`;
 export const loginURL = `${urlAPIUsuario}/usuario/login`;
 export const cadastroURL = `${urlAPIUsuario}/usuario/cadastrar`;
 export const cadastroUsuarioURL = `${urlAPIUsuario}/usuario/cadastrarUsuarioDnit`;
+export const cadastroUsuarioTerceiroURL = `${urlAPIUsuario}/usuario/cadastrarUsuarioTerceiro`
 export const recuperarSenhaURL = `${urlAPIUsuario}/usuario/recuperarSenha`;
 export const redefinirSenhaURL = `${urlAPIUsuario}/usuario/redefinirSenha`;
 export const atualizarTokenUrl = `${urlAPIUsuario}/usuario/atualizarToken`;
