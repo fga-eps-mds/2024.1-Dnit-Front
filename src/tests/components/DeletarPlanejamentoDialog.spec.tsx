@@ -2,43 +2,29 @@ import {fireEvent, render, screen, waitFor} from "@testing-library/react";
 import {MemoryRouter} from "react-router-dom";
 import {AuthProvider} from "../../provider/Autenticacao";
 import DeletarPlanejamentoDialog from "../../components/DeletarPlanejamentoDialog";
-import {PlanejamentoMacro} from "../../models/gerenciarAcoes";
+import {planejamento2} from "../stub/planejamentoModelos";
+import {planejamento} from "../stub/planejamentoModelos";
+import server from "../mock/servicosAPI";
+import localStorageMock from "../mock/memoriaLocal";
 
-const planejamento1: PlanejamentoMacro = {
-    id: "1",
-    nome: "Planejamento 1",
-    responsavel: "Fulano",
-    mesInicio: 1,
-    mesFim: 6,
-    anoInicio: "2023",
-    anoFim: "2023",
-    quantidadeAcoes: 3,
-    planejamentoMacroMensal: [
-        {
-            mes: 1,
-            ano: "2023",
-            upsTotal: 10,
-            quantidadeEscolasTotal: 5,
-            quantidadeAlunosTotal: 500,
-            escolas: [
-                {
-                    id: "1",
-                    ups: 1,
-                    nome: "Escola 1",
-                    uf: "SP",
-                    quantidadeAlunos: 100,
-                    distanciaPolo: 20,
-                },
-            ],
-            detalhesPorUF: [
-                {
-                    uf: "SP",
-                    quantidadeEscolasTotal: 3,
-                },
-            ],
-        },
-    ],
-};
+beforeAll(() => server.listen());
+beforeEach(() => {
+    Object.defineProperty(window, "localStorage", { value: localStorageMock });
+});
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+window.matchMedia = jest.fn().mockImplementation((query) => {
+    return {
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
+    };
+});
 
 describe('Tabela de Gerenciar Acoes', () => {
 
@@ -46,7 +32,7 @@ describe('Tabela de Gerenciar Acoes', () => {
         render(
             <MemoryRouter>
                 <AuthProvider>
-                    <DeletarPlanejamentoDialog closeDialog={() => {}} planejamento={planejamento1}/>
+                    <DeletarPlanejamentoDialog closeDialog={() => {}} planejamento={planejamento}/>
                 </AuthProvider>
             </MemoryRouter>
         );
@@ -59,7 +45,7 @@ describe('Tabela de Gerenciar Acoes', () => {
     it('deve fechar ao clicar no overlay', async () => {
         render(
             <MemoryRouter>
-                <DeletarPlanejamentoDialog closeDialog={() => {}} planejamento={planejamento1} />
+                <DeletarPlanejamentoDialog closeDialog={() => {}} planejamento={planejamento} />
             </MemoryRouter>
         );
 
@@ -75,7 +61,7 @@ describe('Tabela de Gerenciar Acoes', () => {
         let deletou = false;
         render(
             <MemoryRouter>
-                <DeletarPlanejamentoDialog closeDialog={(d) => {deletou = d}} planejamento={planejamento1} />
+                <DeletarPlanejamentoDialog closeDialog={(d) => {deletou = d}} planejamento={planejamento2} />
             </MemoryRouter>
         );
         
@@ -87,11 +73,27 @@ describe('Tabela de Gerenciar Acoes', () => {
         expect(deletou).not.toBeTruthy();
     });
 
+    it('deve mostrar notificação de erro', async () => {
+        let deletou = false;
+        render(
+            <MemoryRouter>
+                <DeletarPlanejamentoDialog closeDialog={(d) => {deletou = d}} planejamento={planejamento} />
+            </MemoryRouter>
+        );
+
+        const overlay = screen.getByText('Confirmar');
+        fireEvent.click(overlay);
+        await waitFor(() => {
+            expect(screen.getByText('Planejamento deletado com sucesso!')).toBeInTheDocument();
+        });
+        expect(deletou).toBeTruthy();
+    });
+
     it('deve cancelar', async () => {
         let deletou = false;
         render(
             <MemoryRouter>
-                <DeletarPlanejamentoDialog closeDialog={() => {}} planejamento={planejamento1} />
+                <DeletarPlanejamentoDialog closeDialog={() => {}} planejamento={planejamento} />
             </MemoryRouter>
         );
 

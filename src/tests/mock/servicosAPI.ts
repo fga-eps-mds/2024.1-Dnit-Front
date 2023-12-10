@@ -897,7 +897,17 @@ const server = setupServer(
         descricao: 'etapa 2'
       }
     ],
-  })))
+  }))),
+    rest.delete(`${urlAPIEscolas}/planejamento/1`, (req, res, ctx) => res(ctx.status(200), ctx.json(
+        {
+            id: "1"
+        }
+    ))),
+    rest.delete(`${urlAPIEscolas}/planejamento/2`, (req, res, ctx) => res(ctx.status(400), ctx.json(
+        {
+            id: "2"
+        }
+    ))),
 );
 
 export default server;

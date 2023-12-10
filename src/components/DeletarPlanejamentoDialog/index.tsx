@@ -33,7 +33,7 @@ export default function DeletarPlanejamentoDialog( { planejamento, closeDialog}:
                       })
                       .catch((error) => {
                           notification.error({
-                              message: "Falha na exclusão do Planejamento. " + (error?.response?.data ?? "")
+                              message: "Falha na exclusão do Planejamento."
                           });
                       });
                   closeDialog(false);
