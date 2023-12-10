@@ -70,5 +70,19 @@ describe('Tabela de Gerenciar Acoes', () => {
         const overlay = screen.getByTestId('overlay');
         fireEvent.click(overlay);
     });
-
+    
+    it('deve mostrar notificação de erro', async () => {
+        let deletou = false;
+        render(
+            <MemoryRouter>
+                <DeletarPlanejamentoDialog closeDialog={(d) => {deletou = d}} planejamento={planejamento1} />
+            </MemoryRouter>
+        );
+        
+        const overlay = screen.getByText('Confirmar');
+        fireEvent.click(overlay);
+        expect(screen.getByText('Falha na exclusão do Planejamento.')).toBeInTheDocument();
+        expect(deletou).not.toBeTruthy();
+    });
+    
 })
