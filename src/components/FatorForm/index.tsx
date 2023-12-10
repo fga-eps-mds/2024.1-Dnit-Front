@@ -4,7 +4,8 @@ import MultiSelect from "../MultiSelect";
 import { useEffect, useState } from "react";
 import { fetchUnidadeFederativa } from "../../service/escolaApi";
 import { FilterOptions } from "../../pages/gerencia/GerenciarUsuario";
-import { Localizacao, Operador, Rede } from "../../models/prioridade";
+import { Condicao, Localizacao, Operador, Rede } from "../../models/prioridade";
+import FatorCondicaoSelect from "../FatorCondicaoSelect";
 
 interface FatorProps {
     nome: string;
@@ -14,74 +15,14 @@ interface FatorProps {
     municipios?: FilterOptions[];
     situacoes?: FilterOptions[];
     etapasEnsino?: FilterOptions[];
+    porte?: FilterOptions[];
 }
 
 
-export default function FatorForm ({ nome, primario, condicaoUfs, propriedades, municipios, situacoes, etapasEnsino }: FatorProps) {
-    const [valor, setValor] = useState<string[]>([]);
-    const [propriedadeSelecionada, setPropriedadeSelecionada] = useState<string>('');
-    const [listaPropriedade, setListaPropriedade] = useState<FilterOptions[]>([]);
-    const [operadorSelecionado, setOperadorSelecionado] = useState<string>('');
-    const [listaOperadores, setListaOperadores] = useState<FilterOptions[]>([]);
-
-    const SelecionarPropriedade = function(propriedade:string){
-            
-            if(propriedade == "2" && situacoes)
-            {
-                setListaPropriedade(situacoes)
-            }else if(propriedade == "4" && condicaoUfs)
-            {
-                setListaPropriedade(condicaoUfs)
-            }else if(propriedade == "7" && etapasEnsino)
-            {
-                setListaPropriedade(etapasEnsino)
-            }else if(propriedade == "8")
-            {
-                setListaPropriedade([{
-                    id: Rede.Estadual,
-                    rotulo: "Estadual",
-                },
-                {
-                    id: Rede.Municipal,
-                    rotulo: "Municipal",
-                },
-                {
-                    id: Rede.Privada,
-                    rotulo:"Privada"
-                }])
-            }else if(propriedade == "5")
-            {
-                setListaPropriedade([{
-                    id: Localizacao.Rural,
-                    rotulo: "Rural",
-                },
-                {
-                    id: Localizacao.Urbana,
-                    rotulo: "Urbana",
-                }])
-            }
-            if(propriedade == "6")
-            {
-                setListaOperadores([{
-                    id: Operador.maior,
-                    rotulo: "maior que",
-                },
-                {
-                    id: Operador.menor,
-                    rotulo: "menor que",
-                }])
-            }else if(propriedadeSelecionada){
-                setListaOperadores([ {
-                    id: Operador.igual,
-                    rotulo: "igual a",
-                },])
-            }
-        
-    }
-
-    useEffect(() =>{
-        SelecionarPropriedade(propriedadeSelecionada)
-        }, [propriedadeSelecionada])
+export default function FatorForm ({ nome, primario, condicaoUfs, propriedades, municipios, situacoes, etapasEnsino, porte }: FatorProps) {
+    
+    const [listaCondicoes, setListaCondicoes] = useState<Condicao[]>([])
+    const [condicaoAtual, setCondicaoAtual] = useState<Condicao>()
 
     return (
         <div className="fator-form">
@@ -95,9 +36,13 @@ export default function FatorForm ({ nome, primario, condicaoUfs, propriedades, 
             </div>
             {!primario && <div className="br-input input-inline" style={{width: "700px"}}>
                 <label>Condição:</label>
-                <Select items={propriedades ? propriedades : []} value= {propriedadeSelecionada} onChange={setPropriedadeSelecionada} />
-                <Select items={listaOperadores} value={operadorSelecionado} onChange={setOperadorSelecionado} />
-                <MultiSelect items={listaPropriedade} value={valor} onChange={setValor} />
+                {listaCondicoes.map((item) => (
+                    <FatorCondicaoSelect condicaoUfs={condicaoUfs} propriedades={propriedades} municipios={municipios} situacoes={situacoes} etapasEnsino={etapasEnsino} porte={porte} onChange={() => {}}></FatorCondicaoSelect>
+                ))}
+                <FatorCondicaoSelect condicaoUfs={condicaoUfs} propriedades={propriedades} municipios={municipios} situacoes={situacoes} etapasEnsino={etapasEnsino} porte={porte} onChange={setCondicaoAtual}></FatorCondicaoSelect>
+                <i className="fas fa-plus-circle" aria-hidden="true" onClick={() => {
+                    if(condicaoAtual)setListaCondicoes([...listaCondicoes,condicaoAtual])
+                }}></i>
             </div>}
             <div className="br-switch icon">
                 <input id="switch-icon" type="checkbox" defaultChecked={true}/>

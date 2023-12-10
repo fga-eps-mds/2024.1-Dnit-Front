@@ -56,3 +56,4 @@ export const editarFator = `${urlAPIEscolas}/priorizacao/fatores`
 export const obterCustosLogisticos = `${urlAPIEscolas}/priorizacao/custologistico`;
 export const editarCustosLogisticos = `${urlAPIEscolas}/priorizacao/custologistico`;
 export const ObterPropriedades = `${urlAPIEscolas}/dominio/propriedades`
+export const ObterPorte = `${urlAPIEscolas}/dominio/porte`

@@ -1,4 +1,4 @@
-import { CustoLogisticoModel, FatorModel, Propriedade } from "../models/prioridade";
+import { CustoLogisticoModel, FatorModel, Porte, Propriedade } from "../models/prioridade";
 import * as URL from "../consts/service"
 import { ResponseStatus, fetchDados, sendCadastros, update } from "./apiUtils";
 import axios, { AxiosResponse } from "axios";
@@ -40,4 +40,8 @@ export async function editarCustosLogisticos(items: CustoLogisticoModel[]): Prom
 
 export async function fetchPropriedades(): Promise<Propriedade[]> { 
     return fetchDados(URL.ObterPropriedades)
+}
+
+export async function fetchPorte(): Promise<Porte[]> { 
+    return fetchDados(URL.ObterPorte)
 }

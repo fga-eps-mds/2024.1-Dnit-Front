@@ -8,8 +8,8 @@ export interface CustoLogisticoModel {
 export interface Condicao {
     id?: string;
     propriedade: string;
-    operador: number;
-    valor: string;
+    operador: string;
+    valor: string[];
     fatorPriorizacaoId?: string;
 }
 
@@ -25,6 +25,11 @@ export interface FatorModel {
 export interface Propriedade {
     id: string;
     rotulo: string;
+}
+
+export interface Porte {
+    id: string;
+    descricao: string;
 }
 
 export enum Operador {

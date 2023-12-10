@@ -5,7 +5,7 @@ import Header from "../../../components/Header";
 import TrilhaDeNavegacao from "../../../components/Navegacao";
 import "./styles.css"
 import FatorForm from "../../../components/FatorForm";
-import { fetchCustosLogisticos, fetchPropriedades } from "../../../service/prioridadeApi";
+import { fetchCustosLogisticos, fetchPorte, fetchPropriedades } from "../../../service/prioridadeApi";
 import { CustoLogisticoModel } from "../../../models/prioridade";
 import { FilterOptions } from "../GerenciarUsuario";
 import { fetchEtapasDeEnsino, fetchMunicipio, fetchSituacao, fetchUnidadeFederativa } from "../../../service/escolaApi";
@@ -21,7 +21,8 @@ export default function GerenciarPrioridades() {
     const [uf, setUF] = useState('');
     const [opcoesSituacao, setOpcoesSituacao] = useState<SituacaoData[]>([]);
     const [etapas, setEtapas] = useState<SelectItem[]>([]);
-    
+    const [listaPortesEscolas, setPortesEscolas] = useState<FilterOptions[]>([]);
+
     const ObterPropriedadesCondicao = () => {
         fetchPropriedades()
             .then(c =>setPropriedades(c))
@@ -31,6 +32,12 @@ export default function GerenciarPrioridades() {
         const listaMunicipios = await fetchMunicipio(Number(uf));
         const novoMunicipio = listaMunicipios.map((u) => ({ id: '' + u.id, rotulo: u.nome }));
         setListaMunicipios(novoMunicipio);
+    }
+
+    async function ObterPortesEscolas(): Promise<void> {
+        const listaPortesEscolas = await fetchPorte();
+        const novoPorte = listaPortesEscolas.map((u) => ({ id: u.id, rotulo: u.descricao }));
+        setPortesEscolas(novoPorte);
     }
 
     async function fetchUf(): Promise<void> {
@@ -78,6 +85,10 @@ export default function GerenciarPrioridades() {
     useEffect(() => {
         fetchMunicipios();
       }, [uf]);
+
+    useEffect(() =>{
+        ObterPortesEscolas();
+    },[])
     
     const items: CollapseProps['items'] = [
         {
@@ -131,7 +142,7 @@ export default function GerenciarPrioridades() {
             key: '3',
             label: "Outros fatores",
             children: (
-                <FatorForm nome="Teste" condicaoUfs={ListaUfs} propriedades={propriedades} municipios={listaMunicipios} situacoes ={opcoesSituacao.map(s => ({id : s.id.toString(), rotulo: s.descricao}))} etapasEnsino = {etapas}></FatorForm>
+                <FatorForm nome="Teste" condicaoUfs={ListaUfs} propriedades={propriedades} municipios={listaMunicipios} situacoes ={opcoesSituacao.map(s => ({id : s.id.toString(), rotulo: s.descricao}))} etapasEnsino = {etapas} porte = {listaPortesEscolas}></FatorForm>
             )
         },
     ];
