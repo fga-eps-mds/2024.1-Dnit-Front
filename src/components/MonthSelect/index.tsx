@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./styles.css";
 
 type MonthSelectProps = {
   onMonthSelected: (data: string) => void;
+  valueSelected?: string;
   disabled: boolean;
 };
 
-const MonthSelect = ({ onMonthSelected, disabled }: MonthSelectProps) => {
+const MonthSelect = ({
+  onMonthSelected,
+  disabled,
+  valueSelected = "",
+}: MonthSelectProps) => {
   const months = [
     "Janeiro",
     "Fevereiro",
@@ -28,6 +33,10 @@ const MonthSelect = ({ onMonthSelected, disabled }: MonthSelectProps) => {
     setSelectedMonth(e.target.value);
     onMonthSelected(e.target.value);
   };
+
+  useEffect(() => {
+    setSelectedMonth(valueSelected);
+  }, [valueSelected]);
 
   return (
     <div className="custom-select">

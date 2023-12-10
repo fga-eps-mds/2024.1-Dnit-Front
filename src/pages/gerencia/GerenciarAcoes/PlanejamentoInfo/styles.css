@@ -1,9 +1,14 @@
+.planning-info-container {
+    width: 100%;
+}
+
 .planning-info {
     display: flex;
     flex-direction: row;
     align-items: stretch;
     position: relative;
     margin-top: 3.125rem;
+    width: 100%;
 }
 
 .custom-divider {

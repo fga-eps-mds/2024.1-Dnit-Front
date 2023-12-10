@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Footer from "../../../../components/Footer";
 import Header from "../../../../components/Header";
 import TrilhaDeNavegacao from "../../../../components/Navegacao";
@@ -6,13 +6,18 @@ import "./styles.css";
 import { ButtonComponent } from "../../../../components/Button";
 import MonthSelect from "../../../../components/MonthSelect";
 import PlanejamentoInfo from "../PlanejamentoInfo";
-import { sendPlanejamento } from "../../../../service/gerenciarAcoes";
+import {
+  fetchPlanejamentoId,
+  sendPlanejamento,
+} from "../../../../service/gerenciarAcoes";
 import * as DATA from "../../../../models/service";
 import { AuthLocalStorage } from "../../../../provider/Autenticacao";
 import { PlanejamentoMacro } from "../../../../models/gerenciarAcoes";
 import { meses } from "../fixtures";
+import { useParams } from "react-router-dom";
 
 export default function GerenciarAcoes() {
+  const { id } = useParams();
   const paginas = [
     { nome: "Gerenciar Ações", link: "/gerenciarAcoes" },
     { nome: "Criar Planejamento", link: "/gerenciarAcoes/criarPlanejamento" },
@@ -119,6 +124,23 @@ export default function GerenciarAcoes() {
     setPlanejamentoInfo(planejamentoCriado);
   }
 
+  useEffect(() => {
+    async function fetchData() {
+      if (id !== "null" && id !== undefined) {
+        const planejamentoResponse = await fetchPlanejamentoId(id);
+        setPlanejamentoInfo(planejamentoResponse);
+        setSavedTitle(planejamentoResponse.nome);
+        setTitle(planejamentoResponse.nome);
+        setQtdActions(planejamentoResponse.quantidadeAcoes);
+        setInitialMonth(meses[planejamentoInfo?.mesInicio! - 1]);
+        setFinalMonth(meses[planejamentoInfo?.mesFim! - 1]);
+        setIsPlanningGenerated(true);
+      }
+    }
+
+    fetchData();
+  });
+
   return (
     <div className="App">
       <div>
@@ -144,6 +166,7 @@ export default function GerenciarAcoes() {
               <MonthSelect
                 onMonthSelected={(month) => setInitialMonth(month)}
                 disabled={isPlanningGenerated}
+                valueSelected={initialMonth}
               />
               <span className="error">{errors.initialMonth}</span>
             </div>
@@ -152,6 +175,7 @@ export default function GerenciarAcoes() {
               <MonthSelect
                 onMonthSelected={(month) => setFinalMonth(month)}
                 disabled={isPlanningGenerated}
+                valueSelected={finalMonth}
               />
               <span className="error">{errors.finalMonth}</span>
             </div>

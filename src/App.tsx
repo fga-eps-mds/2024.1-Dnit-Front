@@ -49,7 +49,7 @@ function App() {
           />
           <Route path="/gerenciarAcoes" element={<GerenciarAcoes />} />
           <Route
-            path="/gerenciarAcoes/gerarPlanejamento"
+            path="/gerenciarAcoes/gerarPlanejamento/:id"
             element={<GerarPlanejamento />}
           />
         </>

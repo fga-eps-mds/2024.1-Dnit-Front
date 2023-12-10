@@ -1,105 +1,135 @@
-import {fireEvent, render, screen, waitFor} from "@testing-library/react";
-import {MemoryRouter} from "react-router-dom";
-import {AuthProvider} from "../../provider/Autenticacao";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
+import { AuthProvider } from "../../provider/Autenticacao";
 import DeletarPlanejamentoDialog from "../../components/DeletarPlanejamentoDialog";
-import {planejamento2} from "../stub/planejamentoModelos";
-import {planejamento} from "../stub/planejamentoModelos";
+import { planejamento2 } from "../stub/planejamentoModelos";
+import { planejamento } from "../stub/planejamentoModelos";
 import server from "../mock/servicosAPI";
 import localStorageMock from "../mock/memoriaLocal";
 
 beforeAll(() => server.listen());
 beforeEach(() => {
-    Object.defineProperty(window, "localStorage", { value: localStorageMock });
+  Object.defineProperty(window, "localStorage", { value: localStorageMock });
 });
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 window.matchMedia = jest.fn().mockImplementation((query) => {
-    return {
-        matches: false,
-        media: query,
-        onchange: null,
-        addListener: jest.fn(),
-        removeListener: jest.fn(),
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-        dispatchEvent: jest.fn(),
-    };
+  return {
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  };
 });
 
-describe('Tabela de Gerenciar Acoes', () => {
+describe("Tabela de Gerenciar Acoes", () => {
+  it("Deve renderizar a pagina de Gerenciar Acoes", async () => {
+    render(
+      <MemoryRouter>
+        <AuthProvider>
+          <DeletarPlanejamentoDialog
+            closeDialog={() => {}}
+            planejamento={planejamento}
+            onClick={(id: string) => {}}
+          />
+        </AuthProvider>
+      </MemoryRouter>
+    );
 
-    it("Deve renderizar a pagina de Gerenciar Acoes", async () => {
-        render(
-            <MemoryRouter>
-                <AuthProvider>
-                    <DeletarPlanejamentoDialog closeDialog={() => {}} planejamento={planejamento}/>
-                </AuthProvider>
-            </MemoryRouter>
-        );
+    expect(
+      screen.getByText("Tem certeza que deseja excluir este planejamento?")
+    ).toBeInTheDocument();
+    expect(screen.getByText("Cancelar")).toBeInTheDocument();
+    expect(screen.getByText("Confirmar")).toBeInTheDocument();
+  });
 
-        expect(screen.getByText("Tem certeza que deseja excluir este planejamento?")).toBeInTheDocument();
-        expect(screen.getByText("Cancelar")).toBeInTheDocument();
-        expect(screen.getByText("Confirmar")).toBeInTheDocument();
+  it("deve fechar ao clicar no overlay", async () => {
+    render(
+      <MemoryRouter>
+        <DeletarPlanejamentoDialog
+          closeDialog={() => {}}
+          planejamento={planejamento}
+          onClick={(id: string) => {}}
+        />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("Tem certeza que deseja excluir este planejamento?")
+      ).toBeInTheDocument();
     });
 
-    it('deve fechar ao clicar no overlay', async () => {
-        render(
-            <MemoryRouter>
-                <DeletarPlanejamentoDialog closeDialog={() => {}} planejamento={planejamento} />
-            </MemoryRouter>
-        );
+    const overlay = screen.getByTestId("overlay");
+    fireEvent.click(overlay);
+  });
 
-        await waitFor(() => {
-            expect(screen.getByText('Tem certeza que deseja excluir este planejamento?')).toBeInTheDocument();
-        });
+  it("deve mostrar notificação de erro", async () => {
+    let deletou = false;
+    render(
+      <MemoryRouter>
+        <DeletarPlanejamentoDialog
+          closeDialog={(d) => {
+            deletou = d;
+          }}
+          planejamento={planejamento2}
+          onClick={(id: string) => {}}
+        />
+      </MemoryRouter>
+    );
 
-        const overlay = screen.getByTestId('overlay');
-        fireEvent.click(overlay);
+    const overlay = screen.getByText("Confirmar");
+    fireEvent.click(overlay);
+    await waitFor(() => {
+      expect(
+        screen.getByText("Falha na exclusão do Planejamento.")
+      ).toBeInTheDocument();
     });
-    
-    it('deve mostrar notificação de erro', async () => {
-        let deletou = false;
-        render(
-            <MemoryRouter>
-                <DeletarPlanejamentoDialog closeDialog={(d) => {deletou = d}} planejamento={planejamento2} />
-            </MemoryRouter>
-        );
-        
-        const overlay = screen.getByText('Confirmar');
-        fireEvent.click(overlay);
-        await waitFor(() => {
-            expect(screen.getByText('Falha na exclusão do Planejamento.')).toBeInTheDocument();
-        });
-        expect(deletou).not.toBeTruthy();
+    expect(deletou).not.toBeTruthy();
+  });
+
+  it("deve mostrar notificação de erro", async () => {
+    let deletou = false;
+    render(
+      <MemoryRouter>
+        <DeletarPlanejamentoDialog
+          closeDialog={(d) => {
+            deletou = d;
+          }}
+          planejamento={planejamento}
+          onClick={(id: string) => {}}
+        />
+      </MemoryRouter>
+    );
+
+    const overlay = screen.getByText("Confirmar");
+    fireEvent.click(overlay);
+    await waitFor(() => {
+      expect(
+        screen.getByText("Planejamento deletado com sucesso!")
+      ).toBeInTheDocument();
     });
+    expect(deletou).toBeTruthy();
+  });
 
-    it('deve mostrar notificação de erro', async () => {
-        let deletou = false;
-        render(
-            <MemoryRouter>
-                <DeletarPlanejamentoDialog closeDialog={(d) => {deletou = d}} planejamento={planejamento} />
-            </MemoryRouter>
-        );
+  it("deve cancelar", async () => {
+    let deletou = false;
+    render(
+      <MemoryRouter>
+        <DeletarPlanejamentoDialog
+          closeDialog={() => {}}
+          planejamento={planejamento}
+          onClick={(id: string) => {}}
+        />
+      </MemoryRouter>
+    );
 
-        const overlay = screen.getByText('Confirmar');
-        fireEvent.click(overlay);
-        await waitFor(() => {
-            expect(screen.getByText('Planejamento deletado com sucesso!')).toBeInTheDocument();
-        });
-        expect(deletou).toBeTruthy();
-    });
-
-    it('deve cancelar', async () => {
-        let deletou = false;
-        render(
-            <MemoryRouter>
-                <DeletarPlanejamentoDialog closeDialog={() => {}} planejamento={planejamento} />
-            </MemoryRouter>
-        );
-
-        const overlay = screen.getByTestId('botaoCancelar');
-        fireEvent.click(overlay);
-        expect(deletou).not.toBeTruthy();
-    });
-    
-})
+    const overlay = screen.getByTestId("botaoCancelar");
+    fireEvent.click(overlay);
+    expect(deletou).not.toBeTruthy();
+  });
+});

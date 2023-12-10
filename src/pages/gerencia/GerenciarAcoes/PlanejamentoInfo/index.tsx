@@ -18,10 +18,9 @@ import DeletarEscolaDialog, {
 } from "../../../../components/DeletarEscolaDialog";
 import ModalAlterarEscola from "../../../../components/GerenciarAcoesModal/AlterarEscola";
 import { numeroCustoLogistico } from "../../../../utils/utils";
-import ModalRanqueEscola from "../../../../components/EscolaRanqueModal";
-import {EscolaRanqueData} from "../../../../models/ranque";
 import {fetchListarEscolasFiltradas} from "../../../../service/escolaApi";
 import {EscolaData} from "../../../../models/service";
+import ModalRanqueEscola from "../../../../components/EscolaRanqueModal";
 
 interface PlanejamentoInfoProps {
   planejamento: PlanejamentoMacro;
@@ -85,7 +84,7 @@ export default function PlanejamentoInfo({
 
     setEscolasPlanejamento(escolasArray);
     setMonthPlanningSelected(planejamento.planejamentoMacroMensal[0]);
-  }, [planejamento]);
+  }, []);
 
   planejamento.planejamentoMacroMensal.forEach((element, index) => {
     selectCardData.push({
@@ -103,7 +102,6 @@ export default function PlanejamentoInfo({
 
   function updateMonthData(cardIndex: number) {
     let escolasArray: EscolasPlanejamentoTabela[] = [];
-    console.log("Calling");
 
     planejamento.planejamentoMacroMensal[cardIndex].escolas.forEach(
       (element) => {
@@ -122,7 +120,7 @@ export default function PlanejamentoInfo({
   }
 
   return (
-    <div>
+    <div className="planning-info-container">
       {escolaAtual != null && 
           <ModalRanqueEscola 
               onClose={() => { setEscolaAtual(null) }} 
@@ -148,11 +146,11 @@ export default function PlanejamentoInfo({
       )}
       {modalAdicionarAcao && (
         <ModalAdicionarEscola
-            planejamento={planejamento}
-            infoMes={monthPlanningSelected}
-            onClose={() => {
-              setModalAdicionarAcao(false);
-            }}
+          planejamento={planejamento}
+          infoMes={monthPlanningSelected}
+          onClose={() => {
+            setModalAdicionarAcao(false);
+          }}
         />
       )}
       {monthPlanningSelected !== undefined && (

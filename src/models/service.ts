@@ -1,3 +1,5 @@
+import { PlanejamentoMacro } from "./gerenciarAcoes";
+
 export interface UnidadeFederativaData {
   id: number;
   nome: string;
@@ -238,4 +240,23 @@ export interface CriarPlanejamentoRequest {
 
 export interface ExcluirPlanejamentoData {
   id_planejamento: string;
+}
+
+export interface PesquisaPlanejamentoFiltro {
+  params: {
+    Pagina: number;
+    TamanhoPagina: number;
+    Nome?: string;
+    Periodo?: string;
+    Responsavel?: string;
+    QuantidadeAcoes?: number;
+  };
+}
+
+export interface PlanejamentoFiltrados {
+  pagina: number;
+  itemsPorPagina: number;
+  total: number;
+  totalPaginas: number;
+  items: PlanejamentoMacro[];
 }
