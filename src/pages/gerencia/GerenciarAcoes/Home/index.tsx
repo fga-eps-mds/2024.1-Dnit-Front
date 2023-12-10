@@ -207,7 +207,6 @@ export default function GerenciarAcoes() {
                           "3": e.responsavel,
                         }}
                         hideEditIcon={true}
-                        onDetailRow={_ => console.log("teste")}
                         onDeleteRow={() => {
                           setDeletePlanejamento(e);
                         }}

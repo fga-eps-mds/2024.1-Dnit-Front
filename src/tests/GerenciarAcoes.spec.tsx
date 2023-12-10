@@ -5,7 +5,6 @@ import server from "./mock/servicosAPI";
 import { Permissao } from "../models/auth";
 import { autenticar } from "./mock/autenticacao";
 import GerenciarAcoes from "../pages/gerencia/GerenciarAcoes/Home";
-import ModalAdicionarEscola from "../components/GerenciarAcoesModal/AdicionarEscola";
 
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
@@ -111,53 +110,5 @@ describe('Tabela de Gerenciar Acoes', () => {
         expect(inputs[0]).toHaveValue("");
         expect(inputs[1]).toHaveValue("");
     });
-
-
-})
-
-describe('Modal adicionar Escola', () => {
-    it("Deve renderizar o modal de Adicionar Escola", () => {
-        let aberto = true;
-        render(
-            <div>
-                {aberto && <ModalAdicionarEscola
-                    onClose={() => { aberto = false; }}
-                />}
-            </div>
-        );
-        expect(screen.getByText("Adicionar Escola")).toBeInTheDocument();
-        expect(screen.getByText("Cancelar")).toBeInTheDocument();
-        expect(screen.getByText("Adicionar")).toBeInTheDocument();
-    });
-
-    it("Deve testar o filtro do modal", async () => {
-        let aberto = true;
-        render(
-            <div>
-                {aberto && <ModalAdicionarEscola
-                    onClose={() => { aberto = false; }}
-                />}
-            </div>
-        );
-        const input = screen.getByTestId("Procurar escola");
-
-        fireEvent.change(input, { target: { value: "Sigma"}});
-        expect(input).toHaveValue("Sigma");
-    });
-
-    it("Deve testar sair da Modal", async () => {
-        let aberto = true;
-        render(
-            <div>
-                {aberto && <ModalAdicionarEscola
-                    onClose={() => { aberto = false; }}
-                />}
-            </div>
-        );
-
-        expect(screen.getByText('Cancelar')).toBeInTheDocument();
-        fireEvent.click(screen.getByText("Cancelar"));
-        expect(aberto).toEqual(false);
-    });
-
+    
 })

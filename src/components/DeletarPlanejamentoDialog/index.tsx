@@ -14,7 +14,7 @@ export default function DeletarPlanejamentoDialog( { planejamento, closeDialog}:
   return (
     <Modal className="delete-planejamento" closeModal={() => closeDialog(false) }>
       <p>
-        <strong>Tem certeza que deseja excluir este planejamento? </strong>
+        <strong>Tem certeza que deseja excluir este planejamento?</strong>
       </p>
       <p>
         O planejamento <strong>{planejamento.nome} será excluído do sistema.</strong>
@@ -24,22 +24,21 @@ export default function DeletarPlanejamentoDialog( { planejamento, closeDialog}:
             Cancelar
           </button>
           
-          <button className="br-button primary" type="button" 
-                  onClick={() => {
-                      deletePlanejamentoMacro(planejamento.id)
-                          .then(() => {
-                              notification.success({ message: "Planejamento deletado com sucesso!" });
-                              closeDialog(true);
-                          })
-                          .catch((error) => {
-                              notification.error({
-                                  message: "Falha na exclusão do Planejamento. " + (error?.response?.data ?? "")
-                              });
+          <button className="br-button primary" type="button" data-testid="botaoConfirmar"
+              onClick={() => {
+                  deletePlanejamentoMacro(planejamento.id)
+                      .then(() => {
+                          notification.success({ message: "Planejamento deletado com sucesso!" });
+                          closeDialog(true);
+                      })
+                      .catch((error) => {
+                          notification.error({
+                              message: "Falha na exclusão do Planejamento. " + (error?.response?.data ?? "")
                           });
-                      closeDialog(false);
-                  }} 
-                  data-testid="botaoConfirmar">
-            Confirmar
+                      });
+                  closeDialog(false);
+          }}>
+                Confirmar
           </button>
       </div>
     </Modal>
