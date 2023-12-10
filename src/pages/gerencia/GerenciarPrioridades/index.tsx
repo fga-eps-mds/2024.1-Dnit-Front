@@ -203,20 +203,20 @@ export default function GerenciarPrioridades() {
                     }
                     }></FatorForm>
                     <div className="custo-table">
-                        <p>Parâmetros do Custo Logístico</p>
                         <table>
+                            <caption style={{fontWeight: "bold"}}>Parâmetros do Custo Logístico</caption>
                             <thead>
                                 <tr>
                                     <th>Custo</th>
-                                    <th>Raio</th>
+                                    <th>Raio(km)</th>
                                     <th>Valor</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {parametrosCusto.map((item) => (
                                     <tr key={item.custo}>
-                                        <th>{"$".repeat(item.custo)}</th>
-                                        <th>
+                                        <td>{"$".repeat(item.custo)}</td>
+                                        <td>
                                             {
                                                 item.raioMax !== null ?
                                                 <div>
@@ -225,10 +225,10 @@ export default function GerenciarPrioridades() {
                                                     onChange={e => handleParametroCustoChange(item, e.target.id, e.target.valueAsNumber)}></input>
                                                     </span>
                                                 </div> :
-                                                <p>Acima de {item.raioMin}</p>
+                                                <span>Acima de {item.raioMin}</span>
                                             }
-                                        </th>
-                                        <th><input type="number" id="valor" defaultValue={item.valor} className="br-input small"></input></th>
+                                        </td>
+                                        <td><input type="number" id="valor" defaultValue={item.valor} className="br-input small"></input></td>
                                     </tr>
                                 ))}
                             </tbody>
