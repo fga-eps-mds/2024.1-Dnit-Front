@@ -1,7 +1,10 @@
 import { Form, Input, Radio, Select, Space, notification } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { sendCadastroUsuarioDnit } from "../../../service/usuarioApi";
+import {
+  sendCadastroUsuarioDnit,
+  sendCadastroUsuarioTerceiro,
+} from "../../../service/usuarioApi";
 import {
   fetchMunicipio,
   fetchUnidadeFederativa,
@@ -12,6 +15,7 @@ import { ExcessoesApi } from "../../../service/excessoes";
 import { fetchListaEmpresas } from "../../../service/empresaApi";
 import { Autocomplete, TextField } from "@mui/material";
 import { EmpresaModel } from "../../../models/empresa";
+import { CadastroUsuarioTerceiroData } from "../../../models/service";
 
 const { Option } = Select;
 
@@ -36,22 +40,40 @@ const CadastroUsuarioForm: React.FC = () => {
   const [uf, setUf] = useState<SelectProps[]>();
   const [ufSelected, setUfSelected] = useState<number>();
   const [municipios, setMunicipios] = useState<SelectProps[]>();
+  const [empresaSelecionada, setEmpresaSelecionada] = useState<string | null>(
+    null
+  );
 
   let empresas = useRef<EmpresaModel[]>([]);
 
   const navigate = useNavigate();
 
   const onFinish = async (values: any) => {
-    const cadastroUsuarioData = {
-      email: values.email,
-      senha: values.senha,
-      nome: values.nome,
-      ufLotacao: values.uf,
-      municipioId: values.municipio,
-    };
-
     try {
-      await sendCadastroUsuarioDnit(cadastroUsuarioData);
+      var empresaSelected = empresas.current.find(
+        (element) => element.razaoSocial === empresaSelecionada
+      );
+      if (empresasVisiveis) {
+        const cadastroUsuarioTerceiro: CadastroUsuarioTerceiroData = {
+          email: values.email,
+          senha: values.senha,
+          nome: values.nome,
+          ufLotacao: values.uf,
+          municipioId: values.municipio,
+          cnpj: empresaSelected?.cnpj ?? "",
+        };
+
+        await sendCadastroUsuarioTerceiro(cadastroUsuarioTerceiro);
+      } else {
+        const cadastroUsuarioData = {
+          email: values.email,
+          senha: values.senha,
+          nome: values.nome,
+          ufLotacao: values.uf,
+          municipioId: values.municipio,
+        };
+        await sendCadastroUsuarioDnit(cadastroUsuarioData);
+      }
       notification.success({ message: "Cadastro feito!" });
       navigate("/login");
     } catch (error) {
@@ -264,7 +286,7 @@ const CadastroUsuarioForm: React.FC = () => {
             <div>
               <Form.Item
                 className="ext2"
-                name="empresa executora"
+                name="empresa"
                 rules={regras}
                 label="Empresa Executora"
               >
@@ -272,6 +294,10 @@ const CadastroUsuarioForm: React.FC = () => {
                   disablePortal
                   id="combo-box-demo"
                   options={empresas.current.map((e) => e.razaoSocial)}
+                  value={empresaSelecionada}
+                  onChange={(event, newValue) =>
+                    setEmpresaSelecionada(newValue)
+                  }
                   style={{ height: "50px" }}
                   className="inputForm"
                   renderInput={(params) => (

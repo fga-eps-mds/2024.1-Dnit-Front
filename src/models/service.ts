@@ -49,6 +49,16 @@ export interface CadastroUsuarioData {
   senha: string;
   nome: string;
   ufLotacao: number;
+  municipioId: number;
+}
+
+export interface CadastroUsuarioTerceiroData {
+  email: string;
+  senha: string;
+  nome: string;
+  ufLotacao: number;
+  municipioId: number;
+  cnpj: string; 
 }
 
 export interface CadastroEscolaData {
