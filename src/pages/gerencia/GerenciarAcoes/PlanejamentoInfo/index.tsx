@@ -13,14 +13,18 @@ import {
 } from "../../../../models/gerenciarAcoes";
 import { ButtonComponent } from "../../../../components/Button";
 import ModalAdicionarEscola from "../../../../components/GerenciarAcoesModal/AdicionarEscola";
-import DeletarEscolaDialog, {
-  DeletarEscolaDialogArgs,
-} from "../../../../components/DeletarEscolaDialog";
 import ModalAlterarEscola from "../../../../components/GerenciarAcoesModal/AlterarEscola";
 import { numeroCustoLogistico } from "../../../../utils/utils";
 import { fetchListarEscolasFiltradas } from "../../../../service/escolaApi";
-import { EscolaData } from "../../../../models/service";
+import {
+  AtualizarPlanejamento,
+  EscolaData,
+  PlanejamentoMacroMesUpdate,
+} from "../../../../models/service";
 import ModalRanqueEscola from "../../../../components/EscolaRanqueModal";
+import DeletarEscolaDialog from "../../../../components/DeletarEscolaDialog";
+import { updatePlanejamento } from "../../../../service/gerenciarAcoes";
+import { notification } from "antd";
 
 interface PlanejamentoInfoProps {
   planejamento: PlanejamentoMacro;
@@ -39,19 +43,24 @@ export default function PlanejamentoInfo({
 
   const [showAlterarMesEscola, setShowAlterarMesEscola] =
     useState<boolean>(false);
-  const [showDeletarEscolaPlanejamento, setShowDeletarEscolaPlanejamento] =
-    useState<DeletarEscolaDialogArgs | null>(null);
   const [escolasPlanejamento, setEscolasPlanejamento] =
     useState<EscolasPlanejamentoTabela[]>();
   const [modalAdicionarAcao, setModalAdicionarAcao] = useState<boolean>(false);
   const [monthPlanningSelected, setMonthPlanningSelected] = useState<
     InfoMesPlanejamentoMacro | undefined
   >();
-  const selectCardData: SelectCardData[] = [];
+  const [showDeletarDialog, setShowDeletarDialog] = useState(false);
+  const [selectCardData, setSelectCardData] = useState<SelectCardData[]>([]);
   const [escolaAtual, setEscolaAtual] = useState<EscolaData | null>();
   const [escolasBanco, setEscolasBanco] = useState<EscolaData[]>();
+  const [cardIndexSelected, setCardIndexSelected] = useState(0);
+
+  const [escolaSelected, setEscolaSelected] =
+    useState<EscolasPlanejamentoTabela | null>();
 
   useEffect(() => {
+    console.log("Calling 2");
+
     fetchListarEscolasFiltradas({
       params: {
         Pagina: 1,
@@ -69,38 +78,7 @@ export default function PlanejamentoInfo({
   useEffect(() => {
     let escolasArray: EscolasPlanejamentoTabela[] = [];
 
-    planejamento.planejamentoMacroMensal[0].escolas.forEach((element) => {
-      escolasArray.push({
-        nome: element.nome,
-        quantidadeAlunos: element.quantidadeAlunos,
-        custoLogistico: numeroCustoLogistico(element.distanciaPolo),
-        uf: element.uf,
-        ups: element.ups,
-      });
-    });
-
-    setEscolasPlanejamento(escolasArray);
-    setMonthPlanningSelected(planejamento.planejamentoMacroMensal[0]);
-  }, []);
-
-  planejamento.planejamentoMacroMensal.forEach((element, index) => {
-    selectCardData.push({
-      id: index,
-      title: `${meses[element.mes - 1]
-        .slice(0, 3)
-        .toUpperCase()}/${element.ano.slice(2, 4)}`,
-      info: [
-        `Escolas ${element.quantidadeEscolasTotal}`,
-        `Alunos ${element.quantidadeAlunosTotal}`,
-        `UPS: ${element.upsTotal}`,
-      ],
-    });
-  });
-
-  function updateMonthData(cardIndex: number) {
-    let escolasArray: EscolasPlanejamentoTabela[] = [];
-
-    planejamento.planejamentoMacroMensal[cardIndex].escolas.forEach(
+    planejamento.planejamentoMacroMensal[cardIndexSelected].escolas.forEach(
       (element) => {
         escolasArray.push({
           nome: element.nome,
@@ -113,7 +91,103 @@ export default function PlanejamentoInfo({
     );
 
     setEscolasPlanejamento(escolasArray);
+    setMonthPlanningSelected(
+      planejamento.planejamentoMacroMensal[cardIndexSelected]
+    );
+    updateSelectCardData();
+  }, [cardIndexSelected, planejamento.planejamentoMacroMensal]);
+
+  function updateSelectCardData() {
+    let newData: SelectCardData[] = [];
+    planejamento.planejamentoMacroMensal.forEach((element, index) => {
+      newData.push({
+        id: index,
+        title: `${meses[element.mes - 1]
+          .slice(0, 3)
+          .toUpperCase()}/${element.ano.slice(2, 4)}`,
+        info: [
+          `Escolas ${element.quantidadeEscolasTotal}`,
+          `Alunos ${element.quantidadeAlunosTotal}`,
+          `UPS: ${element.upsTotal}`,
+        ],
+      });
+    });
+
+    setSelectCardData(newData);
+  }
+
+  function updateMonthData(cardIndex: number) {
+    let escolasArray: EscolasPlanejamentoTabela[] = [];
+    planejamento.planejamentoMacroMensal[cardIndex].escolas.forEach(
+      (element) => {
+        escolasArray.push({
+          nome: element.nome,
+          quantidadeAlunos: element.quantidadeAlunos,
+          custoLogistico: numeroCustoLogistico(element.distanciaPolo),
+          uf: element.uf,
+          ups: element.ups,
+        });
+      }
+    );
+
+    setCardIndexSelected(cardIndex);
+    setEscolasPlanejamento(escolasArray);
     setMonthPlanningSelected(planejamento.planejamentoMacroMensal[cardIndex]);
+    updateSelectCardData();
+  }
+
+  async function sendDeleteEscola() {
+    const newInfoPlanejamentoMacro = planejamento?.planejamentoMacroMensal.map(
+      (p) => {
+        if (p === monthPlanningSelected) {
+          const escolasFiltradas = p?.escolas.filter(
+            (e) =>
+              escolaSelected?.nome !== e.nome &&
+              escolaSelected?.quantidadeAlunos !== e.quantidadeAlunos &&
+              escolaSelected?.uf !== e.uf
+          );
+          return { ...p, escolas: escolasFiltradas };
+        }
+        return p;
+      }
+    );
+
+    var newPlanejamento = planejamento;
+    newPlanejamento.planejamentoMacroMensal = newInfoPlanejamentoMacro;
+
+    let planejamentoMesesInfo: PlanejamentoMacroMesUpdate[] =
+      newPlanejamento!.planejamentoMacroMensal.map((element) => ({
+        mes: element.mes,
+        ano: element.ano,
+        escolas: element.escolas.map((escola) => escola.id),
+      }));
+
+    let bodyRequest: AtualizarPlanejamento = {
+      nome: newPlanejamento!.nome,
+      planejamentoMacroMensal: planejamentoMesesInfo,
+    };
+
+    if (newPlanejamento) {
+      await updatePlanejamento(planejamento.id, bodyRequest)
+        .then((response) => {
+          notification.success({
+            message: "Escolas Deletada do Planejamento com Sucesso!",
+          });
+          planejamento = response;
+        })
+        .catch((error) => {
+          notification.error({
+            message: "Falha ao Deletar Escolas do Planejamento.",
+          });
+        });
+    }
+
+    if (planejamento.planejamentoMacroMensal.length - 1 > cardIndexSelected) {
+      setCardIndexSelected(0);
+    }
+
+    updateMonthData(cardIndexSelected);
+    setShowDeletarDialog(false);
   }
 
   return (
@@ -127,15 +201,16 @@ export default function PlanejamentoInfo({
           escolaId={escolaAtual.idEscola.toString()}
         />
       )}
-      {/* {showDeletarEscolaPlanejamento && (
+      {showDeletarDialog && (
         <DeletarEscolaDialog
-          id=""
-          nome={showDeletarEscolaPlanejamento.nome}
+          infoMes={monthPlanningSelected}
+          escola={escolaSelected!}
           closeDialog={(deletou) => {
-            setShowDeletarEscolaPlanejamento(null);
+            setShowDeletarDialog(false);
           }}
+          onConfirm={sendDeleteEscola}
         />
-      )} */}
+      )}
       {showAlterarMesEscola && (
         <ModalAlterarEscola
           onClose={() => {
@@ -205,10 +280,8 @@ export default function PlanejamentoInfo({
                       setShowAlterarMesEscola(true);
                     }}
                     onDeleteRow={() => {
-                      setShowDeletarEscolaPlanejamento({
-                        nome: e.nome,
-                        id: "",
-                      });
+                      setEscolaSelected(e);
+                      setShowDeletarDialog(true);
                     }}
                     onDetailRow={(_) => {
                       const escolaEncontrada = escolasBanco?.find((escola) => {

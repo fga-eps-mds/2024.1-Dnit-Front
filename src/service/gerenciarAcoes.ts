@@ -52,6 +52,14 @@ export async function deleteEscolaPlanejamento(idEscola: string): Promise<Respon
     }
 }
 
-export async function updatePlanejamento(id: string, data: AtualizarPlanejamento): Promise<ResponseStatus> {
-    return update<AtualizarPlanejamento>(`${URL.criaPlanejamento}/${id}`, data);
+export async function updatePlanejamento(id: string, data: AtualizarPlanejamento): Promise<PlanejamentoMacro> {
+    try {
+        const response: AxiosResponse<PlanejamentoMacro> = await axios.put(
+            `${URL.criaPlanejamento}/${id}`, data
+        );
+        return response.data
+    } catch (error){
+        console.log(error);
+        throw error;
+    }
 } 
