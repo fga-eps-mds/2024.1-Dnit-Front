@@ -7,16 +7,33 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-// describe("Testes para componente FatorForm", () => {
-//     it("Deve renderizar o componente", () => {
-//         const screen = render(
-//             <MemoryRouter>
-//                 <FatorForm fator={undefined} onSaveFator={(f) => {}}></FatorForm>
-//             </MemoryRouter>
-//         )
+const FatorTeste = 
+{
+    nome: "string",
+    peso: 0,
+    ativo: true,
+    primario: false,
+    fatorCondicoes: [
+      {
+        propriedade: "4",
+        operador: "1",
+        valor: [
+          "27"
+        ],
+      }
+    ]
+  }
 
-//         expect(screen.getByText("Teste")).toBeInTheDocument();
-//         expect(screen.getByText("Cancelar")).toBeInTheDocument();
-//         expect(screen.getByText("Salvar")).toBeInTheDocument();
-//     })
-// }) 
+describe("Testes para componente FatorForm", () => {
+    it("Deve renderizar o componente", () => {
+        const screen = render(
+            <MemoryRouter>
+                <FatorForm fator={FatorTeste} onSaveFator={(f) => {}}></FatorForm>
+            </MemoryRouter>
+        )
+
+        expect(screen.getByText("string")).toBeInTheDocument();
+        expect(screen.getByText("Cancelar")).toBeInTheDocument();
+        expect(screen.getByText("Salvar")).toBeInTheDocument();
+    })
+}) 
