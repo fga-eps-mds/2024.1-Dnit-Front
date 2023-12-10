@@ -1,5 +1,29 @@
-import {fireEvent, render, screen} from "@testing-library/react";
+import {fireEvent, render, screen, waitFor} from "@testing-library/react";
 import ModalAdicionarEscola from "../../components/GerenciarAcoesModal/AdicionarEscola";
+import {planejamento, planejamento2} from "../stub/planejamentoModelos";
+import server from "../mock/servicosAPI";
+import localStorageMock from "../mock/memoriaLocal";
+import {MemoryRouter} from "react-router-dom";
+import DeletarPlanejamentoDialog from "../../components/DeletarPlanejamentoDialog";
+
+beforeAll(() => server.listen());
+beforeEach(() => {
+    Object.defineProperty(window, "localStorage", { value: localStorageMock });
+});
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+window.matchMedia = jest.fn().mockImplementation((query) => {
+    return {
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
+    };
+});
 
 describe('Modal adicionar Escola', () => {
 
@@ -8,6 +32,8 @@ describe('Modal adicionar Escola', () => {
         render(
             <div>
                 {aberto && <ModalAdicionarEscola
+                    planejamento={planejamento}
+                    infoMes={planejamento.planejamentoMacroMensal[0]}
                     onClose={() => { aberto = false; }}
                 />}
             </div>
@@ -22,6 +48,8 @@ describe('Modal adicionar Escola', () => {
         render(
             <div>
                 {aberto && <ModalAdicionarEscola
+                    planejamento={planejamento}
+                    infoMes={planejamento.planejamentoMacroMensal[0]}
                     onClose={() => { aberto = false; }}
                 />}
             </div>
@@ -37,6 +65,8 @@ describe('Modal adicionar Escola', () => {
         render(
             <div>
                 {aberto && <ModalAdicionarEscola
+                    planejamento={planejamento}
+                    infoMes={planejamento.planejamentoMacroMensal[0]}
                     onClose={() => { aberto = false; }}
                 />}
             </div>
@@ -52,6 +82,8 @@ describe('Modal adicionar Escola', () => {
         render(
             <div>
                 {aberto && <ModalAdicionarEscola
+                    planejamento={planejamento}
+                    infoMes={planejamento.planejamentoMacroMensal[0]}
                     onClose={() => { aberto = false; }}
                 />}
             </div>
@@ -60,6 +92,43 @@ describe('Modal adicionar Escola', () => {
         expect(screen.getByText('Adicionar')).toBeInTheDocument();
         fireEvent.click(screen.getByText("Adicionar"));
         expect(aberto).toEqual(false);
+    });
+
+
+    it('deve fechar ao clicar no overlay', async () => {
+        let aberto = true;
+        render(
+            <div>
+                {aberto && <ModalAdicionarEscola
+                    planejamento={planejamento}
+                    infoMes={planejamento.planejamentoMacroMensal[0]}
+                    onClose={() => { aberto = false; }}
+                />}
+            </div>
+        );
+
+        const overlay = screen.getByTestId('overlay');
+        fireEvent.click(overlay);
+        expect(aberto).not.toBeTruthy();
+    });
+
+    it('deve mostrar notificação de erro', async () => {
+        let aberto = true;
+        render(
+            <div>
+                {aberto && <ModalAdicionarEscola
+                    planejamento={planejamento}
+                    infoMes={planejamento2.planejamentoMacroMensal[0]}
+                    onClose={() => { aberto = false; }}
+                />}
+            </div>
+        );
+
+        const overlay = screen.getByText('Adicionar');
+        fireEvent.click(overlay);
+        await waitFor(() => {
+            expect(screen.queryAllByText('Falha em Adicionar Escolas ao Planejamento.')).not.toHaveLength(0);
+        });
     });
     
 })
