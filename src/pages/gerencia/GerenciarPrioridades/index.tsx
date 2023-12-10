@@ -5,7 +5,7 @@ import Header from "../../../components/Header";
 import TrilhaDeNavegacao from "../../../components/Navegacao";
 import "./styles.css"
 import FatorForm from "../../../components/FatorForm";
-import { fetchCustosLogisticos, fetchFatoresPriorizacao, fetchPorte, fetchPropriedades } from "../../../service/prioridadeApi";
+import { adicionarFatorPriorizacao, editarFatorPriorizacao, fetchCustosLogisticos, fetchFatoresPriorizacao, fetchPorte, fetchPropriedades } from "../../../service/prioridadeApi";
 import { CustoLogisticoModel } from "../../../models/prioridade";
 import { FilterOptions } from "../GerenciarUsuario";
 import { fetchEtapasDeEnsino, fetchMunicipio, fetchSituacao, fetchUnidadeFederativa } from "../../../service/escolaApi";
@@ -17,7 +17,7 @@ export default function GerenciarPrioridades() {
     const [parametrosCusto, setParametrosCusto] = useState<CustoLogisticoModel[]>([]);
     const paginas = [{nome: "Configuração de Pesos do Ranque", link: "/gerenciarPrioridades"}];
     const [propriedades, setPropriedades] = useState<FilterOptions[]>([]);
-    const [outrosFatores, setOutrosFatores] = useState<FatorModel[]>([]);
+    const [listaFatores, setListaFatores] = useState<FatorModel[]>([]);
     const [fatorUPS, setFatorUPS] = useState<FatorModel>();
     const [fatorCusto, setFatorCusto] = useState<FatorModel>();
     const [notificationApi, notificationContextHandler] = notification.useNotification();
@@ -31,13 +31,29 @@ export default function GerenciarPrioridades() {
     const obterListaFatores = () => {
         fetchFatoresPriorizacao()
             .then((fs) => {
-                setFatorUPS(fs.find(f => f.nome === "UPS" && f.primario));
-                setFatorCusto(fs.find(f => f.nome === "Custo Logistico" && f.primario))
-                setOutrosFatores(fs.filter(f => !f.primario));
+                setListaFatores(fs);
+                // setFatorUPS(fs.find(f => f.nome === "UPS" && f.primario));
+                // setFatorCusto(fs.find(f => f.nome === "Custo Logistico" && f.primario))
+                // setOutrosFatores(fs.filter(f => !f.primario));
             })
             .catch(error => notificationApi.error({ message: 'Falha ao obter fatores de priorização.' + (error?.response?.data || '') }))
     }
 
+    const salvarFator = (fator: FatorModel) => {
+        if (fator.id) {
+            console.log(fator)
+            editarFatorPriorizacao(fator.id, fator)
+                .then((fatorAtualizado) => {
+                    notification.success({message: 'O fator foi editado com sucesso!'});
+                    setListaFatores(listaFatores.map((f => f.id === fator.id ? fatorAtualizado : f)))
+                })
+                .catch(error => notificationApi.error({ message: 'Falha ao editar fator.' + (error?.response?.data || '') }));
+        }
+        else
+        {
+            console.log(fator)
+        }
+    }
 
     const obterPropriedadesCondicao = () => {
         fetchPropriedades()
@@ -118,7 +134,7 @@ export default function GerenciarPrioridades() {
             key: '1',
             label: 'UPS',
             children: (
-                <FatorForm fator={fatorUPS}></FatorForm>
+                <FatorForm onSaveFator={salvarFator} fator={listaFatores.find(f => f.nome === "UPS" && f.primario)}></FatorForm>
             )
         },
         {
@@ -126,7 +142,7 @@ export default function GerenciarPrioridades() {
             label: "Custo Logístico",
             children: (
                 <div className="custo-logistico">
-                    <FatorForm fator={fatorCusto}></FatorForm>
+                    <FatorForm fator={listaFatores.find(f => f.nome === "Custo Logistico" && f.primario)} onSaveFator={salvarFator}></FatorForm>
                     <div className="custo-table">
                         <p>Parâmetros do Custo Logístico</p>
                         <table>
@@ -167,8 +183,11 @@ export default function GerenciarPrioridades() {
             children: (
                 <div>
                     <button data-testid="botaoAdicionarFator" className="br-button primary" type="button" onClick={() => {}}>Novo Fator</button>
-                    {outrosFatores.map((item) => (
-                        <FatorForm key={item.id} fator={item} condicaoUfs={ListaUfs} propriedades={propriedades} municipios={listaMunicipios} situacoes ={opcoesSituacao.map(s => ({id : s.id.toString(), rotulo: s.descricao}))} etapasEnsino = {etapas} porte = {listaPortesEscolas}></FatorForm>
+                    {listaFatores.filter(f => !f.primario).map((item) => (
+                        <FatorForm key={item.id} fator={item} condicaoUfs={ListaUfs} 
+                        propriedades={propriedades} municipios={listaMunicipios} 
+                        situacoes ={opcoesSituacao.map(s => ({id : s.id.toString(), rotulo: s.descricao}))} 
+                        etapasEnsino = {etapas} porte = {listaPortesEscolas} onSaveFator={salvarFator} />
                     ))}
                 </div>
                 //<FatorForm nome="Teste" condicaoUfs={ListaUfs} propriedades={propriedades} municipios={listaMunicipios} situacoes ={opcoesSituacao.map(s => ({id : s.id.toString(), rotulo: s.descricao}))} etapasEnsino = {etapas} porte = {listaPortesEscolas}></FatorForm>

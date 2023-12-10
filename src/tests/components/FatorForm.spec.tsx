@@ -11,7 +11,7 @@ describe("Testes para componente FatorForm", () => {
     it("Deve renderizar o componente", () => {
         const screen = render(
             <MemoryRouter>
-                <FatorForm fator={undefined}></FatorForm>
+                <FatorForm fator={undefined} onSaveFator={(f) => {}}></FatorForm>
             </MemoryRouter>
         )
 

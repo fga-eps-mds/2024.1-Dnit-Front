@@ -30,9 +30,16 @@ export async function deletarFatorPriorizacao(id: string): Promise<ResponseStatu
     }
 }
 
-// export async function editarFatorPriorizacao(id: string, novoFator: FatorModel): Promise<ResponseStatus> {
-
-// }
+export async function editarFatorPriorizacao(id: string, novoFator: FatorModel): Promise<FatorModel> {
+    const url = `${URL.editarFator}/${id}`;
+    try {
+        const response: AxiosResponse<FatorModel> = await axios.put(url, novoFator);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
 
 export async function editarCustosLogisticos(items: CustoLogisticoModel[]): Promise<ResponseStatus>{
     return update(URL.editarCustosLogisticos, items);

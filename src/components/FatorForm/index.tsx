@@ -9,6 +9,7 @@ import FatorCondicaoSelect from "../FatorCondicaoSelect";
 
 interface FatorProps {
     fator: FatorModel | undefined;
+    onSaveFator: (fator: FatorModel) => void;
     condicaoUfs?: FilterOptions[];
     propriedades?: FilterOptions[];
     municipios?: FilterOptions[];
@@ -17,13 +18,13 @@ interface FatorProps {
     porte?: FilterOptions[];
 }
 
-
-export default function FatorForm ({ fator, condicaoUfs, propriedades, municipios, situacoes, etapasEnsino, porte }: FatorProps) {
+export default function FatorForm ({ fator, onSaveFator, condicaoUfs, propriedades, municipios, situacoes, etapasEnsino, porte }: FatorProps) {
     const [nomeFator, setNomeFator] = useState(fator?.nome ?? "");
     const [pesoFator, setPesoFator] = useState(fator?.peso ?? 0);
     const [ativo, setAtivo] = useState(fator?.ativo ?? true);
-    const [listaCondicoes, setListaCondicoes] = useState<Condicao[]>([])
-    const [condicaoAtual, setCondicaoAtual] = useState<Condicao>()
+    const [listaCondicoes, setListaCondicoes] = useState<Condicao[]>(fator?.fatorCondicoes ?? []);
+    const [condicaoAtual, setCondicaoAtual] = useState<Condicao>();
+
     const fatorAtualizado: FatorModel = 
     {
         id: fator?.id,
@@ -31,8 +32,8 @@ export default function FatorForm ({ fator, condicaoUfs, propriedades, municipio
         peso: pesoFator,
         ativo: ativo,
         primario: fator?.primario ?? false,
-        fatorCondicoes: listaCondicoes
-    }
+        fatorCondicoes: listaCondicoes,
+    };
 
     return (
         <div className="fator-form">
@@ -61,8 +62,8 @@ export default function FatorForm ({ fator, condicaoUfs, propriedades, municipio
                 <label>Ativo:</label>
             </div>
             <div className="d-flex w-100 justify-content-start">
-                <button disabled={fator?.primario || !fator?.id} data-testid="botaoExcluir" className="br-button primary" type="button" onClick={() => {}}>Excluir</button>
-                <button data-testid="botaoSalvar" className="br-button primary" type="button" onClick={() => {}}>Salvar</button>
+                <button disabled={fator?.primario || !fator?.id} data-testid="botaoExcluir" className="br-button primary" type="button">Excluir</button>
+                <button data-testid="botaoSalvar" className="br-button primary" type="button" onClick={() => onSaveFator(fatorAtualizado)}>Salvar</button>
             </div>
         </div>
     )
