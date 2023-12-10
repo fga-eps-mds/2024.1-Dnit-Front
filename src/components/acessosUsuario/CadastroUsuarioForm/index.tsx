@@ -292,7 +292,8 @@ const CadastroUsuarioForm: React.FC = () => {
               >
                 <Autocomplete
                   disablePortal
-                  id="combo-box-demo"
+                  id="combo-box"
+                  data-testid="autocomplete"
                   options={empresas.current.map((e) => e.razaoSocial)}
                   value={empresaSelecionada}
                   onChange={(event, newValue) =>
@@ -302,6 +303,7 @@ const CadastroUsuarioForm: React.FC = () => {
                   className="inputForm"
                   renderInput={(params) => (
                     <TextField
+                      data-testid="autocomplete-field"
                       {...params}
                       InputLabelProps={{ shrink: false }}
                     />
