@@ -5,7 +5,7 @@ import Header from "../../../components/Header";
 import TrilhaDeNavegacao from "../../../components/Navegacao";
 import "./styles.css"
 import FatorForm from "../../../components/FatorForm";
-import { adicionarFatorPriorizacao, editarCustosLogisticos, editarFatorPriorizacao, fetchCustosLogisticos, fetchFatoresPriorizacao, fetchPorte, fetchPropriedades } from "../../../service/prioridadeApi";
+import { adicionarFatorPriorizacao, deletarFatorPriorizacao, editarCustosLogisticos, editarFatorPriorizacao, fetchCustosLogisticos, fetchFatoresPriorizacao, fetchPorte, fetchPropriedades } from "../../../service/prioridadeApi";
 import { CustoLogisticoModel } from "../../../models/prioridade";
 import { FilterOptions } from "../GerenciarUsuario";
 import { fetchEtapasDeEnsino, fetchMunicipio, fetchSituacao, fetchUnidadeFederativa } from "../../../service/escolaApi";
@@ -58,6 +58,16 @@ export default function GerenciarPrioridades() {
         {
             console.log(fator)
         }
+    }
+
+    const excluirFator = (fator: FatorModel) => {
+        if (fator.id)
+            deletarFatorPriorizacao(fator.id)
+                .then(() => {
+                    notification.success({message: `O fator ${fator.nome} foi excluído com sucesso!`});
+                    setListaFatores(listaFatores.filter(f => f.id !== fator.id))
+                })
+                .catch(error => notificationApi.error({ message: 'Falha ao deletar o fator.' + (error?.response?.data || '') }));
     }
 
     const handleParametroCustoChange = (item: CustoLogisticoModel, parametro: string, novoValor: number) => {
@@ -222,7 +232,7 @@ export default function GerenciarPrioridades() {
                         <FatorForm key={item.id} fator={item} condicaoUfs={ListaUfs} 
                         propriedades={propriedades} municipios={listaMunicipios} 
                         situacoes ={opcoesSituacao.map(s => ({id : s.id.toString(), rotulo: s.descricao}))} 
-                        etapasEnsino = {etapas} porte = {listaPortesEscolas} onSaveFator={salvarFator} />
+                        etapasEnsino = {etapas} porte = {listaPortesEscolas} onSaveFator={salvarFator} onDeleteFator={excluirFator}/>
                     ))}
                 </div>
                 //<FatorForm nome="Teste" condicaoUfs={ListaUfs} propriedades={propriedades} municipios={listaMunicipios} situacoes ={opcoesSituacao.map(s => ({id : s.id.toString(), rotulo: s.descricao}))} etapasEnsino = {etapas} porte = {listaPortesEscolas}></FatorForm>
