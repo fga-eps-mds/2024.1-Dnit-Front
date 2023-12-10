@@ -69,8 +69,9 @@ export default function GerenciarPrioridades() {
         else
         {
             adicionarFatorPriorizacao(fator)
-                .then((fatorAtualizado) => {
+                .then((fatorAdicionado) => {
                     notification.success({message: `O fator ${fator.nome} foi adicionado com sucesso!`});
+                    setListaFatores(listaFatores.map((f => f.id === fator.id ? fatorAdicionado : f)))
                 })
         }
     }
