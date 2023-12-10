@@ -8,7 +8,7 @@ import { Condicao, FatorModel, Localizacao, Operador, Rede } from "../../models/
 import FatorCondicaoSelect from "../FatorCondicaoSelect";
 
 interface FatorProps {
-    fator: FatorModel | undefined;
+    fator: FatorModel;
     onSaveFator: (fator: FatorModel) => void;
     condicaoUfs?: FilterOptions[];
     propriedades?: FilterOptions[];
@@ -18,32 +18,45 @@ interface FatorProps {
     porte?: FilterOptions[];
 }
 
-export default function FatorForm ({ fator, onSaveFator, condicaoUfs, propriedades, municipios, situacoes, etapasEnsino, porte }: FatorProps) {
+export default function FatorForm ({ fator, onSaveFator, condicaoUfs, propriedades, municipios, situacoes, etapasEnsino, porte }: FatorProps) { 
     const [nomeFator, setNomeFator] = useState(fator?.nome ?? "");
     const [pesoFator, setPesoFator] = useState(fator?.peso ?? 0);
     const [ativo, setAtivo] = useState(fator?.ativo ?? true);
     const [listaCondicoes, setListaCondicoes] = useState<Condicao[]>(fator?.fatorCondicoes ?? []);
     const [condicaoAtual, setCondicaoAtual] = useState<Condicao>();
-
-    const fatorAtualizado: FatorModel = 
-    {
-        id: fator?.id,
-        nome: nomeFator,
-        peso: pesoFator,
-        ativo: ativo,
-        primario: fator?.primario ?? false,
-        fatorCondicoes: listaCondicoes,
-    };
-
+    
+    // const fatorAtualizado: FatorModel = 
+    // {
+    //     id: fator?.id,
+    //     nome: fator?.nome ?? "",
+    //     peso: fator?.peso ?? 0,
+    //     ativo: fator?.ativo ?? true,
+    //     primario: fator?.primario ?? false,
+    //     fatorCondicoes: fator?.fatorCondicoes ?? [],
+    // };
+    
+    const handleSaveButton = () => {
+        const fatorAtualizado: FatorModel = 
+        {
+            id: fator?.id,
+            nome: nomeFator,
+            peso: pesoFator,
+            ativo: ativo,
+            primario: fator?.primario ?? false,
+            fatorCondicoes: listaCondicoes
+        }
+        onSaveFator(fatorAtualizado);
+    }
+    
     return (
         <div className="fator-form">
             <div className="br-input input-inline">
                 <label>Fator:</label>
-                <input defaultValue={fator?.nome} readOnly={fator?.primario} onChange={e => setNomeFator(e.target.value)}></input>
+                <input defaultValue={nomeFator} readOnly={fator?.primario} onChange={e => setNomeFator(e.target.value)}></input>
             </div>
             <div className="br-input input-inline">
                 <label>Peso:</label>
-                <input type="number" defaultValue={fator?.peso} onChange={e => setPesoFator(e.target.valueAsNumber)}></input>
+                <input type="number" defaultValue={pesoFator} onChange={e => setPesoFator(e.target.valueAsNumber)}></input>
             </div>
             {!fator?.primario && <div className="br-input input-inline" style={{width: "700px"}}>
                 <label>Condições:</label>
@@ -63,7 +76,7 @@ export default function FatorForm ({ fator, onSaveFator, condicaoUfs, propriedad
             </div>
             <div className="d-flex w-100 justify-content-start">
                 <button disabled={fator?.primario || !fator?.id} data-testid="botaoExcluir" className="br-button primary" type="button">Excluir</button>
-                <button data-testid="botaoSalvar" className="br-button primary" type="button" onClick={() => onSaveFator(fatorAtualizado)}>Salvar</button>
+                <button data-testid="botaoSalvar" className="br-button primary" type="button" onClick={handleSaveButton}>Salvar</button>
             </div>
         </div>
     )

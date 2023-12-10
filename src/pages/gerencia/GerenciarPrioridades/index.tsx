@@ -40,6 +40,11 @@ export default function GerenciarPrioridades() {
     }
 
     const salvarFator = (fator: FatorModel) => {
+        if (fator.nome === "") {
+            console.log("Fator deve ter um nome!");
+            return;
+        }
+        
         if (fator.id) {
             console.log(fator)
             editarFatorPriorizacao(fator.id, fator)
@@ -102,6 +107,10 @@ export default function GerenciarPrioridades() {
     },[])
 
     useEffect(() => {
+        obterListaFatores();
+    }, [])
+
+    useEffect(() => {
         getSituacao();
     },[]);
 
@@ -125,24 +134,24 @@ export default function GerenciarPrioridades() {
         obterPortesEscolas();
     },[]);
 
-    useEffect(() => {
-        obterListaFatores();
-    }, [])
-    
+    const fatorUps = listaFatores.find(f => f.nome === "UPS" && f.primario);
+    const fatorCustoLogistico = listaFatores.find(f => f.nome === "Custo Logistico" && f.primario);
+
     const items: CollapseProps['items'] = [
         {
             key: '1',
             label: 'UPS',
             children: (
-                <FatorForm onSaveFator={salvarFator} fator={listaFatores.find(f => f.nome === "UPS" && f.primario)}></FatorForm>
+                fatorUps && <FatorForm onSaveFator={salvarFator} fator={fatorUps}></FatorForm>
             )
         },
         {
             key: '2',
             label: "Custo Logístico",
             children: (
+                fatorCustoLogistico &&
                 <div className="custo-logistico">
-                    <FatorForm fator={listaFatores.find(f => f.nome === "Custo Logistico" && f.primario)} onSaveFator={salvarFator}></FatorForm>
+                    <FatorForm fator={fatorCustoLogistico} onSaveFator={salvarFator}></FatorForm>
                     <div className="custo-table">
                         <p>Parâmetros do Custo Logístico</p>
                         <table>
