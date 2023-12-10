@@ -23,12 +23,14 @@ interface CustomTableRowsProps {
   hideUsersIcon?: boolean;
   hidePlusIcon?: boolean;
   hideDownloadIcon?: boolean;
+  hideLocationIcon?: boolean;
   onDeleteRow?: (rowIndex: number) => void;
   onEditRow?: (rowIndex: number) => void;
   onDetailRow?: (rowIndex: number) => void;
   onUsersRow?: (rowIndex: number) => void;
   onPlusRow?: (rowIndex: number) => void;
   onDownload?: (rowIndex: number) => void;
+  onLocationRow?: (rowIndex: number) => void;
 }
 
 export function CustomTableRow({
@@ -40,12 +42,14 @@ export function CustomTableRow({
   onUsersRow = () => {},
   onPlusRow = () => {},
   onDownload = () => {},
+  onLocationRow = () => {},
   hideEditIcon = false,
   hideEyeIcon = false,
   hideTrashIcon = false,
   hideUsersIcon = true,
   hidePlusIcon = true,
-  hideDownloadIcon = true
+  hideDownloadIcon = true,
+  hideLocationIcon = true
 }: CustomTableRowsProps) {
   const columns = Object.keys(data);
 
@@ -89,6 +93,13 @@ export function CustomTableRow({
               className="fas fa-eye"
               aria-hidden="true"
               onClick={() => onDetailRow(id)}
+            />
+          )}
+          {!hideLocationIcon && (
+            <i data-testid={`table-location-eye-${id}`}
+              className="fas fa-location-dot"
+              aria-hidden="true"
+              onClick={() => onLocationRow(id)}
             />
           )}
           {!hideTrashIcon && (

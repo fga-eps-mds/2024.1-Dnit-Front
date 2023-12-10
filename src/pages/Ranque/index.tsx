@@ -12,8 +12,8 @@ import {
 import TrilhaDeNavegacao from '../../components/Navegacao';
 import ReactLoading from 'react-loading';
 import Table, { CustomTableRow } from '../../components/Table';
-import { fetchEscolasRanque, fetchProcessamentoRanque } from '../../service/ranqueApi';
-import { EscolaRanqueData, EscolaRanqueFiltro, ListaPaginada, RanqueProcessamentoData } from '../../models/ranque';
+import { fetchEscolaRanque, fetchEscolasRanque, fetchProcessamentoRanque } from '../../service/ranqueApi';
+import { EscolaRanqueData, EscolaRanqueDetalhes, EscolaRanqueFiltro, ListaPaginada, RanqueProcessamentoData } from '../../models/ranque';
 import { notification } from 'antd';
 import { FiltroNome } from '../../components/FiltroNome';
 import ModalExportarRanque from '../../components/ExportarRanqueModal';
@@ -33,6 +33,7 @@ function Ranque() {
   const [municipios, setMunicipios] = useState<SelectItem[]>([]);
   const [etapa, setEtapa] = useState<SelectItem | null>(null);
   const [etapas, setEtapas] = useState<SelectItem[]>([]);
+  const [escolaDetalhes, setEscolaDetalhes] = useState<EscolaRanqueDetalhes>()
 
   const [ultimoProcessamento, setUltimoProcessamento] = useState<RanqueProcessamentoData | null>(null);
 
@@ -120,7 +121,7 @@ function Ranque() {
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     const padZeros = (n: number) => n.toString().padStart(2, '0');
-    return `${padZeros(date.getDate())}/${padZeros(date.getMonth()+1)}/${date.getFullYear()} ${padZeros(date.getHours())}:${padZeros(date.getMinutes())}`
+    return `${padZeros(date.getDate())}/${padZeros(date.getMonth() + 1)}/${date.getFullYear()} ${padZeros(date.getHours())}:${padZeros(date.getMinutes())}`
   }
 
   return (
@@ -180,12 +181,29 @@ function Ranque() {
                     '3': formatEtapaEnsino(e.escola.etapaEnsino),
                     '4': e.escola.uf?.sigla || '',
                     '5': e.escola.municipio?.nome || '',
-                    '6': e.escola.distanciaPolo? e.escola.polo?.uf.sigla : '-',
-                    '7': e.escola.distanciaPolo? formataCustoLogistico(e.escola.distanciaPolo) : '-',
+                    '6': e.escola.distanciaPolo ? e.escola.polo?.uf.sigla : '-',
+                    '7': e.escola.distanciaPolo ? formataCustoLogistico(e.escola.distanciaPolo) : '-',
                   }}
                   hideTrashIcon={true}
                   hideEditIcon={true}
+                  hideLocationIcon={false}
                   onDetailRow={_ => setEscolaAtual(e)}
+                  onLocationRow={_ => {
+                    fetchEscolaRanque(e.escola.id)
+                      .then(escolaDetalhes => {
+                        let latitude = escolaDetalhes.latitude.replace(',', '.');
+                        let longitude = escolaDetalhes.longitude.replace(',', '.');
+
+                        if (latitude && longitude) {
+                          const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+                          window.open(googleMapsUrl, '_blank');
+                        }
+                      })
+                      .catch(error => {
+                        console.error("Erro ao obter detalhes da escola", error);
+                        notificationApi.error({ message: "Não foi possível encontrar essa localização" });
+                      })
+                  }}
                 />
               )
             }
