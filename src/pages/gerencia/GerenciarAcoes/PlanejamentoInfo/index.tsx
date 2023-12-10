@@ -48,7 +48,6 @@ export default function PlanejamentoInfo({
 
   useEffect(() => {
     let escolasArray: EscolasPlanejamentoTabela[] = [];
-    console.log("Calling");
 
     planejamento.planejamentoMacroMensal[0].escolas.forEach((element) => {
       escolasArray.push({

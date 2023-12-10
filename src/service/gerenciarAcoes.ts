@@ -3,6 +3,7 @@ import * as DATA from "../models/service";
 import * as URL from "../consts/service"
 import {PlanejamentoMacro} from "../models/gerenciarAcoes";
 import axios, { AxiosResponse } from "axios";
+import { AtualizarPlanejamento } from "../models/service";
 
 //envia cadastro de planejamento macro
 export async function sendPlanejamento(data: DATA.CriarPlanejamentoRequest): Promise<ResponseStatus> {
@@ -51,6 +52,6 @@ export async function deleteEscolaPlanejamento(idEscola: string): Promise<Respon
     }
 }
 
-export async function updatePlanejamento(id: string, data: PlanejamentoMacro): Promise<ResponseStatus> {
-    return update<PlanejamentoMacro>(`${URL.criaPlanejamento}/${id}`, data);
+export async function updatePlanejamento(id: string, data: AtualizarPlanejamento): Promise<ResponseStatus> {
+    return update<AtualizarPlanejamento>(`${URL.criaPlanejamento}/${id}`, data);
 } 

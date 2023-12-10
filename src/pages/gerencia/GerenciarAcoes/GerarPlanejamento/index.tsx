@@ -9,12 +9,14 @@ import PlanejamentoInfo from "../PlanejamentoInfo";
 import {
   fetchPlanejamentoId,
   sendPlanejamento,
+  updatePlanejamento,
 } from "../../../../service/gerenciarAcoes";
 import * as DATA from "../../../../models/service";
 import { AuthLocalStorage } from "../../../../provider/Autenticacao";
 import { PlanejamentoMacro } from "../../../../models/gerenciarAcoes";
 import { meses } from "../fixtures";
 import { useParams } from "react-router-dom";
+import { PlanejamentoMacroMesUpdate } from "../../../../models/service";
 
 export default function GerenciarAcoes() {
   const { id } = useParams();
@@ -102,11 +104,6 @@ export default function GerenciarAcoes() {
     }
   };
 
-  const updatePlanning = () => {
-    // Enviar request para update do nome
-    setSavedTitle(title);
-  };
-
   async function createPlanejamento(): Promise<void> {
     let planejamento: DATA.CriarPlanejamentoRequest = {
       nome: title,
@@ -124,6 +121,26 @@ export default function GerenciarAcoes() {
     setPlanejamentoInfo(planejamentoCriado);
   }
 
+  async function sendUpdatePlanejamento(): Promise<void> {
+    let newPlanejamento = planejamentoInfo;
+    newPlanejamento!.nome = title;
+    setSavedTitle(title);
+
+    let planejamentoMesesInfo: PlanejamentoMacroMesUpdate[] =
+      newPlanejamento!.planejamentoMacroMensal.map((element) => ({
+        mes: element.mes,
+        ano: element.ano,
+        escolas: element.escolas.map((escola) => escola.id),
+      }));
+
+    let bodyRequest: DATA.AtualizarPlanejamento = {
+      nome: newPlanejamento!.nome,
+      planejamentoMacroMensal: planejamentoMesesInfo,
+    };
+    await updatePlanejamento(planejamentoInfo!.id, bodyRequest);
+    setPlanejamentoInfo(newPlanejamento);
+  }
+
   useEffect(() => {
     async function fetchData() {
       if (id !== "null" && id !== undefined) {
@@ -139,7 +156,7 @@ export default function GerenciarAcoes() {
     }
 
     fetchData();
-  });
+  }, [id, planejamentoInfo?.mesFim, planejamentoInfo?.mesInicio]);
 
   return (
     <div className="App">
@@ -212,7 +229,7 @@ export default function GerenciarAcoes() {
                 buttonStyle="primary"
                 buttonType="default"
                 padding="37px"
-                onClick={() => updatePlanning()}
+                onClick={() => sendUpdatePlanejamento()}
               />
             </div>
           ) : null}

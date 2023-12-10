@@ -260,3 +260,14 @@ export interface PlanejamentoFiltrados {
   totalPaginas: number;
   items: PlanejamentoMacro[];
 }
+
+export interface AtualizarPlanejamento {
+  nome: string;
+  planejamentoMacroMensal: PlanejamentoMacroMesUpdate[];
+}
+
+export interface PlanejamentoMacroMesUpdate {
+    mes: number;
+    ano: string;
+    escolas: string[]
+}
