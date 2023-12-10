@@ -18,6 +18,8 @@ import DeletarEscolaDialog, {
 } from "../../../../components/DeletarEscolaDialog";
 import ModalAlterarEscola from "../../../../components/GerenciarAcoesModal/AlterarEscola";
 import { numeroCustoLogistico } from "../../../../utils/utils";
+import ModalRanqueEscola from "../../../../components/EscolaRanqueModal";
+import {EscolaRanqueData} from "../../../../models/ranque";
 
 interface PlanejamentoInfoProps {
   planejamento: PlanejamentoMacro;
@@ -45,7 +47,8 @@ export default function PlanejamentoInfo({
     InfoMesPlanejamentoMacro | undefined
   >();
   const selectCardData: SelectCardData[] = [];
-
+  const [escolaAtual, setEscolaAtual] = useState<EscolaRanqueData | null>();
+  
   useEffect(() => {
     let escolasArray: EscolasPlanejamentoTabela[] = [];
     console.log("Calling");
@@ -100,6 +103,13 @@ export default function PlanejamentoInfo({
 
   return (
     <div>
+      {escolaAtual != null && 
+          <ModalRanqueEscola 
+              onClose={() => { setEscolaAtual(null) }} 
+              onCreateAcao={() => { }} 
+              escolaId={escolaAtual.escola.id} 
+          />
+      }
       {showDeletarEscolaPlanejamento && (
         <DeletarEscolaDialog
           id=""
@@ -183,6 +193,7 @@ export default function PlanejamentoInfo({
                         id: "",
                       });
                     }}
+                    //TODO ADICIONAR ID NA ESCOLA onDetailRow={_ => setEscolaAtual(e)}
                   />
                 ))}
               </Table>
