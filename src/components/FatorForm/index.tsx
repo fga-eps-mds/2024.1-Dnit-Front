@@ -19,18 +19,30 @@ interface FatorProps {
 
 
 export default function FatorForm ({ fator, condicaoUfs, propriedades, municipios, situacoes, etapasEnsino, porte }: FatorProps) {
+    const [nomeFator, setNomeFator] = useState(fator?.nome ?? "");
+    const [pesoFator, setPesoFator] = useState(fator?.peso ?? 0);
+    const [ativo, setAtivo] = useState(fator?.ativo ?? true);
     const [listaCondicoes, setListaCondicoes] = useState<Condicao[]>([])
     const [condicaoAtual, setCondicaoAtual] = useState<Condicao>()
+    const fatorAtualizado: FatorModel = 
+    {
+        id: fator?.id,
+        nome: nomeFator,
+        peso: pesoFator,
+        ativo: ativo,
+        primario: fator?.primario ?? false,
+        fatorCondicoes: listaCondicoes
+    }
 
     return (
         <div className="fator-form">
             <div className="br-input input-inline">
                 <label>Fator:</label>
-                <input defaultValue={fator?.nome} readOnly={fator?.primario}></input>
+                <input defaultValue={fator?.nome} readOnly={fator?.primario} onChange={e => setNomeFator(e.target.value)}></input>
             </div>
             <div className="br-input input-inline">
                 <label>Peso:</label>
-                <input type="number" defaultValue={fator?.peso}></input>
+                <input type="number" defaultValue={fator?.peso} onChange={e => setPesoFator(e.target.valueAsNumber)}></input>
             </div>
             {!fator?.primario && <div className="br-input input-inline" style={{width: "700px"}}>
                 <label>Condições:</label>
@@ -44,8 +56,8 @@ export default function FatorForm ({ fator, condicaoUfs, propriedades, municipio
                     }}></i>
                 </div>
             </div>}
-            <div className="br-switch icon">
-                <input id="switch-icon" type="checkbox" defaultChecked={true}/>
+            <div className="br-switch icon" onClick={() => setAtivo(!ativo)}>
+                <input id="switch-icon" type="checkbox" checked={ativo} />
                 <label>Ativo:</label>
             </div>
             <div className="d-flex w-100 justify-content-start">
