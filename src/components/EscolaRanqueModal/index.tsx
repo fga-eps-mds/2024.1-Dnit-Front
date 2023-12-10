@@ -30,18 +30,12 @@ function Label({ children, className }: LabelProps) {
 const ModalRanqueEscola: React.FC<ModalProps> = ({ escolaId, onClose, onCreateAcao }) => {
 
     const [escolaSelecionada, setEscolaSelecionada] = useState<EscolaRanqueDetalhes | null>(null);
-    const [superintendenciaSelecionada, setSuperintendenciaSelecionada] = useState<Superintendencia | undefined>();
-
-    const fetchSuperintendenciaSelecionada = async (superintendenciaId?: number) => {
-        const superintendencia = await fetchSuperintendenciaData(superintendenciaId);
-        setSuperintendenciaSelecionada(superintendencia);
-    }
+    
 
     useEffect(() => {
         fetchEscolaRanque(escolaId)
             .then((escola) => {
                 setEscolaSelecionada(escola);
-                fetchSuperintendenciaSelecionada(escola.superintendencia?.id);
             }
             )
 
@@ -117,13 +111,6 @@ const ModalRanqueEscola: React.FC<ModalProps> = ({ escolaId, onClose, onCreateAc
                         </div>
                     </div>
                     <hr />
-                    <div className='d-flex flex-column '>
-                        <Label><strong>Superintendência</strong></Label>
-                        <Label>Distância: {escolaSelecionada.distanciaSuperintendencia?.toFixed(2)} Km</Label>
-                        <Label>Endereço: {superintendenciaSelecionada?.endereco}</Label>
-                        <Label>Cep: {superintendenciaSelecionada?.cep}</Label>
-                        <Label>UF: {superintendenciaSelecionada?.uf}</Label>
-                    </div>
                 </div>
             </div>
             <br />

@@ -18,6 +18,9 @@ import DeletarEscolaDialog, {
 } from "../../../../components/DeletarEscolaDialog";
 import ModalAlterarEscola from "../../../../components/GerenciarAcoesModal/AlterarEscola";
 import { numeroCustoLogistico } from "../../../../utils/utils";
+import {fetchListarEscolasFiltradas} from "../../../../service/escolaApi";
+import {EscolaData} from "../../../../models/service";
+import ModalRanqueEscola from "../../../../components/EscolaRanqueModal";
 
 interface PlanejamentoInfoProps {
   planejamento: PlanejamentoMacro;
@@ -45,7 +48,26 @@ export default function PlanejamentoInfo({
     InfoMesPlanejamentoMacro | undefined
   >();
   const selectCardData: SelectCardData[] = [];
+  const [escolaAtual, setEscolaAtual] = useState<EscolaData | null>();
+  const [escolasBanco, setEscolasBanco] = useState<EscolaData[]>();
+  
+  useEffect(() => {
+    fetchListarEscolasFiltradas({
+      params: {
+        Pagina: 1,
+        TamanhoPagina: 10000,
+        Nome: "",
+        IdSituacao: "",
+        IdMunicipio: "",
+        IdUf: "",
+      },
+    })
+        .then((escolas) => {
+          setEscolasBanco(escolas.escolas);
+        })
 
+  }, []);
+  
   useEffect(() => {
     let escolasArray: EscolasPlanejamentoTabela[] = [];
 
@@ -98,6 +120,13 @@ export default function PlanejamentoInfo({
 
   return (
     <div className="planning-info-container">
+      {escolaAtual != null && 
+          <ModalRanqueEscola 
+              onClose={() => { setEscolaAtual(null) }} 
+              onCreateAcao={() => { }} 
+              escolaId={escolaAtual.idEscola.toString()} 
+          />
+      }
       {showDeletarEscolaPlanejamento && (
         <DeletarEscolaDialog
           id=""
@@ -180,6 +209,17 @@ export default function PlanejamentoInfo({
                         nome: e.nome,
                         id: "",
                       });
+                    }}
+                    onDetailRow={_ => {
+                      const escolaEncontrada = escolasBanco?.find((escola) => {
+                        return (
+                            escola.nomeEscola === e.nome &&
+                            escola.siglaUf === e.uf &&
+                            escola.numeroTotalDeAlunos === e.quantidadeAlunos
+                        );
+                      });
+                      if(escolaEncontrada && escolaEncontrada.idEscola) setEscolaAtual(escolaEncontrada);
+                      
                     }}
                   />
                 ))}
