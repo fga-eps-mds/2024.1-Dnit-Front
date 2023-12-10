@@ -96,7 +96,7 @@ export function CustomTableRow({
             />
           )}
           {!hideLocationIcon && (
-            <i data-testid={`table-location-eye-${id}`}
+            <i data-testid={`table-row-location-${id}`}
               className="fas fa-location-dot"
               aria-hidden="true"
               onClick={() => onLocationRow(id)}

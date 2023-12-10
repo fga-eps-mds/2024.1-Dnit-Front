@@ -282,6 +282,7 @@ describe("CustomTable Component", () => {
     const onViewButtonMock = jest.fn();
     const onTrashButtonMock = jest.fn();
     const onPlusButtonMock = jest.fn();
+    const onLocationButtonMock = jest.fn();
 
     const id = 1;
     
@@ -306,10 +307,12 @@ describe("CustomTable Component", () => {
             hideEyeIcon={false}
             hideTrashIcon={false}
             hidePlusIcon={false}
+            hideLocationIcon={false}
             onDeleteRow={onTrashButtonMock}
             onEditRow={onEditButtonMock}
             onDetailRow={onViewButtonMock}
             onPlusRow={onPlusButtonMock}
+            onLocationRow={onLocationButtonMock}
           />
         ))}
       </CustomTable>
@@ -329,6 +332,10 @@ describe("CustomTable Component", () => {
 
     const buttonPlus = screen.getByTestId(`table-row-plus-${id}`)
     fireEvent.click(buttonPlus);
+    expect(onPlusButtonMock).toHaveBeenCalledWith(id);
+
+    const buttonLocation = screen.getByTestId(`table-row-location-${id}`)
+    fireEvent.click(buttonLocation);
     expect(onPlusButtonMock).toHaveBeenCalledWith(id);
   });
 

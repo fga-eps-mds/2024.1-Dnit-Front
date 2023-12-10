@@ -920,6 +920,68 @@ const server = setupServer(
     ],
     temSolicitacao: true,
   }))),
+  rest.get(`${listarEscolasRanque}/id-4`, (_, res, ctx) => res(ctx.json({
+    ranqueInfo: {
+      ranqueId: 1,
+      pontuacao: 1000,
+      posicao: 1,
+      fatores: [
+        {
+          nome: "UPS",
+          peso: 1,
+          valor: 1454
+        }
+      ],
+    },
+    id: '1',
+    codigo: '123',
+    nome: 'escola teste',
+    cep: '72844654',
+    endereco: 'endereco',
+    longitude: '9,0893',
+    latitude: '-15,0987',
+    totalDocentes: 10,
+    totalAlunos: 10,
+    telefone: '40028922',
+    uf: {
+      id: 1,
+      sigla: 'DF',
+      nome: 'Distrito Federal'
+    },
+    municipio: {
+      id: 1,
+      nome: 'municipio'
+    },
+    rede: {
+      id: 'Municipal',
+      nome: 'Municipal',
+    },
+    porte: {
+      id: 'Entre51e200',
+      descricao: 'Entre 51 e 200 matrículas de escolarização'
+    },
+    localizacao: {
+      id: 'Urbana',
+      descricao: 'Urbana'
+    },
+    situacao: {
+      id: 'Critica',
+      descricao: 'Critica',
+    },
+    etapasEnsino: [
+      {
+        id: '1',
+        descricao: 'etapa'
+      },
+      {
+        id: '2',
+        descricao: 'etapa 2'
+      }
+    ],
+    temSolicitacao: true,
+  }))),
+  rest.get(`${listarEscolasRanque}/id-3`,
+    (req, res, ctx) => res(ctx.status(400), ctx.body("erro"))),
   rest.get(`${listarEscolasRanque}/2`, (_, res, ctx) => res(ctx.json({
     ranqueInfo: {
       ranqueId: 2,
