@@ -12,7 +12,10 @@ import Table, { CustomTableRow } from "../../../../components/Table";
 import ReactLoading from "react-loading";
 import { ButtonComponent } from "../../../../components/Button";
 import DeletarPlanejamentoDialog from "../../../../components/DeletarPlanejamentoDialog";
-import { fetchPlanejamentos } from "../../../../service/gerenciarAcoes";
+import {
+  deletePlanejamentoMacro,
+  fetchPlanejamentos,
+} from "../../../../service/gerenciarAcoes";
 import { PlanejamentoMacro } from "../../../../models/gerenciarAcoes";
 import { meses } from "../fixtures";
 
@@ -46,6 +49,24 @@ export default function GerenciarAcoes() {
   >([]);
   const [planejamentos, setPlanejamentos] = useState<PlanejamentoMacro[]>([]);
 
+  async function sendDeletePlanejamento(planejamentoId: string) {
+    deletePlanejamentoMacro(planejamentoId)
+      .then(() => {
+        notification.success({
+          message: "Planejamento deletado com sucesso!",
+        });
+        setDeletePlanejamento(null);
+        setPlanejamentos(
+          planejamentos.filter((element) => element.id !== planejamentoId)
+        );
+      })
+      .catch((error) => {
+        notification.error({
+          message: "Falha na exclusão do Planejamento.",
+        });
+      });
+  }
+
   useEffect(() => {
     fetchPlanejamentos({
       params: {
@@ -71,7 +92,7 @@ export default function GerenciarAcoes() {
         index.responsavel.toLowerCase().includes(responsavel.toLowerCase())
     );
     setPlanejamentoBanco(planejamentosFiltrados);
-  }, [nome, responsavel]);
+  }, [nome, responsavel, planejamentos]);
 
   return (
     <div className="App">
@@ -79,6 +100,7 @@ export default function GerenciarAcoes() {
       {deletePlanejamento && (
         <DeletarPlanejamentoDialog
           planejamento={deletePlanejamento}
+          onClick={sendDeletePlanejamento}
           closeDialog={(deletou) => {
             setDeletePlanejamento(null);
           }}
