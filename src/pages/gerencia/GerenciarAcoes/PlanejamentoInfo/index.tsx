@@ -62,7 +62,7 @@ export default function PlanejamentoInfo({
 
     setEscolasPlanejamento(escolasArray);
     setMonthPlanningSelected(planejamento.planejamentoMacroMensal[0]);
-  }, [planejamento]);
+  }, []);
 
   planejamento.planejamentoMacroMensal.forEach((element, index) => {
     selectCardData.push({
@@ -80,7 +80,6 @@ export default function PlanejamentoInfo({
 
   function updateMonthData(cardIndex: number) {
     let escolasArray: EscolasPlanejamentoTabela[] = [];
-    console.log("Calling");
 
     planejamento.planejamentoMacroMensal[cardIndex].escolas.forEach(
       (element) => {
@@ -99,7 +98,7 @@ export default function PlanejamentoInfo({
   }
 
   return (
-    <div>
+    <div className="planning-info-container">
       {showDeletarEscolaPlanejamento && (
         <DeletarEscolaDialog
           id=""
@@ -118,11 +117,11 @@ export default function PlanejamentoInfo({
       )}
       {modalAdicionarAcao && (
         <ModalAdicionarEscola
-            planejamento={planejamento}
-            infoMes={monthPlanningSelected}
-            onClose={() => {
-              setModalAdicionarAcao(false);
-            }}
+          planejamento={planejamento}
+          infoMes={monthPlanningSelected}
+          onClose={() => {
+            setModalAdicionarAcao(false);
+          }}
         />
       )}
       {monthPlanningSelected !== undefined && (

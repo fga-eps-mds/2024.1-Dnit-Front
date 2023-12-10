@@ -108,7 +108,6 @@ export default function GerenciarAcoes() {
     );
 
     if (periodo !== "") {
-      console.log(periodo);
       planejamentosFiltrados = planejamentosFiltrados.filter(
         (element) =>
           `${meses[element.mesInicio - 1]} de ${element.anoInicio} - ${
