@@ -198,7 +198,7 @@ function Ranque() {
                   }}
                   hideTrashIcon={true}
                   hideEditIcon={true}
-                  hideLocationIcon={false}
+                  hideLocationIcon={!e.escola.distanciaPolo}
                   onDetailRow={_ => setEscolaAtual(e)}
                   onLocationRow={_ => showEscolaInMap(e.escola.id)}
                 />
