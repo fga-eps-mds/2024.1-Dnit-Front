@@ -50,10 +50,10 @@ const CadastroUsuarioForm: React.FC = () => {
 
   const onFinish = async (values: any) => {
     try {
-      var empresaSelected = empresas.current.find(
-        (element) => element.razaoSocial === empresaSelecionada
-      );
       if (empresasVisiveis) {
+        var empresaSelected = empresas.current.find(
+          (element) => element.razaoSocial === empresaSelecionada
+        );
         const cadastroUsuarioTerceiro: CadastroUsuarioTerceiroData = {
           email: values.email,
           senha: values.senha,
@@ -210,7 +210,7 @@ const CadastroUsuarioForm: React.FC = () => {
               >
                 {municipios?.map((u) => (
                   <Option
-                    data-testid={`option-${u.value}`}
+                    data-testid={`option-municipio`}
                     key={u.value}
                     value={u.value}
                     label={

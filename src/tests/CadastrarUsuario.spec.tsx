@@ -7,13 +7,20 @@ import { AuthProvider } from "../provider/Autenticacao";
 import { sendCadastroUsuarioDnit } from "../service/usuarioApi";
 import server from "./mock/servicosAPI";
 import { ExcessoesApi } from "../service/excessoes";
+import { fetchMunicipio } from "../service/escolaApi";
 
 jest.mock("../service/usuarioApi", () => ({
   ...jest.requireActual("../service/usuarioApi"),
   sendCadastroUsuarioDnit: jest.fn(),
 }));
 
+jest.mock("../service/escolaApi", () => ({
+  ...jest.requireActual("../service/escolaApi"),
+  fetchMunicipio: jest.fn(),
+}));
+
 const mockedUseRegister = sendCadastroUsuarioDnit as jest.Mock;
+const mockedFetchMunicipio = fetchMunicipio as jest.Mock;
 
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
@@ -34,6 +41,8 @@ window.matchMedia = jest.fn().mockImplementation((query) => {
 
 test("should render Register", async () => {
   mockedUseRegister.mockResolvedValueOnce({ success: true });
+
+  mockedFetchMunicipio.mockResolvedValue([{ id: 1, nome: "Acrelandia" }]);
 
   // eslint-disable-next-line testing-library/render-result-naming-convention
   const screen = render(
@@ -74,7 +83,25 @@ test("should render Register", async () => {
   const options = screen.getByTestId("option-1");
   fireEvent.click(options);
 
+  const municipioDropdown = screen.getByRole("combobox", {
+    name: "Município",
+  });
+  fireEvent.mouseDown(municipioDropdown);
+
+  await waitFor(() =>
+    expect(screen.queryByText("Carregando...")).not.toBeInTheDocument()
+  );
+
+  act(() => {
+    const municipioSelectedValue = screen.getByText("Acrelandia");
+    fireEvent.click(municipioSelectedValue);
+
+    const municipioOption = screen.getAllByTestId("option-municipio")[0];
+    fireEvent.click(municipioOption);
+  });
+
   fireEvent.click(button);
+
   await waitFor(() => expect(mockedUseRegister).toHaveBeenCalledTimes(1));
 });
 
@@ -99,12 +126,14 @@ test("should render error in Register form", async () => {
     });
     fireEvent.click(usuarioDnitRadioButton);
   });
-
 });
 
 test("should render error in the Register form when it exists", async () => {
-  const mockedError = new ExcessoesApi('409','Email já cadastrado', {"1":"null"});
-  mockedUseRegister.mockImplementation(() => Promise.reject(mockedError))
+  const mockedError = new ExcessoesApi("409", "Email já cadastrado", {
+    "1": "null",
+  });
+  mockedUseRegister.mockImplementation(() => Promise.reject(mockedError));
+  mockedFetchMunicipio.mockResolvedValue([{ id: 1, nome: "Acrelandia" }]);
 
   const screen = render(
     <MemoryRouter initialEntries={["/cadastro"]}>
@@ -142,14 +171,34 @@ test("should render error in the Register form when it exists", async () => {
   const options = screen.getByTestId("option-1");
   fireEvent.click(options);
 
+  const municipioDropdown = screen.getByRole("combobox", {
+    name: "Município",
+  });
+  fireEvent.mouseDown(municipioDropdown);
+
+  await waitFor(() =>
+    expect(screen.queryByText("Carregando...")).not.toBeInTheDocument()
+  );
+
+  act(() => {
+    const municipioSelectedValue = screen.getByText("Acrelandia");
+    fireEvent.click(municipioSelectedValue);
+
+    const municipioOption = screen.getAllByTestId("option-municipio")[0];
+    fireEvent.click(municipioOption);
+  });
+
   fireEvent.click(button);
 
-  await waitFor (() => expect(screen.getByText("Email já cadastrado")).toBeInTheDocument())
+  await waitFor(() =>
+    expect(screen.getByText("Email já cadastrado")).toBeInTheDocument()
+  );
 });
 
 test("should render error in the Register form when it exists", async () => {
   const mockedError = new Error("Erro interno");
-  mockedUseRegister.mockImplementation(() => Promise.reject(mockedError))
+  mockedUseRegister.mockImplementation(() => Promise.reject(mockedError));
+  mockedFetchMunicipio.mockResolvedValue([{ id: 1, nome: "Acrelandia" }]);
 
   const screen = render(
     <MemoryRouter initialEntries={["/cadastro"]}>
@@ -187,7 +236,26 @@ test("should render error in the Register form when it exists", async () => {
   const options = screen.getByTestId("option-1");
   fireEvent.click(options);
 
+  const municipioDropdown = screen.getByRole("combobox", {
+    name: "Município",
+  });
+  fireEvent.mouseDown(municipioDropdown);
+
+  await waitFor(() =>
+    expect(screen.queryByText("Carregando...")).not.toBeInTheDocument()
+  );
+
+  act(() => {
+    const municipioSelectedValue = screen.getByText("Acrelandia");
+    fireEvent.click(municipioSelectedValue);
+
+    const municipioOption = screen.getAllByTestId("option-municipio")[0];
+    fireEvent.click(municipioOption);
+  });
+
   fireEvent.click(button);
 
-  await waitFor (() => expect(screen.getByText("Erro interno")).toBeInTheDocument())
+  await waitFor(() =>
+    expect(screen.getByText("Erro interno")).toBeInTheDocument()
+  );
 });
