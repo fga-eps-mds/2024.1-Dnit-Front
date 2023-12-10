@@ -39,6 +39,18 @@ export default function GerenciarPrioridades() {
             .catch(error => notificationApi.error({ message: 'Falha ao obter fatores de priorização.' + (error?.response?.data || '') }))
     }
 
+    const onAddFator = () => {
+        const fatorVazio:FatorModel = 
+        {
+            nome: "",
+            peso: 0,
+            ativo: false,
+            primario: false,
+            fatorCondicoes: []
+        };
+        setListaFatores([fatorVazio, ...listaFatores]);
+    }
+
     const salvarFator = (fator: FatorModel) => {
         if (fator.nome === "") {
             console.log("Fator deve ter um nome!");
@@ -56,7 +68,10 @@ export default function GerenciarPrioridades() {
         }
         else
         {
-            console.log(fator)
+            adicionarFatorPriorizacao(fator)
+                .then((fatorAtualizado) => {
+                    notification.success({message: `O fator ${fator.nome} foi adicionado com sucesso!`});
+                })
         }
     }
 
@@ -227,7 +242,7 @@ export default function GerenciarPrioridades() {
             label: "Outros fatores",
             children: (
                 <div>
-                    <button data-testid="botaoAdicionarFator" className="br-button primary" type="button" onClick={() => {}}>Novo Fator</button>
+                    <button data-testid="botaoAdicionarFator" className="br-button primary" type="button" onClick={onAddFator}>Novo Fator</button>
                     {listaFatores.filter(f => !f.primario).map((item) => (
                         <FatorForm key={item.id} fator={item} condicaoUfs={ListaUfs} 
                         propriedades={propriedades} municipios={listaMunicipios} 
@@ -235,7 +250,6 @@ export default function GerenciarPrioridades() {
                         etapasEnsino = {etapas} porte = {listaPortesEscolas} onSaveFator={salvarFator} onDeleteFator={excluirFator}/>
                     ))}
                 </div>
-                //<FatorForm nome="Teste" condicaoUfs={ListaUfs} propriedades={propriedades} municipios={listaMunicipios} situacoes ={opcoesSituacao.map(s => ({id : s.id.toString(), rotulo: s.descricao}))} etapasEnsino = {etapas} porte = {listaPortesEscolas}></FatorForm>
             )
         },
     ];
