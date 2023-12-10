@@ -55,6 +55,20 @@ describe('Tabela de Gerenciar Acoes', () => {
         expect(screen.getByText("Cancelar")).toBeInTheDocument();
         expect(screen.getByText("Confirmar")).toBeInTheDocument();
     });
-    
+
+    it('deve fechar ao clicar no overlay', async () => {
+        render(
+            <MemoryRouter>
+                <DeletarPlanejamentoDialog closeDialog={() => {}} planejamento={planejamento1} />
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText('Tem certeza que deseja excluir este planejamento?')).toBeInTheDocument();
+        });
+
+        const overlay = screen.getByTestId('overlay');
+        fireEvent.click(overlay);
+    });
 
 })
