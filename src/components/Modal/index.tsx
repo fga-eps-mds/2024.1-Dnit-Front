@@ -19,7 +19,7 @@ export default function Modal({ className = 'default', children, width = 500, cl
 
   return (
     <div  className={"overlay " + className} data-testid="overlay" onClick={handleOverlayClick} onKeyDown={() => { }}>
-      <div className="br-modal-custom medium" style={modalStyle}>
+      <div className="br-modal medium" style={modalStyle}>
         <div className="br-modal-body d-flex flex-column w-100">
           {children}
         </div>

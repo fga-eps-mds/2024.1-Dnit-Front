@@ -30,8 +30,8 @@ export interface SolicitacaoEscolaData {
     porte: string;
     telefone: string;
     numeroTotalDeDocentes: number;
-    distanciaSuperintendencia: number;
-    superintendenciaId: number;
+    distanciaPolo: number;
+    poloId: number;
   }
 
 export interface SolicitacoesData{

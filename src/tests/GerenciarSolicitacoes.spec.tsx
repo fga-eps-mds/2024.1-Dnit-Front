@@ -13,10 +13,14 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 describe('Testes para a pagina de Solicitacoes', () => {
-  test('Deve renderizar a pagina', async () => {
+    autenticar(Permissao.SolicitacaoVisualizar, Permissao.EscolaCadastrar);
+
+    test('Deve renderizar a pagina', async () => { 
     const screen = render(
       <MemoryRouter>
+        <AuthProvider>
         <GerenciarSolicitacoes />
+        </AuthProvider>
       </MemoryRouter>
     );
 
@@ -27,9 +31,13 @@ describe('Testes para a pagina de Solicitacoes', () => {
   });
 
   test('Deve filtrar por escola', async () => {
+    autenticar(Permissao.SolicitacaoVisualizar, Permissao.EscolaCadastrar);
+
     const screen = render(
       <MemoryRouter>
-        <GerenciarSolicitacoes />
+        <AuthProvider>
+          <GerenciarSolicitacoes />
+        </AuthProvider>
       </MemoryRouter>
     );
     
@@ -38,16 +46,17 @@ describe('Testes para a pagina de Solicitacoes', () => {
     expect((await screen.findAllByText("Escola A")).length).toBe(1);
   });
 
-  test('Deve utilizar o filtro de qtd alunos', async () => {
+  test('Deve filtrar por qtd alunos', async () => {
+    autenticar(Permissao.SolicitacaoVisualizar, Permissao.EscolaCadastrar);
+
     const screen = render(
       <MemoryRouter>
-        <GerenciarSolicitacoes />
+        <AuthProvider>
+          <GerenciarSolicitacoes />
+        </AuthProvider>
       </MemoryRouter>
     );
     await waitFor(() => screen.getByText("Soliciatações de Ações"));
-
-    const tamanhoPaginaSelector = screen.getByTestId('items-per-page');
-    fireEvent.change(tamanhoPaginaSelector, { target: { value: '1' } });
 
     const qtdAlunos = screen.getByTestId("Qtd. Alunos:customSelect");
 
@@ -74,9 +83,13 @@ describe('Testes para a pagina de Solicitacoes', () => {
   });
 
   test('Deve utilizar o filtro de UF e municipio', async () => {
+    autenticar(Permissao.SolicitacaoVisualizar, Permissao.EscolaCadastrar);
+
     const screen = render(
       <MemoryRouter>
-        <GerenciarSolicitacoes />
+        <AuthProvider>
+          <GerenciarSolicitacoes />
+        </AuthProvider>
       </MemoryRouter>
     );
 
@@ -104,9 +117,13 @@ describe('Testes para a pagina de Solicitacoes', () => {
   });
 
   test('Deve utilizar o filtro de Municipio', async () => {
+    autenticar(Permissao.SolicitacaoVisualizar, Permissao.EscolaCadastrar);
+
     const screen = render(
       <MemoryRouter>
-        <GerenciarSolicitacoes />
+        <AuthProvider>
+          <GerenciarSolicitacoes />
+        </AuthProvider>
       </MemoryRouter>
     );
 
@@ -117,9 +134,13 @@ describe('Testes para a pagina de Solicitacoes', () => {
   });
 
   test('Deve selecionar uma das paginas', async () => {
+    autenticar(Permissao.SolicitacaoVisualizar, Permissao.EscolaCadastrar);
+
     const screen = render(
       <MemoryRouter>
-        <GerenciarSolicitacoes />
+        <AuthProvider>
+          <GerenciarSolicitacoes />
+        </AuthProvider>
       </MemoryRouter>
     );
 
@@ -151,9 +172,13 @@ describe('Testes para a pagina de Solicitacoes', () => {
   });
 
   test('Deve clickar no botao de visualisar', async () => {
+    autenticar(Permissao.SolicitacaoVisualizar, Permissao.EscolaCadastrar);
+
     const screen = render(
       <MemoryRouter>
-        <GerenciarSolicitacoes />
+        <AuthProvider>
+          <GerenciarSolicitacoes />
+        </AuthProvider>
       </MemoryRouter>
     );
 
@@ -174,9 +199,13 @@ describe('Testes para a pagina de Solicitacoes', () => {
   });
 
   test.skip('Deve clickar no botao de criar escola', async () => {
+    autenticar(Permissao.SolicitacaoVisualizar, Permissao.EscolaCadastrar);
+
     const screen = render(
       <MemoryRouter>
-        <GerenciarSolicitacoes />
+        <AuthProvider>
+          <GerenciarSolicitacoes />
+        </AuthProvider>
       </MemoryRouter>
     );
 
@@ -200,5 +229,31 @@ describe('Testes para a pagina de Solicitacoes', () => {
     fireEvent.click(botaoFechar);
 
   });
+  test.skip('Deve nao usar o botao de criar escola sem permissão', async () => {
+    autenticar(Permissao.SolicitacaoVisualizar);
+
+    const screen = render(
+      <MemoryRouter>
+        <AuthProvider>
+          <GerenciarSolicitacoes />
+        </AuthProvider>
+      </MemoryRouter>
+    );
+
+    await waitFor(() => screen.getByText("Soliciatações de Ações"));
+
+    const tamanhoPaginaSelector = screen.getByTestId('items-per-page');
+    fireEvent.change(tamanhoPaginaSelector, { target: { value: '1' } });
+
+    const buttonNext = screen.getByTestId("proxima-pagina");
+    await fireEvent.click(buttonNext);
+
+    await waitFor(() => expect(screen.getByText('Outra Escola')).toBeInTheDocument());
+    
+
+    await waitFor(() => expect(screen.getByTestId('table-row-plus-0')).not.toBeInTheDocument());
+
+  });
+
 
 })
