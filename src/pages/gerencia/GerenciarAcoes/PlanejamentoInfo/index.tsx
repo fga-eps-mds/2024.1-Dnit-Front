@@ -118,9 +118,11 @@ export default function PlanejamentoInfo({
       )}
       {modalAdicionarAcao && (
         <ModalAdicionarEscola
-          onClose={() => {
-            setModalAdicionarAcao(false);
-          }}
+            planejamento={planejamento}
+            infoMes={monthPlanningSelected}
+            onClose={() => {
+              setModalAdicionarAcao(false);
+            }}
         />
       )}
       {monthPlanningSelected !== undefined && (

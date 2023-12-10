@@ -4,18 +4,35 @@ import ReactLoading from "react-loading";
 import SelectSchoolCard from "../../SelectSchoolCard";
 import {fetchListarEscolasFiltradas} from "../../../service/escolaApi";
 import {EscolaData} from "../../../models/service";
+import {InfoMesPlanejamentoMacro,EscolaPlanejamentoModel, PlanejamentoMacro} from "../../../models/gerenciarAcoes";
+import {meses} from "../../../pages/gerencia/GerenciarAcoes/fixtures";
+import {updatePlanejamento} from "../../../service/gerenciarAcoes";
+import {notification} from "antd";
+
+function converterParaEscolaPlanejamentoModel(escolaData: EscolaData): EscolaPlanejamentoModel {
+    return {
+        id: escolaData.idEscola.toString(),
+        ups: escolaData.numeroTotalDeDocentes, 
+        nome: escolaData.nomeEscola,
+        uf: escolaData.siglaUf,
+        quantidadeAlunos: escolaData.numeroTotalDeAlunos,
+        distanciaPolo: escolaData.distanciaSuperintendencia,
+    };
+}
 
 interface ModalProps {
+    planejamento: PlanejamentoMacro;
+    infoMes: InfoMesPlanejamentoMacro | undefined;
     onClose: () => void;
 }
 
-export default function ModalAdicionarEscola({ onClose }: ModalProps) {
+export default function ModalAdicionarEscola({ planejamento, infoMes, onClose }: ModalProps) {
     const [escolasBanco, setEscolasBanco] = useState<EscolaData[]>([]);
     const [escolas, setEscolas] = useState<EscolaData[]>(escolasBanco); 
     const [nome, setNome] = useState("");
     const [escolaSelecionada, setEscolaSelecionada] = useState<{ [key: number]: boolean }>({});
     const [listaEscolasSelecionadas, setListaEscolasSelecionadas] = useState<EscolaData[]>([]);
-    const [mes, setMes] = useState<string>("Dezembro");
+    const [mes] = useState<number>(infoMes?.mes ?? 1);
 
     useEffect(() => {
         fetchListarEscolasFiltradas({
@@ -66,9 +83,8 @@ export default function ModalAdicionarEscola({ onClose }: ModalProps) {
             <div className="d-flex flex-column">
                 <div style={{ position: "sticky", top: 0, background: "white", zIndex: 1}}>
                     <h4 className="text-center mt-1">Adicionar Escola</h4>
-
-                    {/*TODO ADICIONAR A INTERATIVIDADE DO MES*/}
-                    <label className="text-center mt-1">A escola selecionada será adicionada ao mês de {mes}</label>
+                    
+                    <label className="text-center mt-1">A escola selecionada será adicionada ao mês de {meses[mes-1]}</label>
                     <div className='d-flex flex-column'>
                         <div className="br-input large input-button" style={{ width: "95%", fontSize: '16px', textAlign: 'start' }}>
                             <input
@@ -117,7 +133,30 @@ export default function ModalAdicionarEscola({ onClose }: ModalProps) {
                             Cancelar
                         </button>
                         <button className="br-button primary" type="button" onClick={() => {
-                            //TODO putEscolas(listaEscolasSelecionadas)
+                            const listaEscolaPlanejamentoModel: EscolaPlanejamentoModel[] = 
+                                listaEscolasSelecionadas.map(converterParaEscolaPlanejamentoModel);
+                            
+                            const newInfoPlanejamentoMacro = planejamento?.planejamentoMacroMensal.map((e) => {
+                                if (e === infoMes) {
+                                    infoMes.escolas = [...infoMes.escolas, ...listaEscolaPlanejamentoModel];
+                                }
+                                return e;
+                            });
+                            
+                            var newPlanejamento = planejamento;
+                            newPlanejamento.planejamentoMacroMensal = newInfoPlanejamentoMacro;
+                            
+                            if(newPlanejamento) {
+                                updatePlanejamento(planejamento.id, newPlanejamento)
+                                    .then(() => {
+                                        notification.success({ message: "Escolas Adicionas ao Planejamento com Sucesso!" });
+                                    })
+                                    .catch((error) => {
+                                        notification.error({
+                                            message: "Falha em Adicionar Escolas ao Planejamento."
+                                        });
+                                    });
+                            }
                             onClose();
                         }}>
                             Adicionar
