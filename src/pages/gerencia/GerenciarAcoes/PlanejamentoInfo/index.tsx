@@ -118,9 +118,11 @@ export default function PlanejamentoInfo({
       )}
       {modalAdicionarAcao && (
         <ModalAdicionarEscola
-          onClose={() => {
-            setModalAdicionarAcao(false);
-          }}
+            planejamento={planejamento}
+            infoMes={monthPlanningSelected}
+            onClose={() => {
+              setModalAdicionarAcao(false);
+            }}
         />
       )}
       {monthPlanningSelected !== undefined && (
@@ -135,7 +137,7 @@ export default function PlanejamentoInfo({
             <div className="custom-divider" />
             <div className="uf-container">
               <span className="planning-text">
-                Planejamento Macro {meses[monthPlanningSelected!.mes]} /{" "}
+                Planejamento Macro {meses[monthPlanningSelected!.mes - 1]} /{" "}
                 {monthPlanningSelected.ano}
               </span>
               <UfCardGroup cardsData={monthPlanningSelected.detalhesPorUF} />
@@ -143,7 +145,7 @@ export default function PlanejamentoInfo({
           </div>
           <div className="table-title">
             <span className="title-text">
-              Escolas no mês de {meses[monthPlanningSelected!.mes]}
+              Escolas no mês de {meses[monthPlanningSelected!.mes - 1]}
             </span>
             <ButtonComponent
               buttonStyle="primary"
