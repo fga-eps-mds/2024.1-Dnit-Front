@@ -24,17 +24,22 @@ export default function FatorCondicaoSelect({condicaoUfs, propriedades, municipi
     const [listaPropriedade, setListaPropriedade] = useState<FilterOptions[]>([]);
 
     const SelecionarPropriedade = function(propriedade:string){
-            
-        if(propriedade == "2" && situacoes)
+        if (propriedade == "1" && porte) setListaPropriedade(porte)
+        if(propriedade == "2" && situacoes) setListaPropriedade(situacoes)
+        else if(propriedade == "4" && condicaoUfs) setListaPropriedade(condicaoUfs)
+        else if(propriedade == "5")
         {
-            setListaPropriedade(situacoes)
-        }else if(propriedade == "4" && condicaoUfs)
-        {
-            setListaPropriedade(condicaoUfs)
-        }else if(propriedade == "7" && etapasEnsino)
-        {
-            setListaPropriedade(etapasEnsino)
-        }else if(propriedade == "8")
+            setListaPropriedade([{
+                id: Localizacao.Rural,
+                rotulo: "Rural",
+            },
+            {
+                id: Localizacao.Urbana,
+                rotulo: "Urbana",
+            }])
+        }
+        else if(propriedade == "7" && etapasEnsino) setListaPropriedade(etapasEnsino)
+        else if(propriedade == "8")
         {
             setListaPropriedade([{
                 id: Rede.Estadual,
@@ -48,31 +53,20 @@ export default function FatorCondicaoSelect({condicaoUfs, propriedades, municipi
                 id: Rede.Privada,
                 rotulo:"Privada"
             }])
-        }else if(propriedade == "5")
-        {
-            setListaPropriedade([{
-                id: Localizacao.Rural,
-                rotulo: "Rural",
-            },
-            {
-                id: Localizacao.Urbana,
-                rotulo: "Urbana",
-            }])
-        }else if (propriedade == "1" && porte)
-        {
-            setListaPropriedade(porte)
         }
+        
         if(propriedade == "6")
         {
             setListaOperadores([{
                 id: Operador.maior,
-                rotulo: "maior que",
+                rotulo: "maior ou igual a",
             },
             {
                 id: Operador.menor,
-                rotulo: "menor que",
+                rotulo: "menor ou igual a",
             }])
-        }else if(propriedadeSelecionada){
+        }
+        else if(propriedadeSelecionada){
             setListaOperadores([ {
                 id: Operador.igual,
                 rotulo: "igual a",
@@ -81,11 +75,14 @@ export default function FatorCondicaoSelect({condicaoUfs, propriedades, municipi
     
     }
     useEffect(() =>{
-        onChange(({propriedade:propriedadeSelecionada,operador:operadorSelecionado,valor:valorSelecionado}))
-    })
+        onChange(({
+            propriedade: propriedadeSelecionada, 
+            operador: operadorSelecionado, 
+            valor: valorSelecionado}))
+    }, [propriedadeSelecionada, operadorSelecionado, valorSelecionado])
     return (
         <div>
-            <Select items={propriedades ? propriedades : []} value= {propriedadeSelecionada} onChange={(c) => {
+            <Select items={propriedades ? propriedades : []} value={propriedadeSelecionada} onChange={(c) => {
                 setPropriedadeSelecionada(c)
                 SelecionarPropriedade(c)
             }} />

@@ -20,7 +20,6 @@ interface FatorProps {
 
 
 export default function FatorForm ({ nome, primario, condicaoUfs, propriedades, municipios, situacoes, etapasEnsino, porte }: FatorProps) {
-    
     const [listaCondicoes, setListaCondicoes] = useState<Condicao[]>([])
     const [condicaoAtual, setCondicaoAtual] = useState<Condicao>()
 
@@ -49,8 +48,8 @@ export default function FatorForm ({ nome, primario, condicaoUfs, propriedades, 
                 <label>Ativo:</label>
             </div>
             <div className="d-flex w-100 justify-content-start">
-                <button disabled data-testid="botaoCancelar" className="br-button primary" type="button" onClick={() => {}}>Cancelar</button>
-                <button disabled data-testid="botaoSalvar" className="br-button primary" type="button" onClick={() => {}}>Salvar</button>
+                <button data-testid="botaoExcluir" className="br-button primary" type="button" onClick={() => {}}>Excluir</button>
+                <button data-testid="botaoSalvar" className="br-button primary" type="button" onClick={() => {}}>Salvar</button>
             </div>
         </div>
     )
