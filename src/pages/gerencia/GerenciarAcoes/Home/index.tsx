@@ -130,7 +130,9 @@ export default function GerenciarAcoes() {
               <ButtonComponent
                 label="Criar Novo Planejamento"
                 buttonStyle="primary"
-                onClick={() => navigate("/gerenciarAcoes/gerarPlanejamento")}
+                onClick={() =>
+                  navigate("/gerenciarAcoes/gerarPlanejamento/null")
+                }
               />
             </div>
           )}
@@ -170,6 +172,9 @@ export default function GerenciarAcoes() {
                 hideEditIcon={true}
                 onDeleteRow={() => {
                   setDeletePlanejamento(e);
+                }}
+                onDetailRow={() => {
+                  navigate(`/gerenciarAcoes/gerarPlanejamento/${e.id}`);
                 }}
               />
             ))}
