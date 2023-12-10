@@ -47,4 +47,19 @@ describe('Modal adicionar Escola', () => {
         expect(aberto).toEqual(false);
     });
 
+    it("Deve clicar em adicionar Modal", async () => {
+        let aberto = true;
+        render(
+            <div>
+                {aberto && <ModalAdicionarEscola
+                    onClose={() => { aberto = false; }}
+                />}
+            </div>
+        );
+
+        expect(screen.getByText('Adicionar')).toBeInTheDocument();
+        fireEvent.click(screen.getByText("Adicionar"));
+        expect(aberto).toEqual(false);
+    });
+    
 })
