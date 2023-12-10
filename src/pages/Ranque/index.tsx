@@ -3,7 +3,7 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import { ButtonComponent } from "../../components/Button";
 import "./styles.css";
-import { EtapasDeEnsinoData, RanqueInfo } from '../../models/service';
+import { EtapasDeEnsinoData } from '../../models/service';
 import {
   fetchEtapasDeEnsino,
   fetchMunicipio,
@@ -22,7 +22,7 @@ import ModalRanqueEscola from '../../components/EscolaRanqueModal';
 import { AuthContext } from '../../provider/Autenticacao';
 import { Permissao } from '../../models/auth';
 import { useNavigate } from 'react-router-dom';
-import { formataCustoLogistico } from '../../utils/utils';
+import { formatDate, formataCustoLogistico } from '../../utils/utils';
 
 
 function Ranque() {
@@ -110,18 +110,30 @@ function Ranque() {
       .finally(() => setLoading(false));
   }, [nome, uf, municipio, etapa, paginacao]);
 
+  const showEscolaInMap = (id: string) => {
+    return fetchEscolaRanque(id)
+      .then(escolaDetalhes => {
+        let latitude = escolaDetalhes.latitude.replace(',', '.');
+        let longitude = escolaDetalhes.longitude.replace(',', '.');
+
+        if (!latitude || !longitude) {
+          notificationApi.warning({ message: "Não foi possível encontrar essa localização" });
+          return;
+        }
+        const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+        window.open(googleMapsUrl, '_blank');
+      })
+      .catch(error => {
+        console.error("Erro ao obter detalhes da escola", error);
+        notificationApi.error({ message: "Não foi possível encontrar essa localização" });
+      })
+  }
 
   const formatEtapaEnsino = (etapaEnsino: EtapasDeEnsinoData[], max = 2) => {
     if (!etapaEnsino) {
       return '';
     }
     return `${etapaEnsino.map(etapa => etapa.descricao).slice(0, max).join(', ')}${etapaEnsino.length > max ? '...' : ''}`;
-  }
-
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    const padZeros = (n: number) => n.toString().padStart(2, '0');
-    return `${padZeros(date.getDate())}/${padZeros(date.getMonth() + 1)}/${date.getFullYear()} ${padZeros(date.getHours())}:${padZeros(date.getMinutes())}`
   }
 
   return (
@@ -135,9 +147,9 @@ function Ranque() {
         <div className='d-flex justify-content-between align-items-center'>
           <div className='d-flex align-items-center'>
             <FiltroNome nome={nome} onNomeChange={setNome} />
-            <Select items={ufs} value={uf?.id || ''} label={"UF:"} onChange={id => setUf(ufs.find(u => u.id == id) || null)} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
-            <Select items={municipios} value={municipio?.id || ''} label={"Municípios:"} onChange={id => setMunicipio(municipios.find(m => m.id == id) || null)} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
-            <Select items={etapas} value={etapa?.id || ''} label={"Etapas de Ensino:"} onChange={id => setEtapa(etapas.find(e => e.id == id) || null)} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
+            <Select items={ufs} value={uf?.id ?? ''} label={"UF:"} onChange={id => setUf(ufs.find(u => u.id == id) ?? null)} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
+            <Select items={municipios} value={municipio?.id ?? ''} label={"Municípios:"} onChange={id => setMunicipio(municipios.find(m => m.id == id) ?? null)} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
+            <Select items={etapas} value={etapa?.id ?? ''} label={"Etapas de Ensino:"} onChange={id => setEtapa(etapas.find(e => e.id == id) ?? null)} dropdownStyle={{ marginLeft: "20px", width: "260px" }} filtrarTodos={true} />
           </div>
           {
             ultimoProcessamento &&
@@ -188,22 +200,7 @@ function Ranque() {
                   hideEditIcon={true}
                   hideLocationIcon={false}
                   onDetailRow={_ => setEscolaAtual(e)}
-                  onLocationRow={_ => {
-                    fetchEscolaRanque(e.escola.id)
-                      .then(escolaDetalhes => {
-                        let latitude = escolaDetalhes.latitude.replace(',', '.');
-                        let longitude = escolaDetalhes.longitude.replace(',', '.');
-
-                        if (latitude && longitude) {
-                          const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
-                          window.open(googleMapsUrl, '_blank');
-                        }
-                      })
-                      .catch(error => {
-                        console.error("Erro ao obter detalhes da escola", error);
-                        notificationApi.error({ message: "Não foi possível encontrar essa localização" });
-                      })
-                  }}
+                  onLocationRow={_ => showEscolaInMap(e.escola.id)}
                 />
               )
             }
