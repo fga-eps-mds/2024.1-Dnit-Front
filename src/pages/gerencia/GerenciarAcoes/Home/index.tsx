@@ -22,7 +22,6 @@ import { meses } from "../fixtures";
 interface FilterOptions {
   id: string;
   rotulo: string;
-  intervalos: string | null;
 }
 
 export default function GerenciarAcoes() {
@@ -81,6 +80,22 @@ export default function GerenciarAcoes() {
       .then((planejamento) => {
         setPlanejamentoBanco(planejamento.items);
         setPlanejamentos(planejamento.items);
+        var listPeriods: FilterOptions[] = [];
+
+        planejamento.items.forEach((element, index) => {
+          let planejamentoPeriod = `${meses[element.mesInicio - 1]} de ${
+            element.anoInicio
+          } - ${meses[element.mesFim - 1]} de ${element.anoFim}`;
+
+          if (!listPeriods.find((e) => e.rotulo === planejamentoPeriod)) {
+            listPeriods.push({
+              id: index.toString(),
+              rotulo: planejamentoPeriod,
+            });
+          }
+        });
+
+        setListaPeriodo(listPeriods);
       })
       .finally(() => setLoading(false));
   }, []);
@@ -91,8 +106,18 @@ export default function GerenciarAcoes() {
         index.nome.toLowerCase().includes(nome.toLowerCase()) &&
         index.responsavel.toLowerCase().includes(responsavel.toLowerCase())
     );
+
+    if (periodo !== "") {
+      console.log(periodo);
+      planejamentosFiltrados = planejamentosFiltrados.filter(
+        (element) =>
+          `${meses[element.mesInicio - 1]} de ${element.anoInicio} - ${
+            meses[element.mesFim - 1]
+          } de ${element.anoFim}` === listaPeriodo[Number(periodo)].rotulo
+      );
+    }
     setPlanejamentoBanco(planejamentosFiltrados);
-  }, [nome, responsavel, planejamentos]);
+  }, [nome, responsavel, periodo, planejamentos]);
 
   return (
     <div className="App">
