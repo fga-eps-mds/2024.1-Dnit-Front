@@ -5,7 +5,7 @@ import Header from "../../../components/Header";
 import TrilhaDeNavegacao from "../../../components/Navegacao";
 import "./styles.css"
 import FatorForm from "../../../components/FatorForm";
-import { fetchCustosLogisticos, fetchPorte, fetchPropriedades } from "../../../service/prioridadeApi";
+import { fetchCustosLogisticos, fetchFatoresPriorizacao, fetchPorte, fetchPropriedades } from "../../../service/prioridadeApi";
 import { CustoLogisticoModel } from "../../../models/prioridade";
 import { FilterOptions } from "../GerenciarUsuario";
 import { fetchEtapasDeEnsino, fetchMunicipio, fetchSituacao, fetchUnidadeFederativa } from "../../../service/escolaApi";
@@ -17,7 +17,9 @@ export default function GerenciarPrioridades() {
     const [parametrosCusto, setParametrosCusto] = useState<CustoLogisticoModel[]>([]);
     const paginas = [{nome: "Configuração de Pesos do Ranque", link: "/gerenciarPrioridades"}];
     const [propriedades, setPropriedades] = useState<FilterOptions[]>([]);
-    const [listaFatores, setListaFatores] = useState<FatorModel[]>([])
+    const [outrosFatores, setOutrosFatores] = useState<FatorModel[]>([]);
+    const [fatorUPS, setFatorUPS] = useState<FatorModel>();
+    const [fatorCusto, setFatorCusto] = useState<FatorModel>();
     const [notificationApi, notificationContextHandler] = notification.useNotification();
     const [ListaUfs, setListaUfs] = useState<FilterOptions[]>([]);
     const [listaMunicipios, setListaMunicipios] = useState<FilterOptions[]>([]);
@@ -25,6 +27,17 @@ export default function GerenciarPrioridades() {
     const [opcoesSituacao, setOpcoesSituacao] = useState<SituacaoData[]>([]);
     const [etapas, setEtapas] = useState<SelectItem[]>([]);
     const [listaPortesEscolas, setPortesEscolas] = useState<FilterOptions[]>([]);
+
+    const obterListaFatores = () => {
+        fetchFatoresPriorizacao()
+            .then((fs) => {
+                setFatorUPS(fs.find(f => f.nome === "UPS" && f.primario));
+                setFatorCusto(fs.find(f => f.nome === "Custo Logistico" && f.primario))
+                setOutrosFatores(fs.filter(f => !f.primario));
+            })
+            .catch(error => notificationApi.error({ message: 'Falha ao obter fatores de priorização.' + (error?.response?.data || '') }))
+    }
+
 
     const obterPropriedadesCondicao = () => {
         fetchPropriedades()
@@ -78,7 +91,7 @@ export default function GerenciarPrioridades() {
 
     useEffect(() => {
         obterParametrosCusto();
-    }, [])
+    }, []);
 
     useEffect(() =>{
         fetchUf();
@@ -86,7 +99,7 @@ export default function GerenciarPrioridades() {
 
     useEffect(() =>{
         obterPropriedadesCondicao();
-    },[])
+    },[]);
 
     useEffect(() => {
         fetchMunicipios();
@@ -94,14 +107,18 @@ export default function GerenciarPrioridades() {
 
     useEffect(() =>{
         obterPortesEscolas();
-    },[])
+    },[]);
+
+    useEffect(() => {
+        obterListaFatores();
+    }, [])
     
     const items: CollapseProps['items'] = [
         {
             key: '1',
             label: 'UPS',
             children: (
-                <FatorForm nome="UPS" primario></FatorForm>
+                <FatorForm fator={fatorUPS}></FatorForm>
             )
         },
         {
@@ -109,7 +126,7 @@ export default function GerenciarPrioridades() {
             label: "Custo Logístico",
             children: (
                 <div className="custo-logistico">
-                    <FatorForm nome="Custo Logístico" primario></FatorForm>
+                    <FatorForm fator={fatorCusto}></FatorForm>
                     <div className="custo-table">
                         <p>Parâmetros do Custo Logístico</p>
                         <table>
@@ -129,13 +146,13 @@ export default function GerenciarPrioridades() {
                                                 item.raioMax ?
                                                 <div>
                                                     <span>{item.raioMin} - 
-                                                    <input defaultValue={item.raioMax} className="br-input small"></input>
+                                                    <input type="number" defaultValue={item.raioMax} className="br-input small"></input>
                                                     </span>
                                                 </div> :
                                                 <p>Acima de {item.raioMin}</p>
                                             }
                                         </th>
-                                        <th><input defaultValue={item.valor} className="br-input small"></input></th>
+                                        <th><input type="number" defaultValue={item.valor} className="br-input small"></input></th>
                                     </tr>
                                 ))}
                             </tbody>
@@ -148,7 +165,13 @@ export default function GerenciarPrioridades() {
             key: '3',
             label: "Outros fatores",
             children: (
-                <FatorForm nome="Teste" condicaoUfs={ListaUfs} propriedades={propriedades} municipios={listaMunicipios} situacoes ={opcoesSituacao.map(s => ({id : s.id.toString(), rotulo: s.descricao}))} etapasEnsino = {etapas} porte = {listaPortesEscolas}></FatorForm>
+                <div>
+                    <button data-testid="botaoAdicionarFator" className="br-button primary" type="button" onClick={() => {}}>Novo Fator</button>
+                    {outrosFatores.map((item) => (
+                        <FatorForm key={item.id} fator={item} condicaoUfs={ListaUfs} propriedades={propriedades} municipios={listaMunicipios} situacoes ={opcoesSituacao.map(s => ({id : s.id.toString(), rotulo: s.descricao}))} etapasEnsino = {etapas} porte = {listaPortesEscolas}></FatorForm>
+                    ))}
+                </div>
+                //<FatorForm nome="Teste" condicaoUfs={ListaUfs} propriedades={propriedades} municipios={listaMunicipios} situacoes ={opcoesSituacao.map(s => ({id : s.id.toString(), rotulo: s.descricao}))} etapasEnsino = {etapas} porte = {listaPortesEscolas}></FatorForm>
             )
         },
     ];

@@ -66,7 +66,7 @@ export default function FatorCondicaoSelect({condicaoUfs, propriedades, municipi
                 rotulo: "menor ou igual a",
             }])
         }
-        else if(propriedadeSelecionada){
+        else {
             setListaOperadores([ {
                 id: Operador.igual,
                 rotulo: "igual a",
@@ -81,10 +81,10 @@ export default function FatorCondicaoSelect({condicaoUfs, propriedades, municipi
             valor: valorSelecionado}))
     }, [propriedadeSelecionada, operadorSelecionado, valorSelecionado])
     return (
-        <div>
+        <div style={{display: "flex"}}>
             <Select items={propriedades ? propriedades : []} value={propriedadeSelecionada} onChange={(c) => {
-                setPropriedadeSelecionada(c)
-                SelecionarPropriedade(c)
+                setPropriedadeSelecionada(c);
+                SelecionarPropriedade(c);
             }} />
             <Select items={listaOperadores} value={operadorSelecionado} onChange={setOperadorSelecionado} />
             {propriedadeSelecionada != "6" ? <MultiSelect items={listaPropriedade} value={valorSelecionado} onChange={setValorSelecionado} />:
