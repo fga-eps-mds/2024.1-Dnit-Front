@@ -3,7 +3,11 @@ import Modal from "../../Modal";
 import ReactLoading from "react-loading";
 import SelectSchoolCard from "../../SelectSchoolCard";
 import { fetchListarEscolasFiltradas } from "../../../service/escolaApi";
-import { EscolaData } from "../../../models/service";
+import {
+  AtualizarPlanejamento,
+  EscolaData,
+  PlanejamentoMacroMesUpdate,
+} from "../../../models/service";
 import {
   InfoMesPlanejamentoMacro,
   EscolaPlanejamentoModel,
@@ -180,7 +184,7 @@ export default function ModalAdicionarEscola({
               data-testId="Adicionar"
               className="br-button primary"
               type="button"
-              onClick={() => {
+              onClick={async () => {
                 const listaEscolaPlanejamentoModel: EscolaPlanejamentoModel[] =
                   listaEscolasSelecionadas.map(
                     converterParaEscolaPlanejamentoModel
@@ -201,16 +205,34 @@ export default function ModalAdicionarEscola({
                 newPlanejamento.planejamentoMacroMensal =
                   newInfoPlanejamentoMacro;
 
+                let planejamentoMesesInfo: PlanejamentoMacroMesUpdate[] =
+                  newPlanejamento!.planejamentoMacroMensal.map((element) => ({
+                    mes: element.mes,
+                    ano: element.ano,
+                    escolas: element.escolas.map((escola) => escola.id),
+                  }));
+
+                let bodyRequest: AtualizarPlanejamento = {
+                  nome: newPlanejamento!.nome,
+                  planejamentoMacroMensal: planejamentoMesesInfo,
+                };
+
                 if (newPlanejamento) {
-                  // updatePlanejamento(planejamento.id, newPlanejamento)
-                  //     .then(() => {
-                  //         notification.success({ message: "Escolas Adicionas ao Planejamento com Sucesso!" });
-                  //     })
-                  //     .catch((error) => {
-                  //         notification.error({
-                  //             message: "Falha em Adicionar Escolas ao Planejamento."
-                  //         });
-                  //     });
+                  await updatePlanejamento(planejamento.id, bodyRequest)
+                    .then((response) => {
+                      notification.success({
+                        message:
+                          "Escolas Adicionas ao Planejamento com Sucesso!",
+                      });
+
+                      planejamento = response;
+                    })
+                    .catch((error) => {
+                      console.log(error);
+                      notification.error({
+                        message: "Falha em Adicionar Escolas ao Planejamento.",
+                      });
+                    });
                 }
                 onClose();
               }}
