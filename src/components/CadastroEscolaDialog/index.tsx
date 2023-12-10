@@ -34,8 +34,8 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
   const regrasLatLong = [
     {
       required: false,
-      pattern: /^-?([1-8]?\d|90)(.\d{1,12})?$/,
-      message: "Insira um número entre -90 e +90 com até 12 decimais, utilizando ponto",
+      pattern: /^-?([1-8]?\d|90)(.\d{1,8})?$/,
+      message: "Insira um número entre -90 e +90 com até 8 casas decimais, utilizando ponto",
     },
   ];
 
@@ -46,6 +46,35 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
       message: "Preencha com apenas números",
     },
   ];
+
+  const parseCoordenadas = (value: string, name: string) => {
+    const parts = value.split(',').map(part => part.trim());
+    if (parts.length === 2) {
+      const latitude = parseFloat(parts[0]);
+      const longitude = parseFloat(parts[1]);
+
+      form.setFieldsValue({
+        latitude: latitude.toFixed(8),
+        longitude: longitude.toFixed(8)
+      });
+    }
+  };
+
+  const handlePaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
+    event.preventDefault();
+
+    const pastedData = event.clipboardData.getData('text');
+    const fieldName = event.currentTarget.name;
+
+    parseCoordenadas(pastedData, fieldName);
+  };
+
+
+
+  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    parseCoordenadas(value, name);
+  };
 
   const consultaCEP = async (cep: string) => {
     try {
@@ -88,6 +117,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
   const limpaMunicipio = () => {
     form.setFieldValue("municipio", undefined);
   };
+
 
   async function fetchUf(): Promise<void> {
     const listaUfs = await fetchUnidadeFederativa();
@@ -164,16 +194,17 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
     <div
       className="overlay "
       data-testid="overlay"
-      onClick={(e) => {
+      onMouseUp={() => { }}
+      onMouseDown={(e) => {
         if (e.target === e.currentTarget) {
           closeDialog(true);
         }
       }}
       onKeyDown={() => { }}
     >
-      <div className="custom-modal" style={{ width: "90%" }}>
+      <div className="custom-modal overflow-auto">
         {contextHolder}
-        <div >
+        <div>
           <h2>Cadastrar Escola</h2>
           <Form
             form={form}
@@ -181,21 +212,32 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
             name="Cadastro Escola"
             layout="vertical"
             autoComplete="off"
-            className="form-email"
             preserve
           >
-            <div className="divScroll">
-              <div className="bloco">
-                <Form.Item name="nome" label="Nome da Escola" rules={regrasPreenchimento}>
+            <div className="row p-4">
+              <div className="col-4">
+                <Form.Item
+                  name="nome"
+                  label="Nome da Escola"
+                  className="col-x1-5"
+                  rules={regrasPreenchimento}
+                >
                   <Input
+                    className="custom-input"
                     type="text"
-                    className="inputForm2"
                     value={"dadosSoliciatacao?.nomeSolicitante"}
                   />
                 </Form.Item>
 
-                <Form.Item name="rede" label="Rede" rules={regrasPreenchimento}>
-                  <Select data-testid={"selectRede"}>
+                <Form.Item
+                  name="rede"
+                  label="Rede"
+                  className="col-x1-5"
+                  rules={regrasPreenchimento}
+                >
+                  <Select
+                    data-testid={"selectRede"}
+                  >
                     <Select value={1}>Municipal</Select>
                     <Select value={2}>Estadual</Select>
                     <Select value={3}>Privada</Select>
@@ -205,6 +247,7 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                 <Form.Item
                   name="codigo"
                   label="Codigo da Escola"
+                  className="col-x1-5"
                   rules={[
                     {
                       required: true,
@@ -213,12 +256,13 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                     },
                   ]}
                 >
-                  <Input className="inputForm2" />
+                  <Input className="custom-input" />
                 </Form.Item>
 
                 <Form.Item
                   name="cep"
                   label="CEP"
+                  className="col-x1-5"
                   rules={[
                     {
                       required: true,
@@ -228,14 +272,19 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                   ]}
                 >
                   <Input
-                    className="inputForm2"
+                    className="custom-input"
                     onChange={(event) => {
                       consultaCEP(event.target.value);
                     }}
                   />
                 </Form.Item>
 
-                <Form.Item name="uf" rules={regrasPreenchimento} label="UF">
+                <Form.Item
+                  name="uf"
+                  className="col-x1-5"
+                  rules={regrasPreenchimento}
+                  label="UF"
+                >
                   <Select
                     data-testid={"selectUf"}
                     onChange={limpaMunicipio}
@@ -243,7 +292,6 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                     notFoundContent={<p>Carregando...</p>}
                     placement="bottomRight"
                     optionLabelProp="label"
-                    className="uf"
                   >
                     {listaUfs?.map((u) => (
                       <Select key={u.id} value={u.rotulo} >
@@ -260,20 +308,28 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                   </Select>
                 </Form.Item>
               </div>
-              <div className="bloco2">
-                <Form.Item name="telefone" label="Telefone" rules={[
-                  {
-                    required: true,
-                    pattern: /^\d{10,11}$/,
-                    message: "O número de telefone deve conte 9 ou 8 digitos com DDD",
-                  },
-                ]}>
-                  <Input
-                    className="inputForm2"
-                  />
+              <div className="col-4">
+                <Form.Item
+                  name="telefone"
+                  label="Telefone"
+                  className="col-x1-5"
+                  rules={[
+                    {
+                      required: true,
+                      pattern: /^\d{10,11}$/,
+                      message: "O número de telefone deve conte 9 ou 8 digitos com DDD",
+                    },
+                  ]}>
+                  <Input className="custom-input" />
                 </Form.Item>
 
-                <Form.Item name="ciclos" label="Etapas de Ensino" rules={regrasPreenchimento}>
+                <Form.Item
+                  name="ciclos"
+                  label="Etapas de Ensino"
+                  rules={regrasPreenchimento}
+                  className="col-x1-5"
+
+                >
                   <Select
                     data-testid={"selectEtapasEnsino"}
                     mode="multiple"
@@ -283,7 +339,6 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                     notFoundContent={<p>Carregando...</p>}
                     placement="bottomRight"
                     optionLabelProp="label"
-                    className="select-etapas-cadastro"
                     showSearch={false}
                   >
                     {OpcoesEtapasDeEnsino?.map((u) => (
@@ -294,8 +349,15 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                   </Select>
                 </Form.Item>
 
-                <Form.Item name="porte" label="Porte" rules={regrasPreenchimento}>
-                  <Select data-testid={"selectPorte"}>
+                <Form.Item
+                  name="porte"
+                  label="Porte"
+                  rules={regrasPreenchimento}
+                  className="col-x1-5"
+                >
+                  <Select
+                    data-testid={"selectPorte"}
+                  >
                     <Select value={1}>Até 50 matrículas de escolarização</Select>
                     <Select value={2}>
                       Entre 51 e 200 matrículas de escolarização
@@ -311,20 +373,28 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                     </Select>
                   </Select>
                 </Form.Item>
-                <Form.Item name="endereco" label="Endereço" rules={regrasPreenchimento}>
-                  <Input className="inputForm2" />
+                <Form.Item
+                  name="endereco"
+                  label="Endereço"
+                  className="col-x1-5"
+                  rules={regrasPreenchimento}
+                >
+                  <Input className="custom-input" />
                 </Form.Item>
 
-                <Form.Item name="municipio" label="Município" rules={regrasPreenchimento}>
+                <Form.Item
+                  name="municipio"
+                  label="Município"
+                  className="col-x1-5"
+                  rules={regrasPreenchimento}
+                >
                   <Select
-                    
+
                     data-testid={"selectMunicipio"}
                     disabled={erroCEP}
                     notFoundContent={<p>Carregando...</p>}
                     placement="bottomRight"
                     optionLabelProp="label"
-                    className="uf"
-                  // onMouseDown={consultaMunicipio}
                   >
                     {listaMunicipios?.map((u) => (
                       <Select key={u.id} value={u.rotulo} >
@@ -342,35 +412,50 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                   </Select>
                 </Form.Item>
               </div>
-              <div className="bloco3">
-                <Form.Item name="localizacao" label="Localização" rules={regrasPreenchimento}>
-                  <Select 
-                  className="us"
-                  data-testid={"select-etapas-cadastro"}>
+              <div className="col-4">
+                <Form.Item
+                  name="localizacao"
+                  label="Localização"
+                  className="col-x1-5"
+                  rules={regrasPreenchimento}>
+                  <Select
+                    data-testid={"select-etapas-cadastro"}>
                     <Select value={1}>Rural</Select>
                     <Select value={2}>Urbana</Select>
                   </Select>
                 </Form.Item>
 
                 <Form.Item
-                  name="longitude"
-                  label="Longitude"
-                  rules={regrasLatLong}
-                >
-                  <Input className="inputForm2" />
+                  name="latitude"
+                  label="Latitude"
+                  className="col-x1-5"
+                  rules={regrasLatLong}>
+                  <Input
+                    className="custom-input"
+                    onPaste={handlePaste}
+                  />
                 </Form.Item>
 
-                <Form.Item name="latitude" label="Latitude" rules={regrasLatLong}>
-                  <Input className="inputForm2" />
+                <Form.Item
+                  name="longitude"
+                  label="Longitude"
+                  className="col-x1-5"
+                  rules={regrasLatLong}
+                >
+                  <Input
+                    onPaste={handlePaste}
+                    className="custom-input"
+                  />
                 </Form.Item>
 
                 <Form.Item
                   name="numeroAlunos"
                   label="Número Total de Alunos"
+                  className="col-x1-5"
                   rules={regrasQtdAlunosDocentes}
                 >
                   <Input
-                    className="inputForm2"
+                    className="custom-input"
                     onChange={e => setQtdAlunos(form.getFieldValue("numeroAlunos"))}
                   />
                 </Form.Item>
@@ -378,35 +463,34 @@ export function CadastroEscolaDialog({ closeDialog, dadosSoliciatacao }: Cadastr
                 <Form.Item
                   name="numeroDocentes"
                   label="Número Total de Docentes"
+                  className="col-x1-5"
                   rules={regrasQtdAlunosDocentes}
                 >
-                  <Input className="inputForm2" />
+                  <Input className="custom-input" />
                 </Form.Item>
               </div>
             </div>
-            <div className="cancelar">
-              <Space size={735}>
-                <Button
-                  data-testid="botaoCancelar"
-                  className="custom-button"
-                  type="primary"
-                  size="large"
-                  shape="round"
-                  onClick={() => closeDialog(true)}
-                >
-                  Cancelar
-                </Button>
+            <div className="row justify-content-between">
+              <Button
+                data-testid="botaoCancelar"
+                className="custom-button"
+                type="primary"
+                size="large"
+                shape="round"
+                onClick={() => closeDialog(true)}
+              >
+                Cancelar
+              </Button>
 
-                <Button
-                  className="custom-button"
-                  type="primary"
-                  size="large"
-                  htmlType="submit"
-                  shape="round"
-                >
-                  Cadastrar
-                </Button>
-              </Space>
+              <Button
+                className="custom-button "
+                type="primary"
+                size="large"
+                htmlType="submit"
+                shape="round"
+              >
+                Cadastrar
+              </Button>
             </div>
           </Form>
         </div>

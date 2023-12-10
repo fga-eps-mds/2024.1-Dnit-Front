@@ -23,13 +23,22 @@
     display: flex;
     flex-direction: column;
     max-width: var(--modal-size);
+    max-height: 95%;
     z-index: var(--z-index-layer-4);
+
   }
 
   .custom-button {
     zoom: 80%;
     width: 10em;
     background-color: #1351b4;
-    margin-right: 20px;
+    margin-right: 10%;
+    margin-left: 10%;
     margin-bottom: 20px;
+  }
+
+  .custom-input {
+    border: 1px solid var(--gray2);
+    border-radius: 2px;
+    background-color: var(--gray1);
   }

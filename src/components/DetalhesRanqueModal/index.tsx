@@ -25,6 +25,10 @@ function Label({ children, className }: LabelProps) {
     </label>)
 }
 
+function formatDescription(texto: string): string {
+    return texto.replace(/\n/g, ' ');
+}
+
 const ModalDetalhesRanque: React.FC<ModalProps> = ({ ranque, onEditDescription, onClose }) => {
     const [_, contextHolder] = notification.useNotification();
 
@@ -33,7 +37,7 @@ const ModalDetalhesRanque: React.FC<ModalProps> = ({ ranque, onEditDescription, 
 
     const onEditClick = async () => {
         if (modoEdicao) {
-            const descricao: RanqueUpdateData = { descricao: novaDescricao };
+            const descricao: RanqueUpdateData = { descricao: formatDescription(novaDescricao) };
             await fetchAtualizarDescricaoRanque(ranque.id, descricao);
             ranque.descricao = novaDescricao;
             setModoEdicao(false);
@@ -70,7 +74,7 @@ const ModalDetalhesRanque: React.FC<ModalProps> = ({ ranque, onEditDescription, 
                             maxLength={100}
                         />
                     ) : (
-                        <Label>{ranque.descricao}</Label>
+                        <Label className="texto-descricao">{ranque.descricao}</Label>
                     )}
                     <div className='d-flex flex-column '>
                     </div>

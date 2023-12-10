@@ -39,7 +39,7 @@ function Ranque() {
   const paginas = [{ nome: "Logout", link: "/login" }];
   const [loading, setLoading] = useState(true);
   const [escolas, setEscolas] = useState<ListaPaginada<EscolaRanqueData> | null>(null);
-  const colunas = ['Posição', 'Pontuação', 'Escola', 'Etapas de Ensino', 'UF', 'Município', 'Cidade polo mais próxima', 'Custo Logístico'];
+  const colunas = ['Posição', 'Pontuação', 'Escola', 'Etapas de Ensino', 'UF', 'Município', 'UF Polo mais próximo', 'Custo Logístico'];
 
   const [paginacao, setPaginacao] = useState({ pagina: 1, tamanhoPagina: 10, });
   const [notificationApi, notificationContextHandler] = notification.useNotification();
@@ -58,13 +58,6 @@ function Ranque() {
   const navigate = useNavigate();
   const { temPermissao } = useContext(AuthContext);
 
-  const temPermissaoGerenciar = {
-    cadastrar: temPermissao(Permissao.EmpresaCadastrar),
-    visualizar: temPermissao(Permissao.EmpresaVisualizar),
-    remover: temPermissao(Permissao.EmpresaRemover),
-    editar: temPermissao(Permissao.EmpresaEditar),
-    visualizarUsuarios: temPermissao(Permissao.EmpresaVisualizarUsuarios),
-  }
   const podeExportarRanque = temPermissao(Permissao.RanqueExportar);
 
   useEffect(() => {
@@ -127,7 +120,7 @@ function Ranque() {
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     const padZeros = (n: number) => n.toString().padStart(2, '0');
-    return `${padZeros(date.getDate())}/${padZeros(date.getMonth())}/${date.getFullYear()} ${padZeros(date.getHours())}:${padZeros(date.getMinutes())}`
+    return `${padZeros(date.getDate())}/${padZeros(date.getMonth()+1)}/${date.getFullYear()} ${padZeros(date.getHours())}:${padZeros(date.getMinutes())}`
   }
 
   return (
@@ -187,8 +180,8 @@ function Ranque() {
                     '3': formatEtapaEnsino(e.escola.etapaEnsino),
                     '4': e.escola.uf?.sigla || '',
                     '5': e.escola.municipio?.nome || '',
-                    '6': e.escola.superintendencia?.uf || '',
-                    '7': formataCustoLogistico(e.escola.distanciaSuperintendencia),
+                    '6': e.escola.distanciaPolo? e.escola.polo?.uf.sigla : '-',
+                    '7': e.escola.distanciaPolo? formataCustoLogistico(e.escola.distanciaPolo) : '-',
                   }}
                   hideTrashIcon={true}
                   hideEditIcon={true}
