@@ -2,65 +2,50 @@ import React, { useState, useEffect } from 'react';
 import Modal from "../../Modal";
 import ReactLoading from "react-loading";
 import SelectSchoolCard from "../../SelectSchoolCard";
+import {fetchListarEscolasFiltradas} from "../../../service/escolaApi";
+import {EscolaData} from "../../../models/service";
 
 interface ModalProps {
     onClose: () => void;
 }
 
-interface Escola {
-    id: number
-    nome: string;
-    uf: string;
-    qtdAlunos: number;
-}
-
-const dados: Escola[] = [
-    { id: 1, nome: "Sigma", uf: "SP", qtdAlunos: 500 },
-    { id: 2, nome: "Beta", uf: "RJ", qtdAlunos: 700 },
-    { id: 3, nome: "Omega", uf: "MG", qtdAlunos: 400 },
-    { id: 4, nome: "Alpha", uf: "RS", qtdAlunos: 600 },
-    { id: 5, nome: "ABELIANO DA SILVA SANTOS PAULINO", uf: "BA", qtdAlunos: 800 },
-    { id: 6, nome: "Gamma", uf: "SC", qtdAlunos: 550 },
-    { id: 7, nome: "Delta", uf: "PR", qtdAlunos: 450 },
-    { id: 8, nome: "Theta", uf: "CE", qtdAlunos: 350 },
-    { id: 9, nome: "Zeta", uf: "PE", qtdAlunos: 900 },
-    { id: 10, nome: "Iota", uf: "GO", qtdAlunos: 720 }
-];
-
 export default function ModalAdicionarEscola({ onClose }: ModalProps) {
-    const [escolasBanco, setEscolasBanco] = useState<Escola[]>(dados);
-    const [escolas, setEscolas] = useState<Escola[] | null>(escolasBanco);
+    const [escolasBanco, setEscolasBanco] = useState<EscolaData[]>([]);
+    const [escolas, setEscolas] = useState<EscolaData[]>(escolasBanco); 
     const [nome, setNome] = useState("");
     const [escolaSelecionada, setEscolaSelecionada] = useState<{ [key: number]: boolean }>({});
-    const [listaEscolasSelecionadas, SetListaEscolasSelecionadas] = useState<Escola[]>([]);
+    const [listaEscolasSelecionadas, setListaEscolasSelecionadas] = useState<EscolaData[]>([]);
     const [mes, setMes] = useState<string>("Dezembro");
 
-    //TODO A FUNCAO FETCHESCOLAS
-    // useEffect(() => {
-    //     fetchEscolas(escolaId)
-    //         .then((escolas) => {
-    //                 setEscolasBanco(escolas);
-    //                 setEscolas(escolas);
-    //             }
-    //         )
-    // }, []);
-    
-    //TODO A FUNCAO FETCHMES
-    // useEffect(() => {
-    //     fetchMesAtual().then((mes) => { setMes(mes) })
-    // }, []);
+    useEffect(() => {
+        fetchListarEscolasFiltradas({
+            params: {
+                Pagina: 1,
+                TamanhoPagina: 10000,
+                Nome: "",
+                IdSituacao: "",
+                IdMunicipio: "",
+                IdUf: "",
+            },
+        })
+            .then((escolas) => {
+                setEscolasBanco(escolas.escolas);
+                setEscolas(escolas.escolas);
+            })
+            
+    }, []);
     
     useEffect(() => {
         setEscolas(
             escolasBanco.filter(index =>
-                index.nome.toLowerCase().includes(nome.toLowerCase())
+                index.nomeEscola.toLowerCase().includes(nome.toLowerCase())
             )
         );
     }, [nome]);
 
     useEffect(() => {
-        const escolasFiltradas = escolasBanco.filter(escola => escolaSelecionada[escola.id]);
-        SetListaEscolasSelecionadas(escolasFiltradas);
+        const escolasFiltradas = escolasBanco.filter(escola => escolaSelecionada[escola.idEscola]);
+        setListaEscolasSelecionadas(escolasFiltradas);
     }, [escolaSelecionada, escolasBanco]);
 
 
@@ -105,15 +90,15 @@ export default function ModalAdicionarEscola({ onClose }: ModalProps) {
                     {escolas?.map((escola, index) => (
                         <div key={index}>
                             <SelectSchoolCard
-                                schoolId={escola.id}
-                                schoolName={escola.nome}
-                                schoolUf={escola.uf}
-                                schoolStudents={escola.qtdAlunos}
-                                isSelected={escolaSelecionada[escola.id] || false}
+                                schoolId={escola.idEscola}
+                                schoolName={escola.nomeEscola}
+                                schoolUf={escola.siglaUf}
+                                schoolStudents={escola.numeroTotalDeAlunos}
+                                isSelected={escolaSelecionada[escola.idEscola] || false}
                                 onClick={() => {
                                     setEscolaSelecionada(prevState => ({
                                         ...prevState,
-                                        [escola.id]: !prevState[escola.id]
+                                        [escola.idEscola]: !prevState[escola.idEscola]
                                     }));
                                 }}
                             />
