@@ -81,7 +81,22 @@ describe('Tabela de Gerenciar Acoes', () => {
         
         const overlay = screen.getByText('Confirmar');
         fireEvent.click(overlay);
-        expect(screen.getByText('Falha na exclusão do Planejamento.')).toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.getByText('Falha na exclusão do Planejamento.')).toBeInTheDocument();
+        });
+        expect(deletou).not.toBeTruthy();
+    });
+
+    it('deve cancelar', async () => {
+        let deletou = false;
+        render(
+            <MemoryRouter>
+                <DeletarPlanejamentoDialog closeDialog={() => {}} planejamento={planejamento1} />
+            </MemoryRouter>
+        );
+
+        const overlay = screen.getByTestId('botaoCancelar');
+        fireEvent.click(overlay);
         expect(deletou).not.toBeTruthy();
     });
     
