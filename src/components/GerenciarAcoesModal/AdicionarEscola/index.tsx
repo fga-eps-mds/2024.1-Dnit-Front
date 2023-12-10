@@ -132,7 +132,7 @@ export default function ModalAdicionarEscola({ planejamento, infoMes, onClose }:
                         }}>
                             Cancelar
                         </button>
-                        <button className="br-button primary" type="button" onClick={() => {
+                        <button data-testId="Adicionar" className="br-button primary" type="button" onClick={() => {
                             const listaEscolaPlanejamentoModel: EscolaPlanejamentoModel[] = 
                                 listaEscolasSelecionadas.map(converterParaEscolaPlanejamentoModel);
                             
