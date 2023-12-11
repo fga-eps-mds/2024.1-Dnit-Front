@@ -99,12 +99,13 @@ test("should render error in Register form", async () => {
     });
     fireEvent.click(usuarioDnitRadioButton);
   });
-
 });
 
 test("should render error in the Register form when it exists", async () => {
-  const mockedError = new ExcessoesApi('409','Email já cadastrado', {"1":"null"});
-  mockedUseRegister.mockImplementation(() => Promise.reject(mockedError))
+  const mockedError = new ExcessoesApi("409", "Email já cadastrado", {
+    "1": "null",
+  });
+  mockedUseRegister.mockImplementation(() => Promise.reject(mockedError));
 
   const screen = render(
     <MemoryRouter initialEntries={["/cadastro"]}>
@@ -144,12 +145,14 @@ test("should render error in the Register form when it exists", async () => {
 
   fireEvent.click(button);
 
-  await waitFor (() => expect(screen.getByText("Email já cadastrado")).toBeInTheDocument())
+  await waitFor(() =>
+    expect(screen.getByText("Email já cadastrado")).toBeInTheDocument()
+  );
 });
 
 test("should render error in the Register form when it exists", async () => {
   const mockedError = new Error("Erro interno");
-  mockedUseRegister.mockImplementation(() => Promise.reject(mockedError))
+  mockedUseRegister.mockImplementation(() => Promise.reject(mockedError));
 
   const screen = render(
     <MemoryRouter initialEntries={["/cadastro"]}>
@@ -189,5 +192,7 @@ test("should render error in the Register form when it exists", async () => {
 
   fireEvent.click(button);
 
-  await waitFor (() => expect(screen.getByText("Erro interno")).toBeInTheDocument())
+  await waitFor(() =>
+    expect(screen.getByText("Erro interno")).toBeInTheDocument()
+  );
 });

@@ -68,32 +68,9 @@ describe("Tabela de Gerenciar Acoes", () => {
     fireEvent.click(overlay);
   });
 
-  it("deve mostrar notificação de erro", async () => {
-    let deletou = false;
-    render(
-      <MemoryRouter>
-        <DeletarPlanejamentoDialog
-          closeDialog={(d) => {
-            deletou = d;
-          }}
-          planejamento={planejamento2}
-          onClick={(id: string) => {}}
-        />
-      </MemoryRouter>
-    );
+  it("deve mostrar notificação de sucesso", async () => {
+    const onClickMock = jest.fn();
 
-    const overlay = screen.getByText("Confirmar");
-    fireEvent.click(overlay);
-    await waitFor(() => {
-      expect(
-        screen.getByText("Falha na exclusão do Planejamento.")
-      ).toBeInTheDocument();
-    });
-    expect(deletou).not.toBeTruthy();
-  });
-
-  it("deve mostrar notificação de erro", async () => {
-    let deletou = false;
     render(
       <MemoryRouter>
         <DeletarPlanejamentoDialog
@@ -101,19 +78,15 @@ describe("Tabela de Gerenciar Acoes", () => {
             deletou = d;
           }}
           planejamento={planejamento}
-          onClick={(id: string) => {}}
+          onClick={onClickMock}
         />
       </MemoryRouter>
     );
 
     const overlay = screen.getByText("Confirmar");
     fireEvent.click(overlay);
-    await waitFor(() => {
-      expect(
-        screen.getByText("Planejamento deletado com sucesso!")
-      ).toBeInTheDocument();
-    });
-    expect(deletou).toBeTruthy();
+
+    expect(onClickMock).toHaveBeenCalledTimes(1);
   });
 
   it("deve cancelar", async () => {

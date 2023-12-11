@@ -19,7 +19,7 @@ describe("Modal alterar Escola", () => {
         )}
       </div>
     );
-    expect(screen.getByText("Indisponível...")).toBeInTheDocument();
+    expect(screen.getByText("Alterar Escolas")).toBeInTheDocument();
   });
 
   it("deve fechar ao clicar no overlay", async () => {
@@ -40,7 +40,7 @@ describe("Modal alterar Escola", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("Indisponível...")).toBeInTheDocument();
+      expect(screen.getByText("Alterar Escolas")).toBeInTheDocument();
     });
 
     const overlay = screen.getByTestId("overlay");

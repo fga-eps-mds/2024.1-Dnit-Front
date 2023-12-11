@@ -217,11 +217,12 @@ export default function CustomTable({
       <table>
         <thead>
           <tr>
-            {columsTitle.map((element) => (
+            {columsTitle.map((element, index) => (
               <th
                 key={`${title}-${element}`}
                 scope="col"
                 style={{ color: "#1351B4", fontWeight: "bold" }}
+                data-testid={`table-row-${index}`}
               >
                 {element}
               </th>
