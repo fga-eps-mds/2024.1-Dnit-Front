@@ -86,7 +86,7 @@ export default function FatorForm ({ fator, onSaveFator, onDeleteFator, condicao
                     }}></i>
                 </div>
             </div>}
-            <div className="br-switch icon" onClick={() => setAtivo(!ativo)}>
+            <div className="br-switch icon" onClick={() => setAtivo(!ativo)} onKeyDown={() => {}}>
                 <input id="switch-icon" type="checkbox" checked={ativo} />
                 <label>Ativo:</label>
             </div>
