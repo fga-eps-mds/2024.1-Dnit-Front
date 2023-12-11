@@ -183,7 +183,7 @@ export default function GerenciarAcoes() {
           >
             {planejamentoBanco?.map((e, index) => (
               <CustomTableRow
-                key={e.nome}
+                key={index}
                 id={index}
                 data={{
                   "0": e.nome,
