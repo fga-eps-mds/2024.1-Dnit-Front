@@ -25,6 +25,7 @@ import { Permissao, TipoPerfil } from "../../models/auth";
 import { usuarios } from "../stub/usuarioModelos";
 import { ranqueData } from "../stub/ranqueModelos";
 import { solicitacao, solicitacaoSemEscola } from "../stub/solicitacaoAcao";
+import priorizacaoRequests from "./priorizacao/API";
 
 const escolasService = urlAPIEscolas;
 const upsService = urlAPIUps;
@@ -322,6 +323,76 @@ const server = setupServer(
             id: 3,
             descricao: "Ensino Médio",
           },
+        ])
+      );
+    }
+  ),
+  rest.get(
+    `${escolasService}/dominio/propriedades`,
+    (req, res, ctx) => {
+      return res(
+        ctx.json([
+          {
+            id: 1,
+            rotulo: "Porte"
+          },
+          {
+            id: 2,
+            rotulo: "Situacao"
+          },
+          {
+            id: 3,
+            rotulo: "Municipio"
+          },
+          {
+            id: 4,
+            rotulo: "UF"
+          },
+          {
+            id: 5,
+            rotulo: "Localizacao"
+          },
+          {
+            id: 6,
+            rotulo: "TotalAlunos"
+          },
+          {
+            id: 7,
+            rotulo: "EtapaEnsino"
+          },
+          {
+            id: 8,
+            rotulo: "Rede"
+          }
+        ])
+      );
+    }
+  ),
+  rest.get(
+    `${escolasService}/dominio/propriedades`,
+    (req, res, ctx) => {
+      return res(
+        ctx.json([
+          {
+            id: "Ate50",
+            descricao: "Até 50 matrículas de escolarização"
+          },
+          {
+            id: "Entre201e500",
+            descricao: "Entre 201 e 500 matrículas de escolarização"
+          },
+          {
+            id: "Entre501e1000",
+            "descricao": "Entre 501 e 1000 matrículas de escolarização"
+          },
+          {
+            id: "Entre51e200",
+            descricao: "Entre 51 e 200 matrículas de escolarização"
+          },
+          {
+            id: "Mais1000",
+            descricao: "Mais de 1000 matrículas de escolarização"
+          }
         ])
       );
     }
@@ -822,6 +893,7 @@ const server = setupServer(
   ))),
   ...poloRequests,
   ...empresaRequests,
+  ...priorizacaoRequests,
   rest.get(listarEscolasRanque, (_, res, ctx) => res(
     ctx.status(200),
     ctx.json(ranqueData)

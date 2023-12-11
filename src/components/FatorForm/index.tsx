@@ -63,11 +63,11 @@ export default function FatorForm ({ fator, onSaveFator, onDeleteFator, condicao
         <div className="fator-form">
             <div className="br-input input-inline">
                 <label>Fator:</label>
-                <input defaultValue={nomeFator} readOnly={fator?.primario} onChange={e => setNomeFator(e.target.value)}></input>
+                <input data-testid={`inputFator${fator.nome}`} defaultValue={nomeFator} readOnly={fator?.primario} onChange={e => setNomeFator(e.target.value)}></input>
             </div>
             <div className="br-input input-inline">
                 <label>Peso:</label>
-                <input type="number" defaultValue={pesoFator} onChange={e => setPesoFator(e.target.valueAsNumber)}></input>
+                <input type="number" data-testid={`peso${fator.nome}`} defaultValue={pesoFator} onChange={e => setPesoFator(e.target.valueAsNumber)}></input>
             </div>
             {!fator?.primario && <div className="br-input input-inline" style={{width: "700px"}}>
                 <label>Condições:</label>
@@ -91,8 +91,8 @@ export default function FatorForm ({ fator, onSaveFator, onDeleteFator, condicao
                 <label>Ativo:</label>
             </div>
             <div className="d-flex w-100 justify-content-start">
-                <button disabled={fator?.primario || !fator?.id} data-testid="botaoExcluir" className="br-button primary" onClick={handleDeleteButton} type="button">Excluir</button>
-                <button data-testid="botaoSalvar" className="br-button primary" type="button" onClick={handleSaveButton}>Salvar</button>
+                <button disabled={fator?.primario || !fator?.id} data-testid={`botaoExcluir${fator.nome}`} className="br-button primary" onClick={handleDeleteButton} type="button">Excluir</button>
+                <button data-testid={`botaoSalvar${fator.nome}`} className="br-button primary" type="button" onClick={handleSaveButton}>Salvar</button>
             </div>
         </div>
     )

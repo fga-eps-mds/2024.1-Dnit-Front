@@ -25,7 +25,6 @@ export default function GerenciarPrioridades() {
     const [opcoesSituacao, setOpcoesSituacao] = useState<SituacaoData[]>([]);
     const [etapas, setEtapas] = useState<SelectItem[]>([]);
     const [listaPortesEscolas, setPortesEscolas] = useState<FilterOptions[]>([]);
-    const [items, setItems] = useState<CollapseProps['items']>();
 
     const obterListaFatores = () => {
         fetchFatoresPriorizacao()
@@ -52,12 +51,10 @@ export default function GerenciarPrioridades() {
 
     const salvarFator = (fator: FatorModel) => {
         if (fator.nome === "") {
-            console.log("Fator deve ter um nome!");
             return;
         }
         
         if (fator.id) {
-            console.log(fator)
             editarFatorPriorizacao(fator.id, fator)
                 .then((fatorAtualizado) => {
                     notification.success({message: `O fator ${fator.nome} foi editado com sucesso!`});
@@ -170,8 +167,9 @@ export default function GerenciarPrioridades() {
     const fatorUps = listaFatores.find(f => f.nome === "UPS" && f.primario);
     const fatorCustoLogistico = listaFatores.find(f => f.nome === "Custo Logistico" && f.primario);
 
-    useEffect(() => {
-        setItems([
+ 
+    const items: CollapseProps['items'] =
+    [
             {
                 key: '1',
                 label: 'UPS',
@@ -209,14 +207,14 @@ export default function GerenciarPrioridades() {
                                                     item.raioMax !== null ?
                                                     <div>
                                                         <span>{item.raioMin} - 
-                                                        <input type="number" id="raioMax" defaultValue={item.raioMax} className="br-input small" 
+                                                        <input data-testid={`raioParam${item.custo}`} type="number" id="raioMax" defaultValue={item.raioMax} className="br-input small" 
                                                         onChange={e => handleParametroCustoChange(item, e.target.id, e.target.valueAsNumber)}></input>
                                                         </span>
                                                     </div> :
                                                     <span>Acima de {item.raioMin}</span>
                                                 }
                                             </td>
-                                            <td><input type="number" id="valor" defaultValue={item.valor} className="br-input small"></input></td>
+                                            <td><input data-testid={`valorParam${item.custo}`} type="number" id="valor" defaultValue={item.valor} className="br-input small"></input></td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -240,8 +238,7 @@ export default function GerenciarPrioridades() {
                 </div>
                 )
             },
-        ]);
-    }, [ListaUfs, propriedades, listaMunicipios, opcoesSituacao, etapas, listaPortesEscolas, items, listaFatores]);
+        ];
 
     return (
         <div className="App">
