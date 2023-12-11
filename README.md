@@ -16,6 +16,14 @@ git clone https://github.com/fga-eps-mds/2023.2-Dnit-Front
 cd 2023.2-Dnit-Front
 ```
 
+Copie o `.env.example` em `.env`
+
+```sh
+cp .env.example .env
+```
+
+E preencha os endereços dos microsserviços apropriadamente.
+
 Instale as dependências:
 
 ```sh
