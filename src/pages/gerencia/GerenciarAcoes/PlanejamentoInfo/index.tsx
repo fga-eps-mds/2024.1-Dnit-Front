@@ -79,33 +79,11 @@ export default function PlanejamentoInfo({
   }, []);
 
   useEffect(() => {
-    let escolasArray: EscolasPlanejamentoTabela[] = [];
-    let cardSelected = 0;
-
-    if (planejamentoInfo.planejamentoMacroMensal.length > cardIndexSelected) {
-      cardSelected = cardIndexSelected;
-    } else {
-      setCardIndexSelected(0);
-    }
-    planejamentoInfo.planejamentoMacroMensal[cardSelected].escolas.forEach(
-      (element) => {
-        escolasArray.push({
-          id: element.id,
-          nome: element.nome,
-          quantidadeAlunos: element.quantidadeAlunos,
-          custoLogistico: numeroCustoLogistico(element.distanciaPolo),
-          uf: element.uf,
-          ups: element.ups,
-        });
-      }
-    );
-
-    setEscolasPlanejamento(escolasArray);
-    setItemsPerPage(escolasArray.length);
     setMonthPlanningSelected(
       planejamentoInfo.planejamentoMacroMensal[cardIndexSelected]
     );
     updateSelectCardData();
+    updateMonthData(cardIndexSelected);
   }, [cardIndexSelected, planejamentoInfo.planejamentoMacroMensal]);
 
   function updateSelectCardData() {
@@ -310,6 +288,10 @@ export default function PlanejamentoInfo({
           infoMes={monthPlanningSelected}
           onClose={() => {
             setModalAdicionarAcao(false);
+          }}
+          onConfirm={(escolaPlanejamento: PlanejamentoMacro) => {
+            setPlanejamento(escolaPlanejamento);
+            updateMonthData(cardIndexSelected);
           }}
         />
       )}
