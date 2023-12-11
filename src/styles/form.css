@@ -229,6 +229,10 @@
   background-color: var(--gray1);
 }
 
+fieldset {
+  visibility: hidden;
+}
+
 .politica {
   float: left;
 }

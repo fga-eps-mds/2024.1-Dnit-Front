@@ -1,4 +1,4 @@
-import { type } from "os";
+import { PlanejamentoMacro } from "./gerenciarAcoes";
 
 export interface UnidadeFederativaData {
   id: number;
@@ -50,6 +50,16 @@ export interface CadastroUsuarioData {
   senha: string;
   nome: string;
   ufLotacao: number;
+  municipioId: number;
+}
+
+export interface CadastroUsuarioTerceiroData {
+  email: string;
+  senha: string;
+  nome: string;
+  ufLotacao: number;
+  municipioId: number;
+  cnpj: string; 
 }
 
 export interface CadastroEscolaData {
@@ -238,6 +248,50 @@ export interface RanqueInfo {
   fatores: Fatores[];
 }
 
+
+export interface CriarPlanejamentoRequest {
+  nome: string;
+  responsavel: string;
+  mesInicio: number;
+  mesFim: number;
+  anoInicio: string;
+  anoFim: string;
+  quantidadeAcoes: number;
+}
+
+export interface ExcluirPlanejamentoData {
+  id_planejamento: string;
+}
+
+export interface PesquisaPlanejamentoFiltro {
+  params: {
+    Pagina: number;
+    TamanhoPagina: number;
+    Nome?: string;
+    Periodo?: string;
+    Responsavel?: string;
+    QuantidadeAcoes?: number;
+  };
+}
+
+export interface PlanejamentoFiltrados {
+  pagina: number;
+  itemsPorPagina: number;
+  total: number;
+  totalPaginas: number;
+  items: PlanejamentoMacro[];
+}
+
+export interface AtualizarPlanejamento {
+  nome: string;
+  planejamentoMacroMensal: PlanejamentoMacroMesUpdate[];
+}
+
+export interface PlanejamentoMacroMesUpdate {
+    mes: number;
+    ano: string;
+    escolas: string[]
+}
 export interface PoloData {
     id: number;
     endereco: string;
