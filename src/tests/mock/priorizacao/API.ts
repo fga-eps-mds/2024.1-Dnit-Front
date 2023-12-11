@@ -1,5 +1,5 @@
 import { rest } from "msw";
-import { adicionarFator, deletarFator, editarCustosLogisticos, editarFator, listarFatores, obterCustosLogisticos } from "../../../consts/service"
+import { ObterPorte, adicionarFator, deletarFator, editarCustosLogisticos, editarFator, listarFatores, obterCustosLogisticos } from "../../../consts/service"
 import { parametrosCustoLogistico } from "../../stub/priorizacaoModelos"
 import { fatoresPriorizacao } from "../../stub/priorizacaoModelos"
 
@@ -75,6 +75,37 @@ const editarCustosLogisticosRequest = rest.put(
     }
 )
 
+const obterPortes = rest.get(
+    `${ObterPorte}`,
+    (_req, res, ctx) => {
+        return res(
+            ctx.status(200),
+            ctx.json([
+                {
+                  "id": "Ate50",
+                  "descricao": "Até 50 matrículas de escolarização"
+                },
+                {
+                  "id": "Entre201e500",
+                  "descricao": "Entre 201 e 500 matrículas de escolarização"
+                },
+                {
+                  "id": "Entre501e1000",
+                  "descricao": "Entre 501 e 1000 matrículas de escolarização"
+                },
+                {
+                  "id": "Entre51e200",
+                  "descricao": "Entre 51 e 200 matrículas de escolarização"
+                },
+                {
+                  "id": "Mais1000",
+                  "descricao": "Mais de 1000 matrículas de escolarização"
+                }]
+            )
+        )
+    }
+)
+
 const priorizacaoRequests = [
     obterCustosLogisticosRequest,
     obterFatoresPriorizacaoRequest,
@@ -82,7 +113,8 @@ const priorizacaoRequests = [
     adicionarFatorPriorizacaoRequest,
     deleteFatorPriorizacaoRequest,
     editarCustosLogisticosRequest,
-    editarFatorPriorizacaoRequest
+    editarFatorPriorizacaoRequest,
+    obterPortes
 ]
 
 export default priorizacaoRequests

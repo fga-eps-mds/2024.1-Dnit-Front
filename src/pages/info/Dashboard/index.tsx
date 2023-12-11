@@ -222,14 +222,6 @@ export default function Dashboard() {
               />
             <p className="text">Gerenciar Prioridades</p>
           </Card>
-          <Card className="card" onClick={() => navigate("/gerenciarPrioridades")}>
-            <img
-                className="iconGerenciarPrioridades"
-                src={IconGerenciarPrioridades}
-                alt="ícone prioridades"
-              />
-            <p className="text">Gerenciar Prioridades</p>
-          </Card>
         </div>
       ),
     },
