@@ -1,13 +1,9 @@
 import Modal from "../Modal";
 import "./styles.css";
-import {
-  EscolasPlanejamentoTabela,
-  InfoMesPlanejamentoMacro,
-} from "../../models/gerenciarAcoes";
+import { EscolasPlanejamentoTabela } from "../../models/gerenciarAcoes";
 
 interface DeletarEscolaDialogProps {
   readonly escola: EscolasPlanejamentoTabela | undefined;
-  readonly infoMes: InfoMesPlanejamentoMacro | undefined;
   readonly closeDialog: (deleted: boolean) => void;
   readonly onConfirm: () => void;
 }
@@ -25,7 +21,7 @@ export default function DeletarEscolaDialog({
       <p>
         <strong>Tem certeza que deseja excluir esta escola?</strong>
       </p>
-      <p>
+      <p data-testid="delete-text">
         A escola <strong>{escola?.nome}</strong> será excluída do planejamento.
       </p>
       <div className="d-flex w-100 justify-content-end mb-2">

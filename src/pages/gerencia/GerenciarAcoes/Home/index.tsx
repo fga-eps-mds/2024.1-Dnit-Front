@@ -18,6 +18,7 @@ import {
 } from "../../../../service/gerenciarAcoes";
 import { PlanejamentoMacro } from "../../../../models/gerenciarAcoes";
 import { meses } from "../fixtures";
+import "./styles.css";
 
 interface FilterOptions {
   id: string;
@@ -80,7 +81,7 @@ export default function GerenciarAcoes() {
       .then((planejamento) => {
         setPlanejamentoBanco(planejamento.items);
         setPlanejamentos(planejamento.items);
-        var listPeriods: FilterOptions[] = [];
+        let listPeriods: FilterOptions[] = [];
 
         planejamento.items.forEach((element, index) => {
           let planejamentoPeriod = `${meses[element.mesInicio - 1]} de ${
@@ -101,7 +102,7 @@ export default function GerenciarAcoes() {
   }, []);
 
   useEffect(() => {
-    var planejamentosFiltrados = planejamentos.filter(
+    let planejamentosFiltrados = planejamentos.filter(
       (index) =>
         index.nome.toLowerCase().includes(nome.toLowerCase()) &&
         index.responsavel.toLowerCase().includes(responsavel.toLowerCase())
@@ -133,7 +134,7 @@ export default function GerenciarAcoes() {
       <Header />
       <TrilhaDeNavegacao elementosLi={paginas} />
       <div className="d-flex flex-column m-5">
-        <div className="d-flex justify-content-left align-items-center mr-5">
+        <div className="filters-row">
           <div style={{ margin: "20px" }}>
             <InputFilter onChange={setNome} label="Nome" />
           </div>
@@ -150,7 +151,11 @@ export default function GerenciarAcoes() {
           </div>
 
           {possuiPermissao && (
-            <div data-testid="botaoPossuiPermissao" style={{ right: "5%" }}>
+            <div
+              data-testid="botaoPossuiPermissao"
+              className="new-planning-button"
+              style={{ right: "5%" }}
+            >
               <ButtonComponent
                 label="Criar Novo Planejamento"
                 buttonStyle="primary"
@@ -183,7 +188,7 @@ export default function GerenciarAcoes() {
           >
             {planejamentoBanco?.map((e, index) => (
               <CustomTableRow
-                key={index}
+                key={`${e.nome}-${index}`}
                 id={index}
                 data={{
                   "0": e.nome,

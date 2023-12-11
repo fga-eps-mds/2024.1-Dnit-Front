@@ -36,6 +36,7 @@ export default function SelectCardGroup({
     <div className="select-cards-group">
       {cardsData.map((card) => (
         <SelectCard
+          key={card.id}
           cardData={card}
           selected={selectedCard === card.id}
           onClick={handleCardClick}
@@ -56,6 +57,7 @@ export function SelectCard({
     <div
       className={selected ? "select-card selected" : "select-card"}
       onClick={() => onClick(cardData.id)}
+      onKeyDown={(event) => {}}
     >
       <p className={isSmallCard ? "card-title-sm" : "card-title"}>
         {cardData.title}

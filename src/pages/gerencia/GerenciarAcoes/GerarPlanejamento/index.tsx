@@ -17,6 +17,7 @@ import { PlanejamentoMacro } from "../../../../models/gerenciarAcoes";
 import { meses } from "../fixtures";
 import { useParams } from "react-router-dom";
 import { PlanejamentoMacroMesUpdate } from "../../../../models/service";
+import ReactLoading from "react-loading";
 
 export default function GerenciarAcoes() {
   const { id } = useParams();
@@ -43,8 +44,10 @@ export default function GerenciarAcoes() {
   const [planejamentoInfo, setPlanejamentoInfo] =
     useState<PlanejamentoMacro | null>(null);
 
+  const [loading, setLoading] = useState(false);
+
   const validateForm = () => {
-    var isValid = true;
+    let isValid = true;
     const newErrors = {
       name: "",
       initialMonth: "",
@@ -98,6 +101,7 @@ export default function GerenciarAcoes() {
 
   const handleSubmit = async () => {
     if (validateForm()) {
+      setLoading(true);
       await createPlanejamento();
       setIsPlanningGenerated(true);
       setSavedTitle(title);
@@ -179,7 +183,7 @@ export default function GerenciarAcoes() {
               <span className="error">{errors.name}</span>
             </div>
             <div className="br-input planejamento-input">
-              <label>Mês inicial</label>
+              <label htmlFor="month-select-init">Mês inicial</label>
               <MonthSelect
                 onMonthSelected={(month) => setInitialMonth(month)}
                 disabled={isPlanningGenerated}
@@ -188,7 +192,7 @@ export default function GerenciarAcoes() {
               <span className="error">{errors.initialMonth}</span>
             </div>
             <div className="br-input planejamento-input">
-              <label>Mês final</label>
+              <label htmlFor="month-select-end">Mês final</label>
               <MonthSelect
                 onMonthSelected={(month) => setFinalMonth(month)}
                 disabled={isPlanningGenerated}
@@ -197,9 +201,9 @@ export default function GerenciarAcoes() {
               <span className="error">{errors.finalMonth}</span>
             </div>
             <div className="br-input planejamento-input">
-              <label>Quantidade de Ações</label>
+              <label htmlFor="input-default-qtd">Quantidade de Ações</label>
               <input
-                id="input-default"
+                id="input-default-qtd"
                 type={"text"}
                 disabled={isPlanningGenerated}
                 onChange={(e) => setQtdActions(Number(e.target.value))}
@@ -237,6 +241,12 @@ export default function GerenciarAcoes() {
           {isPlanningGenerated && planejamentoInfo ? (
             <PlanejamentoInfo planejamento={planejamentoInfo} />
           ) : null}
+
+          {loading && !isPlanningGenerated && (
+            <div className="d-flex justify-content-center w-100 m-5">
+              <ReactLoading type="spinningBubbles" color="#000000" />
+            </div>
+          )}
         </div>
       </div>
 

@@ -31,15 +31,17 @@ function converterParaEscolaPlanejamentoModel(
 }
 
 interface ModalProps {
-  planejamento: PlanejamentoMacro;
-  infoMes: InfoMesPlanejamentoMacro | undefined;
-  onClose: () => void;
+  readonly planejamento: PlanejamentoMacro;
+  readonly infoMes: InfoMesPlanejamentoMacro | undefined;
+  readonly onClose: () => void;
+  readonly onConfirm?: (escolaPlanejamento: PlanejamentoMacro) => void;
 }
 
 export default function ModalAdicionarEscola({
   planejamento,
   infoMes,
   onClose,
+  onConfirm = () => {},
 }: ModalProps) {
   const [escolasBanco, setEscolasBanco] = useState<EscolaData[]>([]);
   const [escolas, setEscolas] = useState<EscolaData[]>(escolasBanco);
@@ -50,9 +52,17 @@ export default function ModalAdicionarEscola({
   const [listaEscolasSelecionadas, setListaEscolasSelecionadas] = useState<
     EscolaData[]
   >([]);
-  const [mes] = useState<number>(infoMes?.mes ?? 1);
+  const [mes, setMes] = useState<number>(infoMes?.mes ?? 1);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    let escolasNoPlanejamento: string[] = [];
+    planejamento.planejamentoMacroMensal.forEach((plan) => {
+      plan.escolas.forEach((escola) => {
+        escolasNoPlanejamento.push(escola.id);
+      });
+    });
+    setLoading(true);
     fetchListarEscolasFiltradas({
       params: {
         Pagina: 1,
@@ -63,8 +73,12 @@ export default function ModalAdicionarEscola({
         IdUf: "",
       },
     }).then((escolas) => {
-      setEscolasBanco(escolas.escolas);
-      setEscolas(escolas.escolas);
+      let filterEscolas = escolas.escolas.filter(
+        (escola) => !escolasNoPlanejamento.includes(escola.idEscola.toString())
+      );
+      setEscolasBanco(filterEscolas);
+      setEscolas(filterEscolas);
+      setLoading(false);
     });
   }, []);
 
@@ -130,6 +144,12 @@ export default function ModalAdicionarEscola({
           </div>
         </div>
         <br />
+
+        {loading && (
+          <div className="d-flex justify-content-center w-100 m-5">
+            <ReactLoading type="spinningBubbles" color="#000000" />
+          </div>
+        )}
 
         <div
           className="d-flex flex-column"
@@ -201,22 +221,22 @@ export default function ModalAdicionarEscola({
                     return e;
                   });
 
-                var newPlanejamento = planejamento;
+                let newPlanejamento = planejamento;
                 newPlanejamento.planejamentoMacroMensal =
                   newInfoPlanejamentoMacro;
 
                 let planejamentoMesesInfo: PlanejamentoMacroMesUpdate[] =
-                  newPlanejamento!.planejamentoMacroMensal.map((element) => ({
+                  newPlanejamento.planejamentoMacroMensal.map((element) => ({
                     mes: element.mes,
                     ano: element.ano,
                     escolas: element.escolas.map((escola) => escola.id),
                   }));
 
                 let bodyRequest: AtualizarPlanejamento = {
-                  nome: newPlanejamento!.nome,
+                  nome: newPlanejamento.nome,
                   planejamentoMacroMensal: planejamentoMesesInfo,
                 };
-
+                let newUpdatedPlanejamento: PlanejamentoMacro | null = null;
                 if (newPlanejamento) {
                   await updatePlanejamento(planejamento.id, bodyRequest)
                     .then((response) => {
@@ -225,7 +245,7 @@ export default function ModalAdicionarEscola({
                           "Escolas Adicionas ao Planejamento com Sucesso!",
                       });
 
-                      planejamento = response;
+                      newUpdatedPlanejamento = response;
                     })
                     .catch((error) => {
                       console.log(error);
@@ -233,6 +253,9 @@ export default function ModalAdicionarEscola({
                         message: "Falha em Adicionar Escolas ao Planejamento.",
                       });
                     });
+                }
+                if (newUpdatedPlanejamento) {
+                  onConfirm(newUpdatedPlanejamento);
                 }
                 onClose();
               }}

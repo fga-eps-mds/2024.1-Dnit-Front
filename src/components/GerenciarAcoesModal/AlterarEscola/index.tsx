@@ -10,10 +10,10 @@ import {
 } from "../../../models/gerenciarAcoes";
 
 interface ModalProps {
-  planejamento: PlanejamentoMacro;
-  escolaSelected: EscolasPlanejamentoTabela;
-  onClose: () => void;
-  onConfirm: (
+  readonly planejamento: PlanejamentoMacro;
+  readonly escolaSelected: EscolasPlanejamentoTabela;
+  readonly onClose: () => void;
+  readonly onConfirm: (
     escolaSelecionadaInfo: EscolaPlanejamentoModel,
     escolaSelected: EscolasPlanejamentoTabela
   ) => void;
@@ -78,7 +78,7 @@ export default function ModalAlterarEscola({
         >
           <h4 className="text-center mt-1">Alterar Escolas</h4>
 
-          <label className="text-center mt-1">
+          <label className="text-center mt-1" htmlFor="delete-inp">
             Escolha a escola que deseja trocar com a seguinte escola:
           </label>
 

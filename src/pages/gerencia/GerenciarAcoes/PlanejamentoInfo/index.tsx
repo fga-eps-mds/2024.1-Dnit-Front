@@ -28,7 +28,7 @@ import { updatePlanejamento } from "../../../../service/gerenciarAcoes";
 import { notification } from "antd";
 
 interface PlanejamentoInfoProps {
-  planejamento: PlanejamentoMacro;
+  readonly planejamento: PlanejamentoMacro;
 }
 
 export default function PlanejamentoInfo({
@@ -55,13 +55,15 @@ export default function PlanejamentoInfo({
   const [escolaAtual, setEscolaAtual] = useState<EscolaData | null>();
   const [escolasBanco, setEscolasBanco] = useState<EscolaData[]>();
   const [cardIndexSelected, setCardIndexSelected] = useState(0);
+  const [itemsPerPageTable, setItemsPerPage] = useState(10);
+
+  const [planejamentoInfo, setPlanejamento] =
+    useState<PlanejamentoMacro>(planejamento);
 
   const [escolaSelected, setEscolaSelected] =
     useState<EscolasPlanejamentoTabela | null>();
 
   useEffect(() => {
-    console.log("Calling 2");
-
     fetchListarEscolasFiltradas({
       params: {
         Pagina: 1,
@@ -77,32 +79,17 @@ export default function PlanejamentoInfo({
   }, []);
 
   useEffect(() => {
-    let escolasArray: EscolasPlanejamentoTabela[] = [];
-
-    planejamento.planejamentoMacroMensal[cardIndexSelected].escolas.forEach(
-      (element) => {
-        escolasArray.push({
-          id: element.id,
-          nome: element.nome,
-          quantidadeAlunos: element.quantidadeAlunos,
-          custoLogistico: numeroCustoLogistico(element.distanciaPolo),
-          uf: element.uf,
-          ups: element.ups,
-        });
-      }
-    );
-
-    setEscolasPlanejamento(escolasArray);
     setMonthPlanningSelected(
-      planejamento.planejamentoMacroMensal[cardIndexSelected]
+      planejamentoInfo.planejamentoMacroMensal[cardIndexSelected]
     );
     updateSelectCardData();
-  }, [cardIndexSelected, planejamento.planejamentoMacroMensal]);
+    updateMonthData(cardIndexSelected);
+  }, [cardIndexSelected, planejamentoInfo.planejamentoMacroMensal]);
 
   function updateSelectCardData() {
     let newData: SelectCardData[] = [];
-    planejamento.planejamentoMacroMensal.sort((a, b) => a.mes - b.mes);
-    planejamento.planejamentoMacroMensal.forEach((element, index) => {
+    planejamentoInfo.planejamentoMacroMensal.sort((a, b) => a.mes - b.mes);
+    planejamentoInfo.planejamentoMacroMensal.forEach((element, index) => {
       newData.push({
         id: index,
         title: `${meses[element.mes - 1]
@@ -121,7 +108,7 @@ export default function PlanejamentoInfo({
 
   function updateMonthData(cardIndex: number) {
     let escolasArray: EscolasPlanejamentoTabela[] = [];
-    planejamento.planejamentoMacroMensal[cardIndex].escolas.forEach(
+    planejamentoInfo.planejamentoMacroMensal[cardIndex].escolas.forEach(
       (element) => {
         escolasArray.push({
           id: element.id,
@@ -136,13 +123,16 @@ export default function PlanejamentoInfo({
 
     setCardIndexSelected(cardIndex);
     setEscolasPlanejamento(escolasArray);
-    setMonthPlanningSelected(planejamento.planejamentoMacroMensal[cardIndex]);
+    setItemsPerPage(escolasArray.length);
+    setMonthPlanningSelected(
+      planejamentoInfo.planejamentoMacroMensal[cardIndex]
+    );
     updateSelectCardData();
   }
 
   async function sendDeleteEscola() {
-    const newInfoPlanejamentoMacro = planejamento?.planejamentoMacroMensal.map(
-      (p) => {
+    const newInfoPlanejamentoMacro =
+      planejamentoInfo?.planejamentoMacroMensal.map((p) => {
         if (p === monthPlanningSelected) {
           const escolasFiltradas = p?.escolas.filter(
             (e) => escolaSelected?.id !== e.id
@@ -150,41 +140,37 @@ export default function PlanejamentoInfo({
           return { ...p, escolas: escolasFiltradas };
         }
         return p;
-      }
-    );
+      });
 
-    var newPlanejamento = planejamento;
+    let newPlanejamento = planejamentoInfo;
     newPlanejamento.planejamentoMacroMensal = newInfoPlanejamentoMacro;
 
     let planejamentoMesesInfo: PlanejamentoMacroMesUpdate[] =
-      newPlanejamento!.planejamentoMacroMensal.map((element) => ({
+      newPlanejamento.planejamentoMacroMensal.map((element) => ({
         mes: element.mes,
         ano: element.ano,
         escolas: element.escolas.map((escola) => escola.id),
       }));
 
     let bodyRequest: AtualizarPlanejamento = {
-      nome: newPlanejamento!.nome,
+      nome: newPlanejamento.nome,
       planejamentoMacroMensal: planejamentoMesesInfo,
     };
 
     if (newPlanejamento) {
-      await updatePlanejamento(planejamento.id, bodyRequest)
+      await updatePlanejamento(planejamentoInfo.id, bodyRequest)
         .then((response) => {
           notification.success({
             message: "Escolas Deletada do Planejamento com Sucesso!",
           });
-          planejamento = response;
+          response.planejamentoMacroMensal.sort((a, b) => a.mes - b.mes);
+          setPlanejamento(response);
         })
         .catch((error) => {
           notification.error({
             message: "Falha ao Deletar Escolas do Planejamento.",
           });
         });
-    }
-
-    if (planejamento.planejamentoMacroMensal.length - 1 > cardIndexSelected) {
-      setCardIndexSelected(0);
     }
 
     updateMonthData(cardIndexSelected);
@@ -195,7 +181,7 @@ export default function PlanejamentoInfo({
     escolaSelecionadaInfo: EscolaPlanejamentoModel,
     escolaSelected: EscolasPlanejamentoTabela
   ) {
-    let updatedPlanejamento = planejamento;
+    let updatedPlanejamento = planejamentoInfo;
     let escolaTroca1: EscolaPlanejamentoModel | undefined = undefined;
     let firstMonth = 0;
 
@@ -220,13 +206,13 @@ export default function PlanejamentoInfo({
       });
 
       updatedPlanejamento.planejamentoMacroMensal.forEach((mesInfo) => {
-        var escolaTroca2: EscolaPlanejamentoModel | undefined =
+        let escolaTroca2: EscolaPlanejamentoModel | undefined =
           mesInfo.escolas.find(
             (escola) => escola.id === escolaSelecionadaInfo.id
           );
         if (escolaTroca2 !== undefined && mesInfo.mes !== firstMonth) {
           mesInfo.escolas = mesInfo.escolas.filter(
-            (element) => element.id !== escolaSelecionadaInfo!.id
+            (element) => element.id !== escolaSelecionadaInfo.id
           );
           mesInfo.escolas.push(escolaTroca1!);
         }
@@ -234,24 +220,24 @@ export default function PlanejamentoInfo({
     }
 
     let planejamentoMesesInfo: PlanejamentoMacroMesUpdate[] =
-      updatedPlanejamento!.planejamentoMacroMensal.map((element) => ({
+      updatedPlanejamento.planejamentoMacroMensal.map((element) => ({
         mes: element.mes,
         ano: element.ano,
         escolas: element.escolas.map((escola) => escola.id),
       }));
 
     let bodyRequest: AtualizarPlanejamento = {
-      nome: updatedPlanejamento!.nome,
+      nome: updatedPlanejamento.nome,
       planejamentoMacroMensal: planejamentoMesesInfo,
     };
 
     if (updatedPlanejamento) {
-      await updatePlanejamento(planejamento.id, bodyRequest)
+      await updatePlanejamento(planejamentoInfo.id, bodyRequest)
         .then((response) => {
           notification.success({
             message: "Escolas Trocadas com Sucesso!",
           });
-          planejamento = response;
+          setPlanejamento(response);
         })
         .catch((error) => {
           notification.error({
@@ -276,7 +262,6 @@ export default function PlanejamentoInfo({
       )}
       {showDeletarDialog && (
         <DeletarEscolaDialog
-          infoMes={monthPlanningSelected}
           escola={escolaSelected!}
           closeDialog={(deletou) => {
             setShowDeletarDialog(false);
@@ -287,7 +272,7 @@ export default function PlanejamentoInfo({
       {showAlterarMesEscola && (
         <ModalAlterarEscola
           escolaSelected={escolaSelected!}
-          planejamento={planejamento}
+          planejamento={planejamentoInfo}
           onClose={() => {
             setShowAlterarMesEscola(false);
           }}
@@ -299,10 +284,14 @@ export default function PlanejamentoInfo({
       )}
       {modalAdicionarAcao && (
         <ModalAdicionarEscola
-          planejamento={planejamento}
+          planejamento={planejamentoInfo}
           infoMes={monthPlanningSelected}
           onClose={() => {
             setModalAdicionarAcao(false);
+          }}
+          onConfirm={(escolaPlanejamento: PlanejamentoMacro) => {
+            setPlanejamento(escolaPlanejamento);
+            updateMonthData(cardIndexSelected);
           }}
         />
       )}
@@ -318,7 +307,7 @@ export default function PlanejamentoInfo({
             <div className="custom-divider" />
             <div className="uf-container">
               <span className="planning-text">
-                Planejamento Macro {meses[monthPlanningSelected!.mes - 1]} /{" "}
+                Planejamento Macro {meses[monthPlanningSelected.mes - 1]} /{" "}
                 {monthPlanningSelected.ano}
               </span>
               <UfCardGroup cardsData={monthPlanningSelected.detalhesPorUF} />
@@ -326,7 +315,7 @@ export default function PlanejamentoInfo({
           </div>
           <div className="table-title">
             <span className="title-text">
-              Escolas no mês de {meses[monthPlanningSelected!.mes - 1]}
+              Escolas no mês de {meses[monthPlanningSelected.mes - 1]}
             </span>
             <ButtonComponent
               buttonStyle="primary"
@@ -334,50 +323,49 @@ export default function PlanejamentoInfo({
               onClick={() => setModalAdicionarAcao(true)}
             />
           </div>
-          {escolasPlanejamento !== undefined &&
-            escolasPlanejamento.length != null && (
-              <Table
-                columsTitle={colunas}
-                title=""
-                initialItemsPerPage={10}
-                totalItems={escolasPlanejamento?.length}
-              >
-                {escolasPlanejamento?.map((e, index) => (
-                  <CustomTableRow
-                    key={index}
-                    id={index}
-                    data={{
-                      "0": e.ups.toString(),
-                      "1": `${e.nome}`,
-                      "2": `${e.uf}`,
-                      "3": `${e.quantidadeAlunos}`,
-                      "Custo logístico": `${e.custoLogistico}`,
-                    }}
-                    hideEditIcon={true}
-                    hideChangeIcon={false}
-                    onChangeRow={() => {
-                      setEscolaSelected(e);
-                      setShowAlterarMesEscola(true);
-                    }}
-                    onDeleteRow={() => {
-                      setEscolaSelected(e);
-                      setShowDeletarDialog(true);
-                    }}
-                    onDetailRow={(_) => {
-                      const escolaEncontrada = escolasBanco?.find((escola) => {
-                        return (
-                          escola.nomeEscola === e.nome &&
-                          escola.siglaUf === e.uf &&
-                          escola.numeroTotalDeAlunos === e.quantidadeAlunos
-                        );
-                      });
-                      if (escolaEncontrada && escolaEncontrada.idEscola)
-                        setEscolaAtual(escolaEncontrada);
-                    }}
-                  />
-                ))}
-              </Table>
-            )}
+          {escolasPlanejamento?.length != null && (
+            <Table
+              columsTitle={colunas}
+              title=""
+              initialItemsPerPage={itemsPerPageTable}
+              totalItems={escolasPlanejamento?.length}
+            >
+              {escolasPlanejamento?.map((e, index) => (
+                <CustomTableRow
+                  key={`${e.nome}-${index}`}
+                  id={index}
+                  data={{
+                    "0": e.ups.toString(),
+                    "1": `${e.nome}`,
+                    "2": `${e.uf}`,
+                    "3": `${e.quantidadeAlunos}`,
+                    "Custo logístico": `${e.custoLogistico}`,
+                  }}
+                  hideEditIcon={true}
+                  hideChangeIcon={false}
+                  onChangeRow={() => {
+                    setEscolaSelected(e);
+                    setShowAlterarMesEscola(true);
+                  }}
+                  onDeleteRow={() => {
+                    setEscolaSelected(e);
+                    setShowDeletarDialog(true);
+                  }}
+                  onDetailRow={(_) => {
+                    const escolaEncontrada = escolasBanco?.find((escola) => {
+                      return (
+                        escola.nomeEscola === e.nome &&
+                        escola.siglaUf === e.uf &&
+                        escola.numeroTotalDeAlunos === e.quantidadeAlunos
+                      );
+                    });
+                    if (escolaEncontrada?.idEscola)
+                      setEscolaAtual(escolaEncontrada);
+                  }}
+                />
+              ))}
+            </Table>
+          )}
         </div>
       )}
     </div>
