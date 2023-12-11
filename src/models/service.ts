@@ -36,6 +36,7 @@ export type SituacaoData = EnumData;
 export type EtapasDeEnsinoData = EnumData;
 export type LocalizacaoData = EnumData;
 export type RedeData = EnumData;
+export type Propriedade =EnumData;
 
 export interface LoginData {
   email: string;
