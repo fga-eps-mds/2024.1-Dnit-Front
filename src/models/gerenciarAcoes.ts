@@ -4,6 +4,7 @@ export interface EscolasPlanejamentoTabela {
     uf: string;
     quantidadeAlunos: number;
     custoLogistico: number;
+    id: string;
 }
 
 export interface PlanejamentoMacro {

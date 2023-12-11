@@ -82,6 +82,7 @@ export default function PlanejamentoInfo({
     planejamento.planejamentoMacroMensal[cardIndexSelected].escolas.forEach(
       (element) => {
         escolasArray.push({
+          id: element.id,
           nome: element.nome,
           quantidadeAlunos: element.quantidadeAlunos,
           custoLogistico: numeroCustoLogistico(element.distanciaPolo),
@@ -123,6 +124,7 @@ export default function PlanejamentoInfo({
     planejamento.planejamentoMacroMensal[cardIndex].escolas.forEach(
       (element) => {
         escolasArray.push({
+          id: element.id,
           nome: element.nome,
           quantidadeAlunos: element.quantidadeAlunos,
           custoLogistico: numeroCustoLogistico(element.distanciaPolo),
@@ -143,10 +145,7 @@ export default function PlanejamentoInfo({
       (p) => {
         if (p === monthPlanningSelected) {
           const escolasFiltradas = p?.escolas.filter(
-            (e) =>
-              escolaSelected?.nome !== e.nome &&
-              escolaSelected?.quantidadeAlunos !== e.quantidadeAlunos &&
-              escolaSelected?.uf !== e.uf
+            (e) => escolaSelected?.id !== e.id
           );
           return { ...p, escolas: escolasFiltradas };
         }

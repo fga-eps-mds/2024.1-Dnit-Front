@@ -78,7 +78,8 @@ export const escolaSelected: EscolasPlanejamentoTabela={
     nome: "Escola A",
     uf: "DF",
     quantidadeAlunos: 1000,
-    custoLogistico: 2
+    custoLogistico: 2,
+    id: "asdasasa"
 }
 
 export const fetchPlanejamentosResponse: PlanejamentoFiltrados = {
