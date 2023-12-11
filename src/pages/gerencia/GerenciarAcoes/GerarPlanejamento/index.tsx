@@ -17,6 +17,7 @@ import { PlanejamentoMacro } from "../../../../models/gerenciarAcoes";
 import { meses } from "../fixtures";
 import { useParams } from "react-router-dom";
 import { PlanejamentoMacroMesUpdate } from "../../../../models/service";
+import ReactLoading from "react-loading";
 
 export default function GerenciarAcoes() {
   const { id } = useParams();
@@ -42,6 +43,8 @@ export default function GerenciarAcoes() {
   const [isPlanningGenerated, setIsPlanningGenerated] = useState(false);
   const [planejamentoInfo, setPlanejamentoInfo] =
     useState<PlanejamentoMacro | null>(null);
+
+  const [loading, setLoading] = useState(false);
 
   const validateForm = () => {
     var isValid = true;
@@ -98,6 +101,7 @@ export default function GerenciarAcoes() {
 
   const handleSubmit = async () => {
     if (validateForm()) {
+      setLoading(true);
       await createPlanejamento();
       setIsPlanningGenerated(true);
       setSavedTitle(title);
@@ -237,6 +241,12 @@ export default function GerenciarAcoes() {
           {isPlanningGenerated && planejamentoInfo ? (
             <PlanejamentoInfo planejamento={planejamentoInfo} />
           ) : null}
+
+          {loading && !isPlanningGenerated && (
+            <div className="d-flex justify-content-center w-100 m-5">
+              <ReactLoading type="spinningBubbles" color="#000000" />
+            </div>
+          )}
         </div>
       </div>
 
