@@ -21,7 +21,8 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../provider/Autenticacao";
 import { Permissao } from "../../../models/auth";
 import { fetchPermissoesDoUsuario } from "../../../service/usuarioApi";
-import IconGerenciarPolos from "../../../assets/icones/GerenciarPolos.svg";
+import IconGerenciarPrioridades from "../../../assets/icones/GerenciarPrioridades.svg"
+import IconGerenciarPolos from "../../../assets/icones/GerenciarPolos.svg"
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -213,6 +214,14 @@ export default function Dashboard() {
               <p className="text">Gerenciar Polos</p>
             </Card>
           )}
+          <Card className="card" onClick={() => navigate("/gerenciarPrioridades")}>
+            <img
+                className="iconGerenciarPrioridades"
+                src={IconGerenciarPrioridades}
+                alt="ícone prioridades"
+              />
+            <p className="text">Gerenciar Prioridades</p>
+          </Card>
         </div>
       ),
     },
