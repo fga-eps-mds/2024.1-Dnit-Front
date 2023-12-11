@@ -284,7 +284,6 @@ export default function PlanejamentoInfo({
       )}
       {showDeletarDialog && (
         <DeletarEscolaDialog
-          infoMes={monthPlanningSelected}
           escola={escolaSelected!}
           closeDialog={(deletou) => {
             setShowDeletarDialog(false);

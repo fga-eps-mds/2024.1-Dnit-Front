@@ -78,30 +78,6 @@ describe("Tabela de Gerenciar Acoes", () => {
     expect(novoPlanejamentoButton).toBeInTheDocument();
   });
 
-  //   it("Deve abrir o modal de deletar", async () => {
-  //     mockedFetchPlanejamento.mockResolvedValue(fetchPlanejamentosResponse);
-  //     autenticar(Permissao.UsuarioEditar);
-
-  //     render(
-  //       <MemoryRouter>
-  //         <AuthProvider>
-  //           <GerenciarAcoes />
-  //         </AuthProvider>
-  //       </MemoryRouter>
-  //     );
-  //     fireEvent.click(screen.getByTestId("table-row-0"));
-  //     expect(
-  //       screen.getByText("Tem certeza que deseja excluir este planejamento?")
-  //     ).toBeInTheDocument();
-
-  //     fireEvent.click(screen.getByText("Cancelar"));
-  //     await waitFor(() =>
-  //       expect(
-  //         screen.queryByText("Tem certeza que deseja excluir este planejamento?")
-  //       ).toBeNull()
-  //     );
-  //   });
-
   it("Deve renderizar a tabela", async () => {
     mockedFetchPlanejamento.mockResolvedValue(fetchPlanejamentosResponse);
 
