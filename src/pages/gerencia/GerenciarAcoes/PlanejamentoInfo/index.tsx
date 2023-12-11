@@ -100,6 +100,7 @@ export default function PlanejamentoInfo({
 
   function updateSelectCardData() {
     let newData: SelectCardData[] = [];
+    planejamento.planejamentoMacroMensal.sort((a, b) => a.mes - b.mes);
     planejamento.planejamentoMacroMensal.forEach((element, index) => {
       newData.push({
         id: index,
