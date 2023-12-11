@@ -49,6 +49,16 @@ export interface CadastroUsuarioData {
   senha: string;
   nome: string;
   ufLotacao: number;
+  municipioId: number;
+}
+
+export interface CadastroUsuarioTerceiroData {
+  email: string;
+  senha: string;
+  nome: string;
+  ufLotacao: number;
+  municipioId: number;
+  cnpj: string; 
 }
 
 export interface CadastroEscolaData {
@@ -116,8 +126,8 @@ export interface EscolaData {
   telefone: string;
   numeroTotalDeDocentes: number;
   observacao: string;
-  distanciaSuperintendencia: number;
-  superintendenciaId: number;
+  distanciaPolo: number;
+  poloId: number;
 }
 
 export interface FiltroEscolaData {
@@ -131,11 +141,29 @@ export interface FiltroEscolaData {
   };
 }
 
+export interface FiltroPoloData {
+    params: {
+        Pagina: number;
+        TamanhoPagina: number;
+        Nome: string;
+        Cep: string;
+        idUf: string | number;
+        idMunicipio: string | number;
+    };
+}
+
 export interface EscolasFiltradasResponse {
   escolas: EscolaData[];
   escolasPorPagina: number;
   totalEscolas: number;
   totalPaginas: number;
+}
+
+export interface PolosFiltradosResponse {
+    polos: PoloData[];
+    polosPorPagina: number;
+    totalPolos: number;
+    totalPaginas: number;
 }
 
 export interface AlterarDadosEscolaData {
@@ -160,10 +188,12 @@ export interface EscolaInepData {
   nome: string;
 }
 
-export interface SolicitacaoDeAcaoData {
+export interface SolicitacaoDeAcaoDTO {
   Escola: string;
-  UF: string;
-  Municipio: string;
+  EscolaCodigoInep: string;
+  Uf: number;
+  Municipio: string
+  MunicipioId: number;
   NomeSolicitante: string;
   VinculoEscola: string;
   Email: string;
@@ -202,16 +232,6 @@ export interface UfModel {
   id: number;
   sigla: string;
   nome: string;
-}
-
-export interface Superintendencia{
-  id: number;
-  endereco: string;
-  cep: string;
-  latitude: string;
-  longitude: string;
-  uf: number;
-  siglaUf: string;
 }
 
 export interface Fatores {
@@ -270,4 +290,24 @@ export interface PlanejamentoMacroMesUpdate {
     mes: number;
     ano: string;
     escolas: string[]
+}
+export interface PoloData {
+    id: number;
+    endereco: string;
+    cep: string;
+    latitude: string;
+    longitude: string;
+    nomeMunicipio: string;
+    nome: string;
+    uf: number;
+}
+
+export interface SalvarPoloData {
+  endereco: string;
+  cep: string;
+  latitude: string;
+  longitude: string;
+  municipioId: number;
+  nome: string;
+  idUf: number;
 }

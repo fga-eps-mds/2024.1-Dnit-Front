@@ -11,9 +11,11 @@ import Register from "./pages/cadastro/CadastrarUsuario";
 import RegisterSchool from "./pages/cadastro/CadastrarEscola";
 import ResetPassword from "./pages/senha/Redefinir/";
 import SolicitacaoAcao from "./pages/SolicitacaoAcao/";
+import GerenciarSolicitacoes from "./pages/gerencia/GerenciarSolicitacoes";
 import GerenciarPerfis from "./pages/gerencia/GerenciarPerfis";
 import GerenciarUsuario from "./pages/gerencia/GerenciarUsuario";
 import GerenciarEmpresas from "./pages/gerencia/GerenciarEmpresas";
+import GerenciarPolos from "./pages/gerencia/GerenciarPolos";
 import {
   AuthContext,
   configuraAutenticacaoAxios,
@@ -39,9 +41,11 @@ function App() {
           <Route path="/cadastrarescola" element={<RegisterSchool />} />
           <Route path="/escolas-cadastradas" element={<EscolasCadastradas />} />
           <Route path="/cadastrarRodovias" element={<CadastrarRodovias />} />
+          <Route path="/solicitacoes" element={<GerenciarSolicitacoes />} />
           <Route path="/ranque" element={<Ranque />} />
           <Route path="/gerenciarUsuario" element={<GerenciarUsuario />} />
           <Route path="/gerenciarPerfis" element={<GerenciarPerfis />} />
+          <Route path="/gerenciarPolos" element={<GerenciarPolos />} />
           <Route path="/gerenciarEmpresas" element={<GerenciarEmpresas />} />
           <Route
             path="/gerenciarUsuariosEmpresa/:cnpj"

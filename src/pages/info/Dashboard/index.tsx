@@ -5,9 +5,10 @@ import {
 } from "@ant-design/icons";
 import IconGerenciarPerfis from "../../../assets/icones/GerenciarPerfis.svg";
 import IconGerenciarUsuarios from "../../../assets/icones/GerenciarUsuarios.svg";
-import IconPlay from "../../../assets/icones/iconePlay.svg"
-import IconGerenciarAcoes from "../../../assets/icones/iconeGerenciarAcoes.svg"
+import IconPlay from "../../../assets/icones/iconePlay.svg";
+import IconGerenciarAcoes from "../../../assets/icones/iconeGerenciarAcoes.svg";
 import RankingEscolas from "../../../assets/icones/RankingEscolas.svg";
+import Solicitacoes from "../../../assets/icones/BotaoSolicitacao.svg";
 import { Card, Collapse, CollapseProps } from "antd";
 import { useNavigate } from "react-router";
 import Header from "../../../components/Header";
@@ -19,7 +20,8 @@ import "../../../components/Collapse/";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../provider/Autenticacao";
 import { Permissao } from "../../../models/auth";
-import {fetchPermissoesDoUsuario} from "../../../service/usuarioApi";
+import { fetchPermissoesDoUsuario } from "../../../service/usuarioApi";
+import IconGerenciarPolos from "../../../assets/icones/GerenciarPolos.svg";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -56,7 +58,14 @@ export default function Dashboard() {
   );
   const [podeGerenciarAcoes, setPodeGerenciarAcoes] = useState(
     temPermissao(Permissao.UsuarioVisualizar)
-  )
+  );
+
+  const [podeGerenciarPolos, setPodeGerenciarPolos] = useState(
+    temPermissao(Permissao.PoloVisualizar)
+  );
+  const [podeGerenciarSolicitacao, setPodeGerenciarSolicitacao] = useState(
+    temPermissao(Permissao.SolicitacaoVisualizar)
+  );
 
   useEffect(() => {
     fetchPermissoesDoUsuario().then((permissoes) => {
@@ -72,6 +81,10 @@ export default function Dashboard() {
       setPodeGerenciarPerfis(temPermissao(Permissao.PerfilVisualizar));
       setPodeGerenciarEmpresas(temPermissao(Permissao.EmpresaVisualizar));
       setPodeGerenciarAcoes(temPermissao(Permissao.UsuarioVisualizar));
+      setPodeGerenciarPolos(temPermissao(Permissao.PoloVisualizar));
+      setPodeGerenciarSolicitacao(
+        temPermissao(Permissao.SolicitacaoVisualizar)
+      );
     });
   }, []);
 
@@ -87,13 +100,25 @@ export default function Dashboard() {
               onClick={() => navigate("/escolas-cadastradas")}
             >
               <FileTextOutlined className="icon" />
-              <p data-testid='visualizar-escola-option' className="text">Visualizar Escolas</p>
+              <p data-testid="visualizar-escola-option" className="text">
+                Visualizar Escolas
+              </p>
             </Card>
           )}
           {podeVisualizarRanque && (
             <Card className="card" onClick={() => navigate("/ranque")}>
-              <img src={RankingEscolas} alt="ícone gerenciar usuarios"/>
+              <img src={RankingEscolas} alt="ícone gerenciar usuarios" />
               <p className="text">Ranking de escolas</p>
+            </Card>
+          )}
+          {podeGerenciarSolicitacao && (
+            <Card className="card" onClick={() => navigate("/solicitacoes")}>
+              <img
+                className="iconPerfis"
+                src={Solicitacoes}
+                alt="ícone solicitacoes"
+              />
+              <p className="text">Solicitações</p>
             </Card>
           )}
         </div>
@@ -137,20 +162,27 @@ export default function Dashboard() {
       children: (
         <div className="collapse-item">
           {podeGerenciarEmpresas && (
-            <Card className="card" onClick={() => navigate("/gerenciarEmpresas")}>
+            <Card
+              className="card"
+              onClick={() => navigate("/gerenciarEmpresas")}
+            >
               <FileTextOutlined className="icon" />
               <p className="text">Gerenciar Empresas</p>
             </Card>
           )}
-          {podeGerenciarUsuario &&
-            <Card className="card" onClick={() => navigate("/gerenciarUsuario")}>
+          {podeGerenciarUsuario && (
+            <Card
+              className="card"
+              onClick={() => navigate("/gerenciarUsuario")}
+            >
               <img
                 className="iconGenciaUsuarios"
                 src={IconGerenciarUsuarios}
                 alt="ícone gerenciar usuarios"
               />
               <p className="text">Gerenciar Usuário</p>
-            </Card>}
+            </Card>
+          )}
           {podeGerenciarPerfis && (
             <Card className="card" onClick={() => navigate("/gerenciarPerfis")}>
               <img
@@ -161,19 +193,26 @@ export default function Dashboard() {
               <p className="text">Gerenciar Perfis</p>
             </Card>
           )}
-          {
-            podeGerenciarAcoes &&
+          {podeGerenciarAcoes && (
             <Card className="card" onClick={() => navigate("/gerenciarAcoes")}>
-              <img 
-              className="iconPerfis"
-              src={IconGerenciarAcoes} 
-              alt="Ícone gerenciar ações" 
+              <img
+                className="iconPerfis"
+                src={IconGerenciarAcoes}
+                alt="Ícone gerenciar ações"
               />
-              <p className="text">
-                Gerenciar Ações
-              </p>
+              <p className="text">Gerenciar Ações</p>
             </Card>
-          }
+          )}
+          {podeGerenciarPolos && (
+            <Card className="card" onClick={() => navigate("/gerenciarPolos")}>
+              <img
+                className="iconPerfis"
+                src={IconGerenciarPolos}
+                alt="ícone gerenciar polos"
+              />
+              <p className="text">Gerenciar Polos</p>
+            </Card>
+          )}
         </div>
       ),
     },

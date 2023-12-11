@@ -22,11 +22,17 @@ interface CustomTableRowsProps {
   hideTrashIcon?: boolean;
   hideUsersIcon?: boolean;
   hideChangeIcon?: boolean;
+  hidePlusIcon?: boolean;
+  hideDownloadIcon?: boolean;
+  hideLocationIcon?: boolean;
   onDeleteRow?: (rowIndex: number) => void;
   onEditRow?: (rowIndex: number) => void;
   onDetailRow?: (rowIndex: number) => void;
   onChangeRow?: (rowIndex: number) => void;
   onUsersRow?: (rowIndex: number) => void;
+  onPlusRow?: (rowIndex: number) => void;
+  onDownload?: (rowIndex: number) => void;
+  onLocationRow?: (rowIndex: number) => void;
 }
 
 export function CustomTableRow({
@@ -37,11 +43,17 @@ export function CustomTableRow({
   onDetailRow = () => {},
   onChangeRow = () => {},
   onUsersRow = () => {},
+  onPlusRow = () => {},
+  onDownload = () => {},
+  onLocationRow = () => {},
   hideEditIcon = false,
   hideEyeIcon = false,
   hideTrashIcon = false,
   hideUsersIcon = true,
   hideChangeIcon = true,
+  hidePlusIcon = true,
+  hideDownloadIcon = true,
+  hideLocationIcon = true,
 }: CustomTableRowsProps) {
   const columns = Object.keys(data);
 
@@ -77,6 +89,22 @@ export function CustomTableRow({
               onClick={() => onUsersRow(id)}
             />
           )}
+          {!hidePlusIcon && (
+            <i
+              data-testid={`table-row-plus-${id}`}
+              className="fas fa-plus"
+              aria-hidden="true"
+              onClick={() => onPlusRow(id)}
+            />
+          )}
+          {!hideDownloadIcon && (
+            <i
+              data-testid={`table-row-download-${id}`}
+              className="fas fa-download"
+              aria-hidden="true"
+              onClick={() => onDownload(id)}
+            />
+          )}
           {!hideEditIcon && (
             <i
               data-testid={`table-row-edit-${id}`}
@@ -99,6 +127,14 @@ export function CustomTableRow({
               className="fas fa-repeat"
               aria-hidden="true"
               onClick={() => onChangeRow(id)}
+            />
+          )}
+          {!hideLocationIcon && (
+            <i
+              data-testid={`table-row-location-${id}`}
+              className="fas fa-location-dot"
+              aria-hidden="true"
+              onClick={() => onLocationRow(id)}
             />
           )}
           {!hideTrashIcon && (
