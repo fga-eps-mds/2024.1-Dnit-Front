@@ -920,6 +920,19 @@ const server = setupServer(
     ],
     temSolicitacao: true,
   }))),
+
+  rest.delete(`${urlAPIEscolas}/planejamento/1`, (req, res, ctx) => res(ctx.status(200), ctx.json(
+        {
+            id: "1"
+        }
+    ))),
+
+  rest.delete(`${urlAPIEscolas}/planejamento/2`, (req, res, ctx) => res(ctx.status(400), ctx.json(
+        {
+            id: "2"
+        }
+    ))),
+    
   rest.get(`${listarEscolasRanque}/id-4`, (_, res, ctx) => res(ctx.json({
     ranqueInfo: {
       ranqueId: 1,
