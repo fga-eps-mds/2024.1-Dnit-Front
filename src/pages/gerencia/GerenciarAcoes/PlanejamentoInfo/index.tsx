@@ -55,13 +55,15 @@ export default function PlanejamentoInfo({
   const [escolaAtual, setEscolaAtual] = useState<EscolaData | null>();
   const [escolasBanco, setEscolasBanco] = useState<EscolaData[]>();
   const [cardIndexSelected, setCardIndexSelected] = useState(0);
+  const [itemsPerPageTable, setItemsPerPage] = useState(10);
+
+  const [planejamentoInfo, setPlanejamento] =
+    useState<PlanejamentoMacro>(planejamento);
 
   const [escolaSelected, setEscolaSelected] =
     useState<EscolasPlanejamentoTabela | null>();
 
   useEffect(() => {
-    console.log("Calling 2");
-
     fetchListarEscolasFiltradas({
       params: {
         Pagina: 1,
@@ -78,8 +80,14 @@ export default function PlanejamentoInfo({
 
   useEffect(() => {
     let escolasArray: EscolasPlanejamentoTabela[] = [];
+    let cardSelected = 0;
 
-    planejamento.planejamentoMacroMensal[cardIndexSelected].escolas.forEach(
+    if (planejamentoInfo.planejamentoMacroMensal.length > cardIndexSelected) {
+      cardSelected = cardIndexSelected;
+    } else {
+      setCardIndexSelected(0);
+    }
+    planejamentoInfo.planejamentoMacroMensal[cardSelected].escolas.forEach(
       (element) => {
         escolasArray.push({
           id: element.id,
@@ -93,16 +101,17 @@ export default function PlanejamentoInfo({
     );
 
     setEscolasPlanejamento(escolasArray);
+    setItemsPerPage(escolasArray.length);
     setMonthPlanningSelected(
-      planejamento.planejamentoMacroMensal[cardIndexSelected]
+      planejamentoInfo.planejamentoMacroMensal[cardIndexSelected]
     );
     updateSelectCardData();
-  }, [cardIndexSelected, planejamento.planejamentoMacroMensal]);
+  }, [cardIndexSelected, planejamentoInfo.planejamentoMacroMensal]);
 
   function updateSelectCardData() {
     let newData: SelectCardData[] = [];
-    planejamento.planejamentoMacroMensal.sort((a, b) => a.mes - b.mes);
-    planejamento.planejamentoMacroMensal.forEach((element, index) => {
+    planejamentoInfo.planejamentoMacroMensal.sort((a, b) => a.mes - b.mes);
+    planejamentoInfo.planejamentoMacroMensal.forEach((element, index) => {
       newData.push({
         id: index,
         title: `${meses[element.mes - 1]
@@ -121,7 +130,7 @@ export default function PlanejamentoInfo({
 
   function updateMonthData(cardIndex: number) {
     let escolasArray: EscolasPlanejamentoTabela[] = [];
-    planejamento.planejamentoMacroMensal[cardIndex].escolas.forEach(
+    planejamentoInfo.planejamentoMacroMensal[cardIndex].escolas.forEach(
       (element) => {
         escolasArray.push({
           id: element.id,
@@ -136,13 +145,16 @@ export default function PlanejamentoInfo({
 
     setCardIndexSelected(cardIndex);
     setEscolasPlanejamento(escolasArray);
-    setMonthPlanningSelected(planejamento.planejamentoMacroMensal[cardIndex]);
+    setItemsPerPage(escolasArray.length);
+    setMonthPlanningSelected(
+      planejamentoInfo.planejamentoMacroMensal[cardIndex]
+    );
     updateSelectCardData();
   }
 
   async function sendDeleteEscola() {
-    const newInfoPlanejamentoMacro = planejamento?.planejamentoMacroMensal.map(
-      (p) => {
+    const newInfoPlanejamentoMacro =
+      planejamentoInfo?.planejamentoMacroMensal.map((p) => {
         if (p === monthPlanningSelected) {
           const escolasFiltradas = p?.escolas.filter(
             (e) => escolaSelected?.id !== e.id
@@ -150,10 +162,9 @@ export default function PlanejamentoInfo({
           return { ...p, escolas: escolasFiltradas };
         }
         return p;
-      }
-    );
+      });
 
-    var newPlanejamento = planejamento;
+    var newPlanejamento = planejamentoInfo;
     newPlanejamento.planejamentoMacroMensal = newInfoPlanejamentoMacro;
 
     let planejamentoMesesInfo: PlanejamentoMacroMesUpdate[] =
@@ -169,22 +180,19 @@ export default function PlanejamentoInfo({
     };
 
     if (newPlanejamento) {
-      await updatePlanejamento(planejamento.id, bodyRequest)
+      await updatePlanejamento(planejamentoInfo.id, bodyRequest)
         .then((response) => {
           notification.success({
             message: "Escolas Deletada do Planejamento com Sucesso!",
           });
-          planejamento = response;
+          response.planejamentoMacroMensal.sort((a, b) => a.mes - b.mes);
+          setPlanejamento(response);
         })
         .catch((error) => {
           notification.error({
             message: "Falha ao Deletar Escolas do Planejamento.",
           });
         });
-    }
-
-    if (planejamento.planejamentoMacroMensal.length - 1 > cardIndexSelected) {
-      setCardIndexSelected(0);
     }
 
     updateMonthData(cardIndexSelected);
@@ -195,7 +203,7 @@ export default function PlanejamentoInfo({
     escolaSelecionadaInfo: EscolaPlanejamentoModel,
     escolaSelected: EscolasPlanejamentoTabela
   ) {
-    let updatedPlanejamento = planejamento;
+    let updatedPlanejamento = planejamentoInfo;
     let escolaTroca1: EscolaPlanejamentoModel | undefined = undefined;
     let firstMonth = 0;
 
@@ -246,12 +254,12 @@ export default function PlanejamentoInfo({
     };
 
     if (updatedPlanejamento) {
-      await updatePlanejamento(planejamento.id, bodyRequest)
+      await updatePlanejamento(planejamentoInfo.id, bodyRequest)
         .then((response) => {
           notification.success({
             message: "Escolas Trocadas com Sucesso!",
           });
-          planejamento = response;
+          setPlanejamento(response);
         })
         .catch((error) => {
           notification.error({
@@ -287,7 +295,7 @@ export default function PlanejamentoInfo({
       {showAlterarMesEscola && (
         <ModalAlterarEscola
           escolaSelected={escolaSelected!}
-          planejamento={planejamento}
+          planejamento={planejamentoInfo}
           onClose={() => {
             setShowAlterarMesEscola(false);
           }}
@@ -299,7 +307,7 @@ export default function PlanejamentoInfo({
       )}
       {modalAdicionarAcao && (
         <ModalAdicionarEscola
-          planejamento={planejamento}
+          planejamento={planejamentoInfo}
           infoMes={monthPlanningSelected}
           onClose={() => {
             setModalAdicionarAcao(false);
@@ -339,7 +347,7 @@ export default function PlanejamentoInfo({
               <Table
                 columsTitle={colunas}
                 title=""
-                initialItemsPerPage={10}
+                initialItemsPerPage={itemsPerPageTable}
                 totalItems={escolasPlanejamento?.length}
               >
                 {escolasPlanejamento?.map((e, index) => (
