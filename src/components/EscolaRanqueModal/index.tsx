@@ -7,6 +7,8 @@ import { EscolaRanqueDetalhes } from "../../models/ranque";
 import ReactLoading from "react-loading";
 import { formataCustoLogistico } from "../../utils/utils";
 import "./index.css";
+import { PoloModel } from "../../models/polo";
+import { fetchPolo } from "../../service/poloApi";
 
 interface ModalProps {
   onClose: () => void;
@@ -37,10 +39,17 @@ const ModalRanqueEscola: React.FC<ModalProps> = ({
 }) => {
   const [escolaSelecionada, setEscolaSelecionada] =
     useState<EscolaRanqueDetalhes | null>(null);
+  const [poloSelecionado, setPoloSelecionado] = useState<PoloModel | undefined>();
+
+  const fetchPoloSelecionado = async (poloId?: number) => {
+    const polo = await fetchPolo(poloId);
+    setPoloSelecionado(polo);
+}
 
   useEffect(() => {
     fetchEscolaRanque(escolaId).then((escola) => {
       setEscolaSelecionada(escola);
+      fetchPoloSelecionado(escola.polo?.id);
     });
   }, []);
 
@@ -148,6 +157,13 @@ const ModalRanqueEscola: React.FC<ModalProps> = ({
             </div>
           </div>
           <hr />
+          <div className='d-flex flex-column '>
+              <Label><strong>Polo mais próximo</strong></Label>
+              <Label>Distância: {escolaSelecionada.distanciaPolo?.toFixed(2)} Km</Label>
+              <Label>Endereço: {escolaSelecionada.distanciaPolo ? poloSelecionado?.endereco : '-'}</Label>
+              <Label>Cep: {escolaSelecionada.distanciaPolo ? poloSelecionado?.cep : '-'}</Label>
+              <Label>UF: {escolaSelecionada.distanciaPolo ? poloSelecionado?.uf.sigla : '-'}</Label>
+          </div>
         </div>
       </div>
       <br />
