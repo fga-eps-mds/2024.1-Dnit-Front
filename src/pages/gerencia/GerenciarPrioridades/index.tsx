@@ -5,7 +5,7 @@ import Header from "../../../components/Header";
 import TrilhaDeNavegacao from "../../../components/Navegacao";
 import "./styles.css"
 import FatorForm from "../../../components/FatorForm";
-import { adicionarFatorPriorizacao, editarFatorPriorizacao, fetchCustosLogisticos, fetchFatoresPriorizacao, fetchPorte, fetchPropriedades } from "../../../service/prioridadeApi";
+import { adicionarFatorPriorizacao, deletarFatorPriorizacao, editarCustosLogisticos, editarFatorPriorizacao, fetchCustosLogisticos, fetchFatoresPriorizacao, fetchPorte, fetchPropriedades } from "../../../service/prioridadeApi";
 import { CustoLogisticoModel } from "../../../models/prioridade";
 import { FilterOptions } from "../GerenciarUsuario";
 import { fetchEtapasDeEnsino, fetchMunicipio, fetchSituacao, fetchUnidadeFederativa } from "../../../service/escolaApi";
@@ -38,6 +38,18 @@ export default function GerenciarPrioridades() {
             .catch(error => notificationApi.error({ message: 'Falha ao obter fatores de priorização.' + (error?.response?.data || '') }))
     }
 
+    const onAddFator = () => {
+        const fatorVazio:FatorModel = 
+        {
+            nome: "",
+            peso: 0,
+            ativo: false,
+            primario: false,
+            fatorCondicoes: []
+        };
+        setListaFatores([fatorVazio, ...listaFatores]);
+    }
+
     const salvarFator = (fator: FatorModel) => {
         if (fator.nome === "") {
             console.log("Fator deve ter um nome!");
@@ -48,15 +60,50 @@ export default function GerenciarPrioridades() {
             console.log(fator)
             editarFatorPriorizacao(fator.id, fator)
                 .then((fatorAtualizado) => {
-                    notification.success({message: 'O fator foi editado com sucesso!'});
+                    notification.success({message: `O fator ${fator.nome} foi editado com sucesso!`});
                     setListaFatores(listaFatores.map((f => f.id === fator.id ? fatorAtualizado : f)))
                 })
                 .catch(error => notificationApi.error({ message: 'Falha ao editar fator.' + (error?.response?.data || '') }));
         }
         else
         {
-            console.log(fator)
+            adicionarFatorPriorizacao(fator)
+                .then((fatorAdicionado) => {
+                    notification.success({message: `O fator ${fator.nome} foi adicionado com sucesso!`});
+                    setListaFatores(listaFatores.map((f => f.id === fator.id ? fatorAdicionado : f)))
+                })
         }
+    }
+
+    const excluirFator = (fator: FatorModel) => {
+        if (fator.id)
+            deletarFatorPriorizacao(fator.id)
+                .then(() => {
+                    notification.success({message: `O fator ${fator.nome} foi excluído com sucesso!`});
+                    setListaFatores(listaFatores.filter(f => f.id !== fator.id))
+                })
+                .catch(error => notificationApi.error({ message: 'Falha ao deletar o fator.' + (error?.response?.data || '') }));
+    }
+
+    const handleParametroCustoChange = (item: CustoLogisticoModel, parametro: string, novoValor: number) => {
+        let next = parametrosCusto.find(p => p.custo === item.custo + 1);
+        if (parametro === "raioMax") {
+            item.raioMax = novoValor;
+            if (next) next.raioMin = novoValor;
+        }
+        else if (parametro === "valor") {
+            item.valor = novoValor;
+        }   
+        if (novoValor > 0)
+            setParametrosCusto(parametrosCusto.map(p => p.custo === item.custo ? item : p.custo === next?.custo ? next : p))
+    }
+
+    const salvarParametrosCustoLogistico = () => {
+        editarCustosLogisticos(parametrosCusto)
+            .then(() => {
+                notification.success({message: 'Os parâmetros de custo logístico foram alterados com sucesso!'});
+            })
+            .catch(error => notificationApi.error({ message: 'Falha ao editar custos logísticos.' + (error?.response?.data || '') }));
     }
 
     const obterPropriedadesCondicao = () => {
@@ -138,33 +185,38 @@ export default function GerenciarPrioridades() {
                 children: (
                     fatorCustoLogistico &&
                     <div className="custo-logistico">
-                        <FatorForm fator={fatorCustoLogistico} onSaveFator={salvarFator}></FatorForm>
+                        <FatorForm fator={fatorCustoLogistico} onSaveFator={(f) => {
+                            salvarFator(f);
+                            salvarParametrosCustoLogistico();
+                        }
+                        }></FatorForm>
                         <div className="custo-table">
-                            <p>Parâmetros do Custo Logístico</p>
                             <table>
+                                <caption style={{fontWeight: "bold"}}>Parâmetros do Custo Logístico</caption>
                                 <thead>
                                     <tr>
                                         <th>Custo</th>
-                                        <th>Raio</th>
+                                        <th>Raio(km)</th>
                                         <th>Valor</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {parametrosCusto.map((item) => (
                                         <tr key={item.custo}>
-                                            <th>{"$".repeat(item.custo)}</th>
-                                            <th>
+                                            <td>{"$".repeat(item.custo)}</td>
+                                            <td>
                                                 {
-                                                    item.raioMax ?
+                                                    item.raioMax !== null ?
                                                     <div>
                                                         <span>{item.raioMin} - 
-                                                        <input type="number" defaultValue={item.raioMax} className="br-input small"></input>
+                                                        <input type="number" id="raioMax" defaultValue={item.raioMax} className="br-input small" 
+                                                        onChange={e => handleParametroCustoChange(item, e.target.id, e.target.valueAsNumber)}></input>
                                                         </span>
                                                     </div> :
-                                                    <p>Acima de {item.raioMin}</p>
+                                                    <span>Acima de {item.raioMin}</span>
                                                 }
-                                            </th>
-                                            <th><input type="number" defaultValue={item.valor} className="br-input small"></input></th>
+                                            </td>
+                                            <td><input type="number" id="valor" defaultValue={item.valor} className="br-input small"></input></td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -175,18 +227,17 @@ export default function GerenciarPrioridades() {
             },
             {
                 key: '3',
-                label: "Outros fatores",
-                children: (
-                    <div>
-                        <button data-testid="botaoAdicionarFator" className="br-button primary" type="button" onClick={() => {}}>Novo Fator</button>
-                        {listaFatores.filter(f => !f.primario).map((item) => (
-                            <FatorForm key={item.id} fator={item} condicaoUfs={ListaUfs} 
-                            propriedades={propriedades} municipios={listaMunicipios} 
-                            situacoes ={opcoesSituacao.map(s => ({id : s.id.toString(), rotulo: s.descricao}))} 
-                            etapasEnsino = {etapas} porte = {listaPortesEscolas} onSaveFator={salvarFator} />
-                        ))}
-                    </div>
-                    //<FatorForm nome="Teste" condicaoUfs={ListaUfs} propriedades={propriedades} municipios={listaMunicipios} situacoes ={opcoesSituacao.map(s => ({id : s.id.toString(), rotulo: s.descricao}))} etapasEnsino = {etapas} porte = {listaPortesEscolas}></FatorForm>
+            label: "Outros fatores",
+            children: (
+                <div>
+                    <button data-testid="botaoAdicionarFator" className="br-button primary" type="button" onClick={onAddFator}>Novo Fator</button>
+                    {listaFatores.filter(f => !f.primario).map((item) => (
+                        <FatorForm key={item.id} fator={item} condicaoUfs={ListaUfs} 
+                        propriedades={propriedades} municipios={listaMunicipios} 
+                        situacoes ={opcoesSituacao.map(s => ({id : s.id.toString(), rotulo: s.descricao}))} 
+                        etapasEnsino = {etapas} porte = {listaPortesEscolas} onSaveFator={salvarFator} onDeleteFator={excluirFator}/>
+                    ))}
+                </div>
                 )
             },
         ]);

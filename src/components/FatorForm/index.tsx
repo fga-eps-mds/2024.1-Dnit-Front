@@ -11,6 +11,7 @@ import { fetchPorte } from "../../service/prioridadeApi";
 interface FatorProps {
     fator: FatorModel;
     onSaveFator: (fator: FatorModel) => void;
+    onDeleteFator?: (fator: FatorModel) => void;
     condicaoUfs?: FilterOptions[];
     propriedades?: FilterOptions[];
     municipios?: FilterOptions[];
@@ -19,7 +20,7 @@ interface FatorProps {
     porte?: FilterOptions[];
 }
 
-export default function FatorForm ({ fator, onSaveFator, condicaoUfs, propriedades, municipios, situacoes, etapasEnsino, porte }: FatorProps) { 
+export default function FatorForm ({ fator, onSaveFator, onDeleteFator, condicaoUfs, propriedades, municipios, situacoes, etapasEnsino, porte }: FatorProps) { 
     const [nomeFator, setNomeFator] = useState(fator?.nome ?? "");
     const [pesoFator, setPesoFator] = useState(fator?.peso ?? 0);
     const [ativo, setAtivo] = useState(fator?.ativo ?? true);
@@ -36,6 +37,19 @@ export default function FatorForm ({ fator, onSaveFator, condicaoUfs, propriedad
             fatorCondicoes: listaCondicoes
         }
         onSaveFator(fatorAtualizado);
+    }
+
+    const handleDeleteButton = () => {
+        const fatorAtualizado: FatorModel = 
+        {
+            id: fator?.id,
+            nome: nomeFator,
+            peso: pesoFator,
+            ativo: ativo,
+            primario: fator?.primario ?? false,
+            fatorCondicoes: listaCondicoes
+        }
+        onDeleteFator?.(fatorAtualizado);
     }
     
     const handleFatorCondicaoChange = (condicao: Condicao, i: number) => {
@@ -77,7 +91,7 @@ export default function FatorForm ({ fator, onSaveFator, condicaoUfs, propriedad
                 <label>Ativo:</label>
             </div>
             <div className="d-flex w-100 justify-content-start">
-                <button disabled={fator?.primario || !fator?.id} data-testid="botaoExcluir" className="br-button primary" type="button">Excluir</button>
+                <button disabled={fator?.primario || !fator?.id} data-testid="botaoExcluir" className="br-button primary" onClick={handleDeleteButton} type="button">Excluir</button>
                 <button data-testid="botaoSalvar" className="br-button primary" type="button" onClick={handleSaveButton}>Salvar</button>
             </div>
         </div>

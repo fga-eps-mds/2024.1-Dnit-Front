@@ -15,8 +15,15 @@ export async function fetchFatorPriorizacao(id: string): Promise<FatorModel> {
     return fetchDados(URL.visualizarFator, id);
 }
 
-export async function adicionarFatorPriorizacao(novoFator: FatorModel): Promise<ResponseStatus> {
-    return sendCadastros(URL.adicionarFator, novoFator);
+export async function adicionarFatorPriorizacao(novoFator: FatorModel): Promise<FatorModel> {
+    const url = `${URL.adicionarFator}`;
+    try {
+        const response: AxiosResponse<FatorModel> = await axios.post(url, novoFator)
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
 }
 
 export async function deletarFatorPriorizacao(id: string): Promise<ResponseStatus> {
