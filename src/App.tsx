@@ -24,7 +24,7 @@ import "./styles/App.css";
 import GerenciarUsuariosEmpresa from "./pages/gerencia/GerenciarUsuariosEmpresa";
 import Ranque from "./pages/Ranque";
 import GerenciarPrioridades from "./pages/gerencia/GerenciarPrioridades";
-import GerenciarAcoes from "./pages/gerencia/GerenciarAcoes/GerarPlanejamento";
+import GerenciarAcoes from "./pages/gerencia/GerenciarAcoes/Home";
 import GerarPlanejamento from "./pages/gerencia/GerenciarAcoes/GerarPlanejamento";
 
 function App() {
@@ -48,7 +48,10 @@ function App() {
           <Route path="/gerenciarPerfis" element={<GerenciarPerfis />} />
           <Route path="/gerenciarPolos" element={<GerenciarPolos />} />
           <Route path="/gerenciarEmpresas" element={<GerenciarEmpresas />} />
-          <Route path="/gerenciarPrioridades" element={<GerenciarPrioridades />} />
+          <Route
+            path="/gerenciarPrioridades"
+            element={<GerenciarPrioridades />}
+          />
           <Route
             path="/gerenciarUsuariosEmpresa/:cnpj"
             element={<GerenciarUsuariosEmpresa />}
