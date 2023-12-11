@@ -18,8 +18,6 @@ export default function GerenciarPrioridades() {
     const paginas = [{nome: "Configuração de Pesos do Ranque", link: "/gerenciarPrioridades"}];
     const [propriedades, setPropriedades] = useState<FilterOptions[]>([]);
     const [listaFatores, setListaFatores] = useState<FatorModel[]>([]);
-    const [fatorUPS, setFatorUPS] = useState<FatorModel>();
-    const [fatorCusto, setFatorCusto] = useState<FatorModel>();
     const [notificationApi, notificationContextHandler] = notification.useNotification();
     const [ListaUfs, setListaUfs] = useState<FilterOptions[]>([]);
     const [listaMunicipios, setListaMunicipios] = useState<FilterOptions[]>([]);
@@ -27,6 +25,7 @@ export default function GerenciarPrioridades() {
     const [opcoesSituacao, setOpcoesSituacao] = useState<SituacaoData[]>([]);
     const [etapas, setEtapas] = useState<SelectItem[]>([]);
     const [listaPortesEscolas, setPortesEscolas] = useState<FilterOptions[]>([]);
+    const [items, setItems] = useState<CollapseProps['items']>();
 
     const obterListaFatores = () => {
         fetchFatoresPriorizacao()
@@ -62,7 +61,7 @@ export default function GerenciarPrioridades() {
 
     const obterPropriedadesCondicao = () => {
         fetchPropriedades()
-            .then(c =>setPropriedades(c))
+            .then(c =>setPropriedades(c.filter(f => f.id != "3" && f.id != "7")))
             .catch(error => notificationApi.error({ message: 'Falha na listagem de propriedades de escola. ' + (error?.response?.data || '') }))
     }
     
@@ -108,111 +107,99 @@ export default function GerenciarPrioridades() {
 
     useEffect(() => {
         obterListaFatores();
+        getSituacao();
+        obterParametrosCusto();
+        obterPropriedadesCondicao();
+        fetchUf();
+        obterPortesEscolas();
     }, [])
 
-    useEffect(() => {
-        getSituacao();
-    },[]);
-
-    useEffect(() => {
-        obterParametrosCusto();
-    }, []);
-
-    useEffect(() =>{
-        fetchUf();
-    },[])
-
-    useEffect(() =>{
-        obterPropriedadesCondicao();
-    },[]);
 
     useEffect(() => {
         fetchMunicipios();
-      }, [uf]);
+    }, [uf]);
 
-    useEffect(() =>{
-        obterPortesEscolas();
-    },[]);
 
     const fatorUps = listaFatores.find(f => f.nome === "UPS" && f.primario);
     const fatorCustoLogistico = listaFatores.find(f => f.nome === "Custo Logistico" && f.primario);
 
-    const items: CollapseProps['items'] = [
-        {
-            key: '1',
-            label: 'UPS',
-            children: (
-                fatorUps && <FatorForm onSaveFator={salvarFator} fator={fatorUps}></FatorForm>
-            )
-        },
-        {
-            key: '2',
-            label: "Custo Logístico",
-            children: (
-                fatorCustoLogistico &&
-                <div className="custo-logistico">
-                    <FatorForm fator={fatorCustoLogistico} onSaveFator={salvarFator}></FatorForm>
-                    <div className="custo-table">
-                        <p>Parâmetros do Custo Logístico</p>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Custo</th>
-                                    <th>Raio</th>
-                                    <th>Valor</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {parametrosCusto.map((item) => (
-                                    <tr key={item.custo}>
-                                        <th>{"$".repeat(item.custo)}</th>
-                                        <th>
-                                            {
-                                                item.raioMax ?
-                                                <div>
-                                                    <span>{item.raioMin} - 
-                                                    <input type="number" defaultValue={item.raioMax} className="br-input small"></input>
-                                                    </span>
-                                                </div> :
-                                                <p>Acima de {item.raioMin}</p>
-                                            }
-                                        </th>
-                                        <th><input type="number" defaultValue={item.valor} className="br-input small"></input></th>
+    useEffect(() => {
+        setItems([
+            {
+                key: '1',
+                label: 'UPS',
+                children: (
+                    fatorUps && <FatorForm onSaveFator={salvarFator} fator={fatorUps}></FatorForm>
+                )
+            },
+            {
+                key: '2',
+                label: "Custo Logístico",
+                children: (
+                    fatorCustoLogistico &&
+                    <div className="custo-logistico">
+                        <FatorForm fator={fatorCustoLogistico} onSaveFator={salvarFator}></FatorForm>
+                        <div className="custo-table">
+                            <p>Parâmetros do Custo Logístico</p>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Custo</th>
+                                        <th>Raio</th>
+                                        <th>Valor</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {parametrosCusto.map((item) => (
+                                        <tr key={item.custo}>
+                                            <th>{"$".repeat(item.custo)}</th>
+                                            <th>
+                                                {
+                                                    item.raioMax ?
+                                                    <div>
+                                                        <span>{item.raioMin} - 
+                                                        <input type="number" defaultValue={item.raioMax} className="br-input small"></input>
+                                                        </span>
+                                                    </div> :
+                                                    <p>Acima de {item.raioMin}</p>
+                                                }
+                                            </th>
+                                            <th><input type="number" defaultValue={item.valor} className="br-input small"></input></th>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-            )
-        },
-        {
-            key: '3',
-            label: "Outros fatores",
-            children: (
-                <div>
-                    <button data-testid="botaoAdicionarFator" className="br-button primary" type="button" onClick={() => {}}>Novo Fator</button>
-                    {listaFatores.filter(f => !f.primario).map((item) => (
-                        <FatorForm key={item.id} fator={item} condicaoUfs={ListaUfs} 
-                        propriedades={propriedades} municipios={listaMunicipios} 
-                        situacoes ={opcoesSituacao.map(s => ({id : s.id.toString(), rotulo: s.descricao}))} 
-                        etapasEnsino = {etapas} porte = {listaPortesEscolas} onSaveFator={salvarFator} />
-                    ))}
-                </div>
-                //<FatorForm nome="Teste" condicaoUfs={ListaUfs} propriedades={propriedades} municipios={listaMunicipios} situacoes ={opcoesSituacao.map(s => ({id : s.id.toString(), rotulo: s.descricao}))} etapasEnsino = {etapas} porte = {listaPortesEscolas}></FatorForm>
-            )
-        },
-    ];
-
-      
+                )
+            },
+            {
+                key: '3',
+                label: "Outros fatores",
+                children: (
+                    <div>
+                        <button data-testid="botaoAdicionarFator" className="br-button primary" type="button" onClick={() => {}}>Novo Fator</button>
+                        {listaFatores.filter(f => !f.primario).map((item) => (
+                            <FatorForm key={item.id} fator={item} condicaoUfs={ListaUfs} 
+                            propriedades={propriedades} municipios={listaMunicipios} 
+                            situacoes ={opcoesSituacao.map(s => ({id : s.id.toString(), rotulo: s.descricao}))} 
+                            etapasEnsino = {etapas} porte = {listaPortesEscolas} onSaveFator={salvarFator} />
+                        ))}
+                    </div>
+                    //<FatorForm nome="Teste" condicaoUfs={ListaUfs} propriedades={propriedades} municipios={listaMunicipios} situacoes ={opcoesSituacao.map(s => ({id : s.id.toString(), rotulo: s.descricao}))} etapasEnsino = {etapas} porte = {listaPortesEscolas}></FatorForm>
+                )
+            },
+        ]);
+    }, [ListaUfs, propriedades, listaMunicipios, opcoesSituacao, etapas, listaPortesEscolas, items, listaFatores]);
 
     return (
         <div className="App">
             {notificationContextHandler}
             <Header/>
             <TrilhaDeNavegacao elementosLi={paginas}/>
-            <Collapse className="collapse" items={items} defaultActiveKey={['1', '2', '3']} ghost>
-            </Collapse>
+            {items &&
+                <Collapse className="collapse" items={items} defaultActiveKey={['1', '2', '3']} ghost></Collapse>
+            }
             <Footer/>
         </div>
     )

@@ -7,9 +7,9 @@ export interface CustoLogisticoModel {
 
 export interface Condicao {
     id?: string;
-    propriedade: string;
-    operador: string;
-    valor: string[];
+    propriedade: number;
+    operador: number;
+    valores: string[];
     fatorPriorizacaoId?: string;
 }
 

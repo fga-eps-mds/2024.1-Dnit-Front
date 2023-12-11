@@ -6,6 +6,7 @@ import { fetchUnidadeFederativa } from "../../service/escolaApi";
 import { FilterOptions } from "../../pages/gerencia/GerenciarUsuario";
 import { Condicao, FatorModel, Localizacao, Operador, Rede } from "../../models/prioridade";
 import FatorCondicaoSelect from "../FatorCondicaoSelect";
+import { fetchPorte } from "../../service/prioridadeApi";
 
 interface FatorProps {
     fator: FatorModel;
@@ -23,18 +24,7 @@ export default function FatorForm ({ fator, onSaveFator, condicaoUfs, propriedad
     const [pesoFator, setPesoFator] = useState(fator?.peso ?? 0);
     const [ativo, setAtivo] = useState(fator?.ativo ?? true);
     const [listaCondicoes, setListaCondicoes] = useState<Condicao[]>(fator?.fatorCondicoes ?? []);
-    const [condicaoAtual, setCondicaoAtual] = useState<Condicao>();
-    
-    // const fatorAtualizado: FatorModel = 
-    // {
-    //     id: fator?.id,
-    //     nome: fator?.nome ?? "",
-    //     peso: fator?.peso ?? 0,
-    //     ativo: fator?.ativo ?? true,
-    //     primario: fator?.primario ?? false,
-    //     fatorCondicoes: fator?.fatorCondicoes ?? [],
-    // };
-    
+
     const handleSaveButton = () => {
         const fatorAtualizado: FatorModel = 
         {
@@ -48,6 +38,13 @@ export default function FatorForm ({ fator, onSaveFator, condicaoUfs, propriedad
         onSaveFator(fatorAtualizado);
     }
     
+    const handleFatorCondicaoChange = (condicao: Condicao, i: number) => {
+        let novaListaCondicoes = [...listaCondicoes];
+        novaListaCondicoes[i] = condicao;
+        console.log(novaListaCondicoes)
+        setListaCondicoes(novaListaCondicoes);
+    }
+
     return (
         <div className="fator-form">
             <div className="br-input input-inline">
@@ -61,12 +58,17 @@ export default function FatorForm ({ fator, onSaveFator, condicaoUfs, propriedad
             {!fator?.primario && <div className="br-input input-inline" style={{width: "700px"}}>
                 <label>Condições:</label>
                 <div style={{display: "inline-block"}}>
-                    {listaCondicoes.map((item) => (
-                    <FatorCondicaoSelect condicaoUfs={condicaoUfs} propriedades={propriedades} municipios={municipios} situacoes={situacoes} etapasEnsino={etapasEnsino} porte={porte} onChange={() => {}}></FatorCondicaoSelect>
+                    {listaCondicoes.map((item, i) => (
+                        <FatorCondicaoSelect index={i} condicao={item} propriedades={propriedades} onChange={handleFatorCondicaoChange}></FatorCondicaoSelect>
                     ))}
-                    <FatorCondicaoSelect condicaoUfs={condicaoUfs} propriedades={propriedades} municipios={municipios} situacoes={situacoes} etapasEnsino={etapasEnsino} porte={porte} onChange={setCondicaoAtual}></FatorCondicaoSelect>
+                    {/* <FatorCondicaoSelect condicaoUfs={condicaoUfs} propriedades={propriedades} municipios={municipios} situacoes={situacoes} etapasEnsino={etapasEnsino} porte={porte} onChange={setCondicaoAtual}></FatorCondicaoSelect> */}
                     <i className="fas fa-plus-circle" aria-hidden="true" onClick={() => {
-                        if(condicaoAtual) setListaCondicoes([...listaCondicoes, condicaoAtual])
+                        const novaCondicao: Condicao = {
+                            propriedade: 0,
+                            operador: 0,
+                            valores: []
+                        };
+                        setListaCondicoes([...listaCondicoes, novaCondicao]);
                     }}></i>
                 </div>
             </div>}
