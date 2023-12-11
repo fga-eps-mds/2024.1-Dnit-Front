@@ -5,7 +5,6 @@ import {
 } from "@ant-design/icons";
 import IconGerenciarPerfis from "../../../assets/icones/GerenciarPerfis.svg";
 import IconGerenciarUsuarios from "../../../assets/icones/GerenciarUsuarios.svg";
-import IconPlay from "../../../assets/icones/iconePlay.svg";
 import IconGerenciarAcoes from "../../../assets/icones/iconeGerenciarAcoes.svg";
 import RankingEscolas from "../../../assets/icones/RankingEscolas.svg";
 import Solicitacoes from "../../../assets/icones/BotaoSolicitacao.svg";
@@ -21,8 +20,8 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../provider/Autenticacao";
 import { Permissao } from "../../../models/auth";
 import { fetchPermissoesDoUsuario } from "../../../service/usuarioApi";
-import IconGerenciarPrioridades from "../../../assets/icones/GerenciarPrioridades.svg"
-import IconGerenciarPolos from "../../../assets/icones/GerenciarPolos.svg"
+import IconGerenciarPrioridades from "../../../assets/icones/GerenciarPrioridades.svg";
+import IconGerenciarPolos from "../../../assets/icones/GerenciarPolos.svg";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -214,12 +213,15 @@ export default function Dashboard() {
               <p className="text">Gerenciar Polos</p>
             </Card>
           )}
-          <Card className="card" onClick={() => navigate("/gerenciarPrioridades")}>
+          <Card
+            className="card"
+            onClick={() => navigate("/gerenciarPrioridades")}
+          >
             <img
-                className="iconGerenciarPrioridades"
-                src={IconGerenciarPrioridades}
-                alt="ícone prioridades"
-              />
+              className="iconGerenciarPrioridades"
+              src={IconGerenciarPrioridades}
+              alt="ícone prioridades"
+            />
             <p className="text">Gerenciar Prioridades</p>
           </Card>
         </div>

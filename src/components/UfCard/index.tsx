@@ -12,10 +12,11 @@ export interface UfCardProps {
 export default function UfCardGroup({ cardsData }: UfCardGroupProps) {
   return (
     <div className="select-cards-group">
-      {cardsData.map((card) => (
+      {cardsData.map((card, index) => (
         <UfCard
           uf={card.uf}
           quantidadeEscolasTotal={card.quantidadeEscolasTotal}
+          key={`${card.quantidadeEscolasTotal}-${index}`}
         />
       ))}
     </div>

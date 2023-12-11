@@ -31,9 +31,9 @@ function converterParaEscolaPlanejamentoModel(
 }
 
 interface ModalProps {
-  planejamento: PlanejamentoMacro;
-  infoMes: InfoMesPlanejamentoMacro | undefined;
-  onClose: () => void;
+  readonly planejamento: PlanejamentoMacro;
+  readonly infoMes: InfoMesPlanejamentoMacro | undefined;
+  readonly onClose: () => void;
 }
 
 export default function ModalAdicionarEscola({
@@ -50,7 +50,7 @@ export default function ModalAdicionarEscola({
   const [listaEscolasSelecionadas, setListaEscolasSelecionadas] = useState<
     EscolaData[]
   >([]);
-  const [mes] = useState<number>(infoMes?.mes ?? 1);
+  const [mes, setMes] = useState<number>(infoMes?.mes ?? 1);
 
   useEffect(() => {
     fetchListarEscolasFiltradas({
@@ -201,19 +201,19 @@ export default function ModalAdicionarEscola({
                     return e;
                   });
 
-                var newPlanejamento = planejamento;
+                let newPlanejamento = planejamento;
                 newPlanejamento.planejamentoMacroMensal =
                   newInfoPlanejamentoMacro;
 
                 let planejamentoMesesInfo: PlanejamentoMacroMesUpdate[] =
-                  newPlanejamento!.planejamentoMacroMensal.map((element) => ({
+                  newPlanejamento.planejamentoMacroMensal.map((element) => ({
                     mes: element.mes,
                     ano: element.ano,
                     escolas: element.escolas.map((escola) => escola.id),
                   }));
 
                 let bodyRequest: AtualizarPlanejamento = {
-                  nome: newPlanejamento!.nome,
+                  nome: newPlanejamento.nome,
                   planejamentoMacroMensal: planejamentoMesesInfo,
                 };
 

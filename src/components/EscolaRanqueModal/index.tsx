@@ -39,12 +39,14 @@ const ModalRanqueEscola: React.FC<ModalProps> = ({
 }) => {
   const [escolaSelecionada, setEscolaSelecionada] =
     useState<EscolaRanqueDetalhes | null>(null);
-  const [poloSelecionado, setPoloSelecionado] = useState<PoloModel | undefined>();
+  const [poloSelecionado, setPoloSelecionado] = useState<
+    PoloModel | undefined
+  >();
 
   const fetchPoloSelecionado = async (poloId?: number) => {
     const polo = await fetchPolo(poloId);
     setPoloSelecionado(polo);
-}
+  };
 
   useEffect(() => {
     fetchEscolaRanque(escolaId).then((escola) => {
@@ -74,8 +76,8 @@ const ModalRanqueEscola: React.FC<ModalProps> = ({
           <Label>Posição: {escolaSelecionada.ranqueInfo.posicao}</Label>
           <Label>Pontuação:</Label>
           <div className="d-flex flex-column">
-            {escolaSelecionada.ranqueInfo.fatores.map((f) => (
-              <Label className="ml-4">
+            {escolaSelecionada.ranqueInfo.fatores.map((f, index) => (
+              <Label className="ml-4" key={index}>
                 Fator {f.nome}, Peso {f.peso}, Valor {f.valor}
               </Label>
             ))}
@@ -121,20 +123,20 @@ const ModalRanqueEscola: React.FC<ModalProps> = ({
           </div>
           <div className="row mb-2">
             <div className="col-12 col-md-6">
-              <Label>Porte: {escolaSelecionada.porte?.descricao || ""}</Label>
+              <Label>Porte: {escolaSelecionada.porte?.descricao ?? ""}</Label>
             </div>
             <div className="col-12 col-md-6">
               <Label>
-                Situação: {escolaSelecionada.situacao?.descricao || ""}
+                Situação: {escolaSelecionada.situacao?.descricao ?? ""}
               </Label>
             </div>
           </div>
-          <Label>Rede: {escolaSelecionada.rede?.id || ""}</Label>
+          <Label>Rede: {escolaSelecionada.rede?.id ?? ""}</Label>
           <Label>
             Etapas de Ensino:{" "}
             {escolaSelecionada.etapasEnsino
               ?.map((e) => e.descricao)
-              .join(", ") || ""}
+              .join(", ") ?? ""}
           </Label>
           <div>
             <div className="d-flex flex-column">
@@ -157,12 +159,29 @@ const ModalRanqueEscola: React.FC<ModalProps> = ({
             </div>
           </div>
           <hr />
-          <div className='d-flex flex-column '>
-              <Label><strong>Polo mais próximo</strong></Label>
-              <Label>Distância: {escolaSelecionada.distanciaPolo?.toFixed(2)} Km</Label>
-              <Label>Endereço: {escolaSelecionada.distanciaPolo ? poloSelecionado?.endereco : '-'}</Label>
-              <Label>Cep: {escolaSelecionada.distanciaPolo ? poloSelecionado?.cep : '-'}</Label>
-              <Label>UF: {escolaSelecionada.distanciaPolo ? poloSelecionado?.uf.sigla : '-'}</Label>
+          <div className="d-flex flex-column ">
+            <Label>
+              <strong>Polo mais próximo</strong>
+            </Label>
+            <Label>
+              Distância: {escolaSelecionada.distanciaPolo?.toFixed(2)} Km
+            </Label>
+            <Label>
+              Endereço:{" "}
+              {escolaSelecionada.distanciaPolo
+                ? poloSelecionado?.endereco
+                : "-"}
+            </Label>
+            <Label>
+              Cep:{" "}
+              {escolaSelecionada.distanciaPolo ? poloSelecionado?.cep : "-"}
+            </Label>
+            <Label>
+              UF:{" "}
+              {escolaSelecionada.distanciaPolo
+                ? poloSelecionado?.uf.sigla
+                : "-"}
+            </Label>
           </div>
         </div>
       </div>

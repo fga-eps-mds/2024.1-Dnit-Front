@@ -81,7 +81,7 @@ export default function GerenciarAcoes() {
       .then((planejamento) => {
         setPlanejamentoBanco(planejamento.items);
         setPlanejamentos(planejamento.items);
-        var listPeriods: FilterOptions[] = [];
+        let listPeriods: FilterOptions[] = [];
 
         planejamento.items.forEach((element, index) => {
           let planejamentoPeriod = `${meses[element.mesInicio - 1]} de ${
@@ -102,7 +102,7 @@ export default function GerenciarAcoes() {
   }, []);
 
   useEffect(() => {
-    var planejamentosFiltrados = planejamentos.filter(
+    let planejamentosFiltrados = planejamentos.filter(
       (index) =>
         index.nome.toLowerCase().includes(nome.toLowerCase()) &&
         index.responsavel.toLowerCase().includes(responsavel.toLowerCase())
@@ -188,7 +188,7 @@ export default function GerenciarAcoes() {
           >
             {planejamentoBanco?.map((e, index) => (
               <CustomTableRow
-                key={index}
+                key={`${e.nome}-${index}`}
                 id={index}
                 data={{
                   "0": e.nome,

@@ -61,7 +61,7 @@ export function CustomTableRow({
     <tr>
       {columns.map((column, colIndex) =>
         column === "Custo logístico" ? (
-          <td>
+          <td key={`${id}-${column}`}>
             <div className="icon-row-cost">
               {[...Array(Number(data[column]))].map((_, digitIndex) => (
                 <i
@@ -69,6 +69,7 @@ export function CustomTableRow({
                   className="fas fa-dollar-sign"
                   aria-hidden="true"
                   onClick={() => onUsersRow(id)}
+                  key={`${id}-${digitIndex}`}
                 />
               ))}
             </div>

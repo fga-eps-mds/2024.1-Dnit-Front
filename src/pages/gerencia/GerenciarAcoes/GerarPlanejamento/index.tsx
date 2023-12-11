@@ -47,7 +47,7 @@ export default function GerenciarAcoes() {
   const [loading, setLoading] = useState(false);
 
   const validateForm = () => {
-    var isValid = true;
+    let isValid = true;
     const newErrors = {
       name: "",
       initialMonth: "",
@@ -183,7 +183,7 @@ export default function GerenciarAcoes() {
               <span className="error">{errors.name}</span>
             </div>
             <div className="br-input planejamento-input">
-              <label>Mês inicial</label>
+              <label htmlFor="month-select-init">Mês inicial</label>
               <MonthSelect
                 onMonthSelected={(month) => setInitialMonth(month)}
                 disabled={isPlanningGenerated}
@@ -192,7 +192,7 @@ export default function GerenciarAcoes() {
               <span className="error">{errors.initialMonth}</span>
             </div>
             <div className="br-input planejamento-input">
-              <label>Mês final</label>
+              <label htmlFor="month-select-end">Mês final</label>
               <MonthSelect
                 onMonthSelected={(month) => setFinalMonth(month)}
                 disabled={isPlanningGenerated}
@@ -201,9 +201,9 @@ export default function GerenciarAcoes() {
               <span className="error">{errors.finalMonth}</span>
             </div>
             <div className="br-input planejamento-input">
-              <label>Quantidade de Ações</label>
+              <label htmlFor="input-default-qtd">Quantidade de Ações</label>
               <input
-                id="input-default"
+                id="input-default-qtd"
                 type={"text"}
                 disabled={isPlanningGenerated}
                 onChange={(e) => setQtdActions(Number(e.target.value))}

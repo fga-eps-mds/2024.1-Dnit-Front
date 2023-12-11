@@ -36,6 +36,7 @@ export default function SelectCardGroup({
     <div className="select-cards-group">
       {cardsData.map((card) => (
         <SelectCard
+          key={card.id}
           cardData={card}
           selected={selectedCard === card.id}
           onClick={handleCardClick}
