@@ -26,7 +26,7 @@ function converterParaEscolaPlanejamentoModel(
     nome: escolaData.nomeEscola,
     uf: escolaData.siglaUf,
     quantidadeAlunos: escolaData.numeroTotalDeAlunos,
-    distanciaPolo: escolaData.distanciaSuperintendencia,
+    distanciaPolo: 0,
   };
 }
 

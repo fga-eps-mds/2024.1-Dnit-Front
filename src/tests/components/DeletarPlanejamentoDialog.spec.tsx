@@ -2,7 +2,6 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { AuthProvider } from "../../provider/Autenticacao";
 import DeletarPlanejamentoDialog from "../../components/DeletarPlanejamentoDialog";
-import { planejamento2 } from "../stub/planejamentoModelos";
 import { planejamento } from "../stub/planejamentoModelos";
 import server from "../mock/servicosAPI";
 import localStorageMock from "../mock/memoriaLocal";
@@ -74,9 +73,7 @@ describe("Tabela de Gerenciar Acoes", () => {
     render(
       <MemoryRouter>
         <DeletarPlanejamentoDialog
-          closeDialog={(d) => {
-            deletou = d;
-          }}
+          closeDialog={(d) => {}}
           planejamento={planejamento}
           onClick={onClickMock}
         />
