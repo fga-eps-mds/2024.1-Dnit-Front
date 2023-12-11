@@ -1,4 +1,4 @@
-import {PlanejamentoMacro} from "../../models/gerenciarAcoes";
+import {EscolasPlanejamentoTabela, PlanejamentoMacro} from "../../models/gerenciarAcoes";
 
 export const planejamento: PlanejamentoMacro = {
     id: "1",
@@ -71,3 +71,11 @@ export const planejamento2: PlanejamentoMacro = {
         },
     ],
 };
+
+export const escolaSelected: EscolasPlanejamentoTabela={
+    ups: 12,
+    nome: "Escola A",
+    uf: "DF",
+    quantidadeAlunos: 1000,
+    custoLogistico: 2
+}

@@ -7,6 +7,7 @@ import UfCardGroup from "../../../../components/UfCard";
 import { meses } from "../fixtures";
 import "./styles.css";
 import {
+  EscolaPlanejamentoModel,
   EscolasPlanejamentoTabela,
   InfoMesPlanejamentoMacro,
   PlanejamentoMacro,
@@ -190,6 +191,78 @@ export default function PlanejamentoInfo({
     setShowDeletarDialog(false);
   }
 
+  async function mudaEscolasEntreMeses(
+    escolaSelecionadaInfo: EscolaPlanejamentoModel,
+    escolaSelected: EscolasPlanejamentoTabela
+  ) {
+    let updatedPlanejamento = planejamento;
+    let escolaTroca1: EscolaPlanejamentoModel | undefined = undefined;
+    let firstMonth = 0;
+
+    if (escolaSelecionadaInfo !== undefined) {
+      // Realiza as trocas
+      updatedPlanejamento.planejamentoMacroMensal.forEach((mesInfo) => {
+        if (escolaTroca1 === undefined) {
+          escolaTroca1 = mesInfo.escolas.find(
+            (escola) =>
+              escola.nome === escolaSelected.nome &&
+              escola.quantidadeAlunos === escolaSelected.quantidadeAlunos &&
+              escola.uf === escolaSelected.uf
+          );
+          if (escolaTroca1 !== undefined) {
+            firstMonth = mesInfo.mes;
+            mesInfo.escolas = mesInfo.escolas.filter(
+              (element) => element.id !== escolaTroca1!.id
+            );
+            mesInfo.escolas.push(escolaSelecionadaInfo);
+          }
+        }
+      });
+
+      updatedPlanejamento.planejamentoMacroMensal.forEach((mesInfo) => {
+        var escolaTroca2: EscolaPlanejamentoModel | undefined =
+          mesInfo.escolas.find(
+            (escola) => escola.id === escolaSelecionadaInfo.id
+          );
+        if (escolaTroca2 !== undefined && mesInfo.mes !== firstMonth) {
+          mesInfo.escolas = mesInfo.escolas.filter(
+            (element) => element.id !== escolaSelecionadaInfo!.id
+          );
+          mesInfo.escolas.push(escolaTroca1!);
+        }
+      });
+    }
+
+    let planejamentoMesesInfo: PlanejamentoMacroMesUpdate[] =
+      updatedPlanejamento!.planejamentoMacroMensal.map((element) => ({
+        mes: element.mes,
+        ano: element.ano,
+        escolas: element.escolas.map((escola) => escola.id),
+      }));
+
+    let bodyRequest: AtualizarPlanejamento = {
+      nome: updatedPlanejamento!.nome,
+      planejamentoMacroMensal: planejamentoMesesInfo,
+    };
+
+    if (updatedPlanejamento) {
+      await updatePlanejamento(planejamento.id, bodyRequest)
+        .then((response) => {
+          notification.success({
+            message: "Escolas Trocadas com Sucesso!",
+          });
+          planejamento = response;
+        })
+        .catch((error) => {
+          notification.error({
+            message: "Falha em Trocar Escolas no Planejamento.",
+          });
+        });
+    }
+
+    setShowAlterarMesEscola(false);
+  }
+
   return (
     <div className="planning-info-container">
       {escolaAtual != null && (
@@ -213,8 +286,14 @@ export default function PlanejamentoInfo({
       )}
       {showAlterarMesEscola && (
         <ModalAlterarEscola
+          escolaSelected={escolaSelected!}
+          planejamento={planejamento}
           onClose={() => {
             setShowAlterarMesEscola(false);
+          }}
+          onConfirm={(escolaInfo, escolaSelecionada) => {
+            mudaEscolasEntreMeses(escolaInfo, escolaSelecionada);
+            updateMonthData(cardIndexSelected);
           }}
         />
       )}
@@ -277,6 +356,7 @@ export default function PlanejamentoInfo({
                     hideEditIcon={true}
                     hideChangeIcon={false}
                     onChangeRow={() => {
+                      setEscolaSelected(e);
                       setShowAlterarMesEscola(true);
                     }}
                     onDeleteRow={() => {
