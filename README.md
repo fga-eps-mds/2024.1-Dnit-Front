@@ -47,3 +47,20 @@ Nas vezes subsequentes, caso não tenha adicionado novas dependencias:
 No seu navegador, acesse o endereço: http://localhost:3000.
 
 Para encerrar a aplicação, use Ctrl + C.
+
+## Contribuidores
+
+- [Daniel Porto](https://github.com/DanielPortods)
+- [Rafael Berto](https://github.com/RafaelBP02)
+- [Thiago Sampaio](https://github.com/thiagohdaqw)
+- [Victor Hugo](https://github.com/victorhugo21)
+- [Vitor Lamego](https://github.com/VitorLamego)
+- [Wagner Martins](https://github.com/wagnermc506)
+- [Yudi Yamane](https://github.com/yudi)
+- [André Emanuel](https://github.com/Hunter104)
+- [Artur Henrique](https://github.com/H0lzz)
+- [Cássio Sousa](https://github.com/csreis72)
+- [Eduardo Matheus](https://github.com/DiceRunner714)
+- [João Antonio](https://github.com/joaoseisei)
+- [Lucas Gama](https://github.com/bottinolucas)
+- [Márcio Henrique](https://github.com/DeM4rcio)
