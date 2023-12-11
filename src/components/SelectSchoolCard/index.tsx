@@ -29,6 +29,7 @@ export default function SelectSchoolCard({
           : "select-school-card"
       }
       onClick={() => onClick(schoolId)}
+      onKeyDown={(event) => {}}
     >
       <span className="card-text school-name">Nome: {schoolName}</span>
       <span className="card-text">UF: {schoolUf}</span>
