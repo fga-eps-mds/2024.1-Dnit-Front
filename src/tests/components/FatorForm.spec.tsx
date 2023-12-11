@@ -15,8 +15,8 @@ const FatorTeste =
     primario: false,
     fatorCondicoes: [
       {
-        propriedade: 4,
-        operador: 1,
+        propriedade: "4",
+        operador: "1",
         valores: [
           "27"
         ],
