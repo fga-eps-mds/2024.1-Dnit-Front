@@ -31,12 +31,7 @@ export default function GerenciarPrioridades() {
     
     const obterListaFatores = () => {
         fetchFatoresPriorizacao()
-            .then((fs) => {
-                setListaFatores(fs);
-                // setFatorUPS(fs.find(f => f.nome === "UPS" && f.primario));
-                // setFatorCusto(fs.find(f => f.nome === "Custo Logistico" && f.primario))
-                // setOutrosFatores(fs.filter(f => !f.primario));
-            })
+            .then(setListaFatores)
             .catch(error => notificationApi.error({ message: 'Falha ao obter fatores de priorização.' + (error?.response?.data || '') }))
     }
 
@@ -54,9 +49,15 @@ export default function GerenciarPrioridades() {
 
     const salvarFator = (fator: FatorModel) => {
         if (fator.nome === "") {
+            notification.error({message: "Por favor, dê um nome ao fator."});
             return;
         }
-        
+
+        if (fator.fatorCondicoes.some(c => c.propriedade === 0 || c.operador === 0 || c.valores.length === 0)) {
+            notification.error({message: "Por favor, não deixe condições vazias."});
+            return;
+        }
+
         if (fator.id) {
             editarFatorPriorizacao(fator.id, fator)
                 .then((fatorAtualizado) => {

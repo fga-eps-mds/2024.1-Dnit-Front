@@ -65,7 +65,7 @@ export default function FatorForm ({ fator, onSaveFator, onDeleteFator, condicao
         setListaCondicoes((prevCondicoes) => {
           return prevCondicoes.filter((_, i) => i !== index);
         });
-      };
+    };
 
     const handlePeso = (peso: number) => {
         setPesoFator(peso < 0 ? 0 : peso > 100 ? 100 : peso);
@@ -102,9 +102,9 @@ export default function FatorForm ({ fator, onSaveFator, onDeleteFator, condicao
                     }}></i>}
                 </div>
             </div>}
-            <div className="br-switch icon" onClick={() => temPermissao(Permissao.PrioridadesEditar) ? setAtivo(!ativo) : {}} onKeyDown={() => {}}>
+            <div className="br-switch icon" >
                 <input id="switch-icon" type="checkbox" checked={ativo} />
-                <label>Ativo:</label>
+                <label onClick={() => temPermissao(Permissao.PrioridadesEditar) ? setAtivo(!ativo) : {}} onKeyDown={() => {}}>Ativo:</label>
             </div>
             <div className="d-flex w-100 justify-content-start">
                 <button disabled={fator?.primario || !fator?.id || !temPermissao(Permissao.PrioridadesExcluir)} data-testid={`botaoExcluir${fator.nome}`} className="br-button primary" onClick={handleDeleteButton} type="button">Excluir</button>
