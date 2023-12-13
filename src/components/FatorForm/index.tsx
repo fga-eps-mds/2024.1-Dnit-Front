@@ -109,7 +109,7 @@ export default function FatorForm ({ fator, onSaveFator, onDeleteFator, condicao
             </div>
             <div className="d-flex w-100 justify-content-start">
                 <button disabled={fator?.primario || !fator?.id || !temPermissao(Permissao.PrioridadesExcluir)} data-testid={`botaoExcluir${fator.nome}`} className="br-button primary" onClick={handleDeleteButton} type="button">Excluir</button>
-                <button disabled={!temPermissao(Permissao.EmpresaEditar)} data-testid={`botaoSalvar${fator.nome}`} className="br-button primary" type="button" onClick={handleSaveButton}>Salvar</button>
+                <button disabled={!temPermissao(Permissao.PrioridadesEditar)} data-testid={`botaoSalvar${fator.nome}`} className="br-button primary" type="button" onClick={handleSaveButton}>Salvar</button>
             </div>
         </div>
     )

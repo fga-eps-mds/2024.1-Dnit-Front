@@ -5,6 +5,8 @@ import server from "./mock/servicosAPI";
 import { MemoryRouter } from "react-router-dom";
 import { AuthProvider } from "../provider/Autenticacao";
 import GerenciarPrioridades from "../pages/gerencia/GerenciarPrioridades";
+import { autenticar } from "./mock/autenticacao";
+import { Permissao } from "../models/auth";
 
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
@@ -26,6 +28,8 @@ describe("Gerenciar Prioridades", () => {
     })
 
     it("Deve listar fatores", async () => {
+        autenticar(Permissao.PrioridadesVisualizar);
+        
         const screen = setup();
         
         await waitFor(() => expect(screen.getByTestId("inputFatorUPS")).toBeInTheDocument);
@@ -33,6 +37,8 @@ describe("Gerenciar Prioridades", () => {
     })
 
     it("Deve editar peso do custo logístico", async () => {
+        autenticar(Permissao.PrioridadesVisualizar, Permissao.PrioridadesEditar);
+
         const screen = setup();
         
         await waitFor(() => expect(screen.getByTestId("pesoCusto Logistico")).toBeInTheDocument);
@@ -43,6 +49,8 @@ describe("Gerenciar Prioridades", () => {
     })
 
     it("Deve alterar parâmetro do custo logístico", async () => {
+        autenticar(Permissao.PrioridadesVisualizar, Permissao.PrioridadesEditar);
+
         const screen = setup();
         
         await waitFor(() => expect(screen.getByTestId("raioParam1")).toBeInTheDocument);
@@ -58,6 +66,9 @@ describe("Gerenciar Prioridades", () => {
                 target: {value: "5"}
             })
             botaoSalvar.click();
+        })
+
+        act(() => {
             fireEvent.change(valorInput, {
                 target: {value: "66"}
             })
@@ -66,12 +77,14 @@ describe("Gerenciar Prioridades", () => {
     })
 
     it("Deve editar fator", async () => {
+        autenticar(Permissao.PrioridadesVisualizar, Permissao.PrioridadesEditar);
+
         const screen = setup();
         
-        await waitFor(() => expect(screen.getByTestId("inputFatorFator A")).toBeInTheDocument);
-        await waitFor(() => expect(screen.getByTestId("botaoSalvarFator A")).toBeInTheDocument);
-        const input = screen.getByTestId("inputFatorFator A");
-        const botaoSalvar = screen.getByTestId("botaoSalvarFator A");
+        await waitFor(() => expect(screen.getByTestId("inputFatorFator B")).toBeInTheDocument);
+        await waitFor(() => expect(screen.getByTestId("botaoSalvarFator B")).toBeInTheDocument);
+        const input = screen.getByTestId("inputFatorFator B");
+        const botaoSalvar = screen.getByTestId("botaoSalvarFator B");
 
         act(() => {
             fireEvent.change(input, {
@@ -82,6 +95,8 @@ describe("Gerenciar Prioridades", () => {
     })
 
     it("Não deve salvar fator com nome vazio", async () => {
+        autenticar(Permissao.PrioridadesVisualizar, Permissao.PrioridadesEditar);
+
         const screen = setup();
         
         await waitFor(() => expect(screen.getByTestId("inputFatorFator A")).toBeInTheDocument);
@@ -90,13 +105,15 @@ describe("Gerenciar Prioridades", () => {
 
         act(() => {
             fireEvent.change(input, {
-                target: {value: "Fator Editado"}
+                target: {value: ""}
             })
             botaoSalvar.click();
         })
     })
 
     it("Deve excluir fator", async () => {
+        autenticar(Permissao.PrioridadesVisualizar, Permissao.PrioridadesExcluir);
+
         const screen = setup();
         
         await waitFor(() => expect(screen.getByTestId("botaoExcluirFator B")).toBeInTheDocument);
@@ -108,16 +125,30 @@ describe("Gerenciar Prioridades", () => {
     })
 
     it("Deve criar novo fator", async () => {
+        autenticar(Permissao.PrioridadesVisualizar, Permissao.PrioridadesEditar);
+
         const screen = setup();
         
-        await waitFor(() => expect(screen.getByTestId("inputFatorFator B")).toBeInTheDocument);
-        const input = screen.getByTestId("inputFatorFator B");
-        const botaoSalvar = screen.getByTestId("botaoSalvarFator B");
+        await waitFor(() => expect(screen.getByTestId("inputFatorFator A")).toBeInTheDocument);
+        const input = screen.getByTestId("inputFatorFator A");
+        const botaoSalvar = screen.getByTestId("botaoSalvarFator A");
         act(() => {
             fireEvent.change(input, {
                 target: {value: "Novo Fator"}
             })
             botaoSalvar.click();
+        })
+    })
+
+    it("Deve clicar em botão Novo Fator", async () => {
+        autenticar(Permissao.PrioridadesVisualizar, Permissao.PrioridadesEditar);
+
+        const screen = setup();
+        
+        await waitFor(() => expect(screen.getByTestId("botaoAdicionarFator")).toBeInTheDocument);
+        const botaoAdicionar = screen.getByTestId("botaoAdicionarFator");
+        act(() => {
+            botaoAdicionar.click();
         })
     })
 })
