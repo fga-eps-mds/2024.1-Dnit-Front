@@ -138,11 +138,12 @@ export default function FatorCondicaoSelect({index, condicao, propriedades, onCh
 
     return (
         <div style={{display: "flex"}}>
-            <Select items={selectPropriedades} value={condicaoState.propriedadeSelecionada} onChange={(c) => {
+            <Select items={selectPropriedades} dropdownStyle={{width: "194px", marginLeft: "20px"}} value={condicaoState.propriedadeSelecionada} onChange={(c) => {
                 setPropriedadeSelecionada(c);
             }} />
-            <Select items={condicaoState.operadores} value={condicaoState.operadorSelecionado} onChange={(e) => setCondicaoState({...condicaoState, operadorSelecionado: e})} />
-            {condicaoState.propriedadeSelecionada != "6" ? <MultiSelect items={condicaoState.valores} value={condicaoState.valoresSelecionados} onChange={(e) => setCondicaoState({...condicaoState, valoresSelecionados: e})} />:
+            <Select items={condicaoState.operadores} dropdownStyle={{width: "194px", marginLeft: "20px"}} value={condicaoState.operadorSelecionado} onChange={(e) => setCondicaoState({...condicaoState, operadorSelecionado: e})} />
+            {condicaoState.propriedadeSelecionada != "6" ? <MultiSelect items={condicaoState.valores} value={condicaoState.valoresSelecionados} 
+                dropdownStyle={{width: "194px", marginLeft: "20px"}} onChange={(e) => setCondicaoState({...condicaoState, valoresSelecionados: e})} />:
             <input type="number"></input>
             }
         </div>          

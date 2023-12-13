@@ -81,7 +81,7 @@ export default function FatorForm ({ fator, onSaveFator, onDeleteFator, condicao
                 <label>Peso:</label>
                 <input type="number" data-testid={`peso${fator.nome}`} maxLength={3} value={pesoFator} onChange={e => handlePeso(e.target.valueAsNumber)}></input>
             </div>
-            {!fator?.primario && <div className="br-input input-inline" style={{width: "700px"}}>
+            {!fator?.primario && <div className="br-input input-inline" style={{width: "800px"}}>
                 <label>Condições:</label>
                 <div style={{display: "inline-block"}}>
                     {listaCondicoes.map((item, i) => (
