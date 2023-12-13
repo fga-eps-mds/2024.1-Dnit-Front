@@ -54,13 +54,19 @@ export default function FatorForm ({ fator, onSaveFator, onDeleteFator, condicao
         }
         onDeleteFator?.(fatorAtualizado);
     }
-    
+
     const handleFatorCondicaoChange = (condicao: Condicao, i: number) => {
         let novaListaCondicoes = [...listaCondicoes];
         novaListaCondicoes[i] = condicao;
         console.log(novaListaCondicoes)
         setListaCondicoes(novaListaCondicoes);
     }
+
+    const removeCondicao = (index: number) => {
+        setListaCondicoes((prevCondicoes) => {
+          return prevCondicoes.filter((_, i) => i !== index);
+        });
+      };
 
     const handlePeso = (peso: number) => {
         setPesoFator(peso < 0 ? 0 : peso > 100 ? 100 : peso);
@@ -80,9 +86,13 @@ export default function FatorForm ({ fator, onSaveFator, onDeleteFator, condicao
                 <label>Condições:</label>
                 <div style={{display: "inline-block"}}>
                     {listaCondicoes.map((item, i) => (
-                        <FatorCondicaoSelect index={i} condicao={item} propriedades={propriedades} onChange={handleFatorCondicaoChange}></FatorCondicaoSelect>
+                        <div style={{display: "flex"}} key={`${i}-${item.propriedade}-${item.operador}-${item.valores}`} >
+                            <FatorCondicaoSelect index={i} condicao={item} propriedades={propriedades} onChange={handleFatorCondicaoChange}></FatorCondicaoSelect>
+                            {temPermissao(Permissao.PrioridadesEditar) && 
+                            <i style={{alignSelf: "center"}} className="fas fa-minus-circle" aria-hidden="true" 
+                            onClick={() => removeCondicao(i)}></i>}
+                        </div>
                     ))}
-                    {/* <FatorCondicaoSelect condicaoUfs={condicaoUfs} propriedades={propriedades} municipios={municipios} situacoes={situacoes} etapasEnsino={etapasEnsino} porte={porte} onChange={setCondicaoAtual}></FatorCondicaoSelect> */}
                     { temPermissao(Permissao.PrioridadesEditar) && <i className="fas fa-plus-circle" aria-hidden="true" onClick={() => {
                         const novaCondicao: Condicao = {
                             propriedade: 0,
