@@ -58,7 +58,6 @@ export default function FatorForm ({ fator, onSaveFator, onDeleteFator, condicao
     const handleFatorCondicaoChange = (condicao: Condicao, i: number) => {
         let novaListaCondicoes = [...listaCondicoes];
         novaListaCondicoes[i] = condicao;
-        console.log(novaListaCondicoes)
         setListaCondicoes(novaListaCondicoes);
     }
 
@@ -89,11 +88,11 @@ export default function FatorForm ({ fator, onSaveFator, onDeleteFator, condicao
                         <div style={{display: "flex"}} key={`${i}-${item.propriedade}-${item.operador}-${item.valores}`} >
                             <FatorCondicaoSelect index={i} condicao={item} propriedades={propriedades} onChange={handleFatorCondicaoChange}></FatorCondicaoSelect>
                             {temPermissao(Permissao.PrioridadesEditar) && 
-                            <i style={{alignSelf: "center"}} className="fas fa-minus-circle" aria-hidden="true" 
+                            <i data-testid={`remover-condicao-${i}`} style={{alignSelf: "center"}} className="fas fa-minus-circle" aria-hidden="true" 
                             onClick={() => removeCondicao(i)}></i>}
                         </div>
                     ))}
-                    { temPermissao(Permissao.PrioridadesEditar) && <i className="fas fa-plus-circle" aria-hidden="true" onClick={() => {
+                    { temPermissao(Permissao.PrioridadesEditar) && <i data-testid="adicionar-condicao" className="fas fa-plus-circle" aria-hidden="true" onClick={() => {
                         const novaCondicao: Condicao = {
                             propriedade: 0,
                             operador: 0,
