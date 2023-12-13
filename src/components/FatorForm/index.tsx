@@ -1,12 +1,14 @@
 import "./styles.css"
 import Select from "../Select";
 import MultiSelect from "../MultiSelect";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { fetchUnidadeFederativa } from "../../service/escolaApi";
 import { FilterOptions } from "../../pages/gerencia/GerenciarUsuario";
 import { Condicao, FatorModel, Localizacao, Operador, Rede } from "../../models/prioridade";
 import FatorCondicaoSelect from "../FatorCondicaoSelect";
 import { fetchPorte } from "../../service/prioridadeApi";
+import { AuthContext } from "../../provider/Autenticacao";
+import { Permissao } from "../../models/auth";
 
 interface FatorProps {
     fator: FatorModel;
@@ -25,6 +27,7 @@ export default function FatorForm ({ fator, onSaveFator, onDeleteFator, condicao
     const [pesoFator, setPesoFator] = useState(fator?.peso ?? 0);
     const [ativo, setAtivo] = useState(fator?.ativo ?? true);
     const [listaCondicoes, setListaCondicoes] = useState<Condicao[]>(fator?.fatorCondicoes ?? []);
+    const { temPermissao } = useContext(AuthContext);
 
     const handleSaveButton = () => {
         const fatorAtualizado: FatorModel = 
@@ -59,6 +62,10 @@ export default function FatorForm ({ fator, onSaveFator, onDeleteFator, condicao
         setListaCondicoes(novaListaCondicoes);
     }
 
+    const handlePeso = (peso: number) => {
+        setPesoFator(peso < 0 ? 0 : peso > 100 ? 100 : peso);
+    }
+
     return (
         <div className="fator-form">
             <div className="br-input input-inline">
@@ -67,7 +74,7 @@ export default function FatorForm ({ fator, onSaveFator, onDeleteFator, condicao
             </div>
             <div className="br-input input-inline">
                 <label>Peso:</label>
-                <input type="number" data-testid={`peso${fator.nome}`} defaultValue={pesoFator} onChange={e => setPesoFator(e.target.valueAsNumber)}></input>
+                <input type="number" data-testid={`peso${fator.nome}`} maxLength={3} value={pesoFator} onChange={e => handlePeso(e.target.valueAsNumber)}></input>
             </div>
             {!fator?.primario && <div className="br-input input-inline" style={{width: "700px"}}>
                 <label>Condições:</label>
@@ -76,23 +83,23 @@ export default function FatorForm ({ fator, onSaveFator, onDeleteFator, condicao
                         <FatorCondicaoSelect index={i} condicao={item} propriedades={propriedades} onChange={handleFatorCondicaoChange}></FatorCondicaoSelect>
                     ))}
                     {/* <FatorCondicaoSelect condicaoUfs={condicaoUfs} propriedades={propriedades} municipios={municipios} situacoes={situacoes} etapasEnsino={etapasEnsino} porte={porte} onChange={setCondicaoAtual}></FatorCondicaoSelect> */}
-                    <i className="fas fa-plus-circle" aria-hidden="true" onClick={() => {
+                    { temPermissao(Permissao.PrioridadesEditar) && <i className="fas fa-plus-circle" aria-hidden="true" onClick={() => {
                         const novaCondicao: Condicao = {
                             propriedade: 0,
                             operador: 0,
                             valores: []
                         };
                         setListaCondicoes([...listaCondicoes, novaCondicao]);
-                    }}></i>
+                    }}></i>}
                 </div>
             </div>}
-            <div className="br-switch icon" onClick={() => setAtivo(!ativo)} onKeyDown={() => {}}>
+            <div className="br-switch icon" onClick={() => temPermissao(Permissao.PrioridadesEditar) ? setAtivo(!ativo) : {}} onKeyDown={() => {}}>
                 <input id="switch-icon" type="checkbox" checked={ativo} />
                 <label>Ativo:</label>
             </div>
             <div className="d-flex w-100 justify-content-start">
-                <button disabled={fator?.primario || !fator?.id} data-testid={`botaoExcluir${fator.nome}`} className="br-button primary" onClick={handleDeleteButton} type="button">Excluir</button>
-                <button data-testid={`botaoSalvar${fator.nome}`} className="br-button primary" type="button" onClick={handleSaveButton}>Salvar</button>
+                <button disabled={fator?.primario || !fator?.id || !temPermissao(Permissao.PrioridadesExcluir)} data-testid={`botaoExcluir${fator.nome}`} className="br-button primary" onClick={handleDeleteButton} type="button">Excluir</button>
+                <button disabled={!temPermissao(Permissao.EmpresaEditar)} data-testid={`botaoSalvar${fator.nome}`} className="br-button primary" type="button" onClick={handleSaveButton}>Salvar</button>
             </div>
         </div>
     )

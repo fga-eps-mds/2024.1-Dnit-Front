@@ -39,6 +39,10 @@ export enum Permissao {
   PoloVisualizar = "PoloVisualizar",
   PoloEditar = "PoloEditar",
   PoloRemover = "PoloRemover",
+
+  PrioridadesVisualizar = "PrioridadesVisualizar",
+  PrioridadesEditar = "PrioridadesEditar",
+  PrioridadesExcluir = "PrioridadesExcluir",
 }
 
 export enum TipoPerfil {

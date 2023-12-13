@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Collapse, CollapseProps, notification } from "antd";
 import Footer from "../../../components/Footer";
 import Header from "../../../components/Header";
@@ -12,6 +12,8 @@ import { fetchEtapasDeEnsino, fetchMunicipio, fetchSituacao, fetchUnidadeFederat
 import { SituacaoData } from "../../../models/service";
 import { SelectItem } from "../../../components/Select";
 import { FatorModel } from "../../../models/prioridade";
+import { AuthContext } from "../../../provider/Autenticacao";
+import { Permissao } from "../../../models/auth";
 
 export default function GerenciarPrioridades() {
     const [parametrosCusto, setParametrosCusto] = useState<CustoLogisticoModel[]>([]);
@@ -25,7 +27,8 @@ export default function GerenciarPrioridades() {
     const [opcoesSituacao, setOpcoesSituacao] = useState<SituacaoData[]>([]);
     const [etapas, setEtapas] = useState<SelectItem[]>([]);
     const [listaPortesEscolas, setPortesEscolas] = useState<FilterOptions[]>([]);
-
+    const { temPermissao } = useContext(AuthContext);
+    
     const obterListaFatores = () => {
         fetchFatoresPriorizacao()
             .then((fs) => {
@@ -228,7 +231,7 @@ export default function GerenciarPrioridades() {
             label: "Outros fatores",
             children: (
                 <div>
-                    <button data-testid="botaoAdicionarFator" className="br-button primary" type="button" onClick={onAddFator}>Novo Fator</button>
+                    <button disabled={!temPermissao(Permissao.PrioridadesEditar)} data-testid="botaoAdicionarFator" className="br-button primary" type="button" onClick={onAddFator}>Novo Fator</button>
                     {listaFatores.filter(f => !f.primario).map((item) => (
                         <FatorForm key={item.id} fator={item} condicaoUfs={ListaUfs} 
                         propriedades={propriedades} municipios={listaMunicipios} 

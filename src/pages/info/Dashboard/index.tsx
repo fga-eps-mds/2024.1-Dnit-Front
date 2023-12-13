@@ -66,6 +66,9 @@ export default function Dashboard() {
   const [podeGerenciarSolicitacao, setPodeGerenciarSolicitacao] = useState(
     temPermissao(Permissao.SolicitacaoVisualizar)
   );
+  const [podeGerenciarPrioridades, setPodeGerenciarPrioridades] = useState(
+    temPermissao(Permissao.PrioridadesVisualizar)
+  );
 
   useEffect(() => {
     fetchPermissoesDoUsuario().then((permissoes) => {
@@ -85,6 +88,7 @@ export default function Dashboard() {
       setPodeGerenciarSolicitacao(
         temPermissao(Permissao.SolicitacaoVisualizar)
       );
+      setPodeGerenciarPrioridades(temPermissao(Permissao.PrioridadesVisualizar));
     });
   }, []);
 
@@ -213,17 +217,19 @@ export default function Dashboard() {
               <p className="text">Gerenciar Polos</p>
             </Card>
           )}
-          <Card
-            className="card"
-            onClick={() => navigate("/gerenciarPrioridades")}
-          >
-            <img
-              className="iconGerenciarPrioridades"
-              src={IconGerenciarPrioridades}
-              alt="ícone prioridades"
-            />
-            <p className="text">Gerenciar Prioridades</p>
-          </Card>
+          {podeGerenciarPrioridades && (
+            <Card
+              className="card"
+              onClick={() => navigate("/gerenciarPrioridades")}
+            >
+              <img
+                className="iconGerenciarPrioridades"
+                src={IconGerenciarPrioridades}
+                alt="ícone prioridades"
+              />
+              <p className="text">Gerenciar Prioridades</p>
+            </Card>
+          )}
         </div>
       ),
     },
