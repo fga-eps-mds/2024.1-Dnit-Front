@@ -87,47 +87,35 @@ const getPropriedadeCallback = (propriedade: String) => {
 }
 
 export default function FatorCondicaoSelect({index, condicao, propriedades, onChange}:CondicaoProps) {
-    
-    const [condicaoState, setCondicaoState] = useState<CondicaoOptions>(
-        { 
-            valores: [],
-            operadores: SelecionarOperadores(String(condicao.propriedade)),
-            propriedadeSelecionada: String(condicao.propriedade),
-            operadorSelecionado: String(condicao.operador),
-            valoresSelecionados: condicao.valores
-        }
-    );
 
-    const [propriedadeSelecionada, setPropriedadeSelecionada] = useState<string>('');
-    const [optionValores, setOptionValores] = useState<FilterOptions[]>([]);
+    const opcoesOperadores = SelecionarOperadores(String(condicao.propriedade));
 
-    useEffect(() => {
-        setCondicaoState({
-            ...condicaoState,
-            propriedadeSelecionada: propriedadeSelecionada,
-            valores: optionValores
-        })
-    }, [optionValores])
+    const [propriedadeSelecionada, setPropriedadeSelecionada] = useState<string>(String(condicao.propriedade));
+    const [operadorSelecionado, setOperadorSelecionado] = useState<string>(
+        opcoesOperadores.map(o => o.id.toString()).find(e => e === String(condicao.operador)) 
+        ?? opcoesOperadores[0].id);
+    const [valores, setValores] = useState<FilterOptions[]>([]);
+    const [valoresSelecionados, setValoresSelecionados] = useState<string[]>(condicao.valores);
+
+    const callOnChange = () => {
+        onChange({
+            propriedade: Number(propriedadeSelecionada), 
+            operador: Number(operadorSelecionado), 
+            valores: valoresSelecionados
+        }, index);
+    }
 
     useEffect(() => {
         const callback = getPropriedadeCallback(propriedadeSelecionada);
         callback().then(options => {
-            setOptionValores(options);
+            setValores(options);
         })
     }, [propriedadeSelecionada]);
 
     useEffect(() => {
-        setPropriedadeSelecionada(condicaoState.propriedadeSelecionada);
-    }, [])
-
-    useEffect(() => {
-        if (condicaoState.propriedadeSelecionada)
-        onChange({
-            propriedade: Number(condicaoState.propriedadeSelecionada), 
-            operador: Number(condicaoState.operadorSelecionado), 
-            valores: condicaoState.valoresSelecionados
-        }, index);
-    }, [condicaoState])
+        if (propriedadeSelecionada && operadorSelecionado && valoresSelecionados.length > 0)
+            callOnChange();
+    }, [propriedadeSelecionada, operadorSelecionado])
 
     const selectPropriedades: SelectItem[] = propriedades?.map((item) => {
         return {
@@ -138,13 +126,17 @@ export default function FatorCondicaoSelect({index, condicao, propriedades, onCh
 
     return (
         <div style={{display: "flex"}}>
-            <Select items={selectPropriedades} dropdownStyle={{width: "194px", marginLeft: "20px"}} value={condicaoState.propriedadeSelecionada} onChange={(c) => {
+            <Select items={selectPropriedades} dropdownStyle={{width: "194px", marginLeft: "20px"}} value={propriedadeSelecionada} onChange={(c) => {
+                setValoresSelecionados([]);
                 setPropriedadeSelecionada(c);
             }} />
-            <Select items={condicaoState.operadores} dropdownStyle={{width: "194px", marginLeft: "20px"}} value={condicaoState.operadorSelecionado} onChange={(e) => setCondicaoState({...condicaoState, operadorSelecionado: e})} />
-            {condicaoState.propriedadeSelecionada != "6" ? <MultiSelect items={condicaoState.valores} value={condicaoState.valoresSelecionados} 
-                dropdownStyle={{width: "194px", marginLeft: "20px"}} onChange={(e) => setCondicaoState({...condicaoState, valoresSelecionados: e})} />:
-            <input className="br-input large" id="alunos-input" type="number"></input>
+            <Select items={opcoesOperadores} dropdownStyle={{width: "194px", marginLeft: "20px"}} value={operadorSelecionado} onChange={(e) => setOperadorSelecionado(e)} />
+            {propriedadeSelecionada != "6" ? 
+                <MultiSelect items={valores} value={valoresSelecionados} onDropDownClose={callOnChange}
+                    dropdownStyle={{width: "194px", marginLeft: "20px"}} onChange={e => setValoresSelecionados(e)} /> :
+                <input className="br-input large" id="alunos-input" type="number" 
+                    value={valoresSelecionados[0]} onChange={(e) => setValoresSelecionados([e.target.value])} 
+                    onBlur={callOnChange}/>
             }
         </div>          
     )

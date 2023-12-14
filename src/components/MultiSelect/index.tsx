@@ -14,6 +14,7 @@ interface MultiSelectProps {
   readonly dropdownStyle?: object;
   readonly buttonStyle?: object;
   readonly labelStyle?:object;
+  readonly onDropDownClose?: () => void;
   readonly onChange: (id: string[]) => void;
   readonly filtrarTodos?: boolean;
   readonly definePlaceholder?: string;
@@ -22,13 +23,14 @@ interface MultiSelectProps {
   readonly required?: boolean;
 }
 
-export default function MultiSelect({ items, value, label, onChange, inputStyle, dropdownStyle, buttonStyle, labelStyle, 
+export default function MultiSelect({ items, value, label, onDropDownClose, onChange, inputStyle, dropdownStyle, buttonStyle, labelStyle, 
     filtrarTodos, definePlaceholder, readOnly, errorMessage, required }: MultiSelectProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [novaLista, setNovaLista] = useState<MultiSelectOptions[]>([]);
   const checkAll: boolean = items.length === value.length && items.length > 0;
 
   const toggleDropdown = () => {
+    if (isOpen && onDropDownClose) onDropDownClose();
     setIsOpen(!isOpen);
   };
 
@@ -75,6 +77,7 @@ export default function MultiSelect({ items, value, label, onChange, inputStyle,
   useEffect(() => {
     const fechaDropdown = (event: MouseEvent) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        onDropDownClose && onDropDownClose();
         setIsOpen(false);
       }
     };
