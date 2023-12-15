@@ -14,6 +14,7 @@ import { SelectItem } from "../../../components/Select";
 import { FatorModel } from "../../../models/prioridade";
 import { AuthContext } from "../../../provider/Autenticacao";
 import { Permissao } from "../../../models/auth";
+import { useNavigate } from "react-router-dom";
 
 export default function GerenciarPrioridades() {
     const [parametrosCusto, setParametrosCusto] = useState<CustoLogisticoModel[]>([]);
@@ -28,6 +29,7 @@ export default function GerenciarPrioridades() {
     const [etapas, setEtapas] = useState<SelectItem[]>([]);
     const [listaPortesEscolas, setPortesEscolas] = useState<FilterOptions[]>([]);
     const { temPermissao } = useContext(AuthContext);
+    const navigate = useNavigate();
     
     const obterListaFatores = () => {
         fetchFatoresPriorizacao()
@@ -152,8 +154,11 @@ export default function GerenciarPrioridades() {
             })
             .catch(error => notificationApi.error({ message: 'Falha ao obter etapas de ensino. ' + (error?.response?.data || '') }))
     },[])
-
+    
     useEffect(() => {
+        if (!temPermissao(Permissao.PrioridadesVisualizar)) {
+            navigate("/dashboard");
+        }
         obterListaFatores();
         getSituacao();
         obterParametrosCusto();

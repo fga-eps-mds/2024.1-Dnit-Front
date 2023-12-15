@@ -104,7 +104,7 @@ export default function FatorForm ({ fator, onSaveFator, onDeleteFator, condicao
             </div>}
             <div className="br-switch icon" >
                 <input id="switch-icon" type="checkbox" checked={ativo} />
-                <label onClick={() => temPermissao(Permissao.PrioridadesEditar) ? setAtivo(!ativo) : {}} onKeyDown={() => {}}>Ativo:</label>
+                <label data-testid={`ativo-${fator.nome}`} onClick={() => temPermissao(Permissao.PrioridadesEditar) ? setAtivo(!ativo) : {}} onKeyDown={() => {}}>Ativo:</label>
             </div>
             <div className="d-flex w-100 justify-content-start">
                 <button disabled={fator?.primario || !fator?.id || !temPermissao(Permissao.PrioridadesExcluir)} data-testid={`botaoExcluir${fator.nome}`} className="br-button primary" onClick={handleDeleteButton} type="button">Excluir</button>

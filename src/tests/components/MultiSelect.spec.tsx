@@ -1,6 +1,6 @@
 /* eslint-disable testing-library/no-unnecessary-act */
 /* eslint-disable testing-library/render-result-naming-convention */
-import { render, waitFor, act } from "@testing-library/react";
+import { render, waitFor, act, fireEvent } from "@testing-library/react";
 import server from "../mock/servicosAPI";
 import MultiSelect from "../../components/MultiSelect";
 
@@ -159,4 +159,23 @@ describe("Testes para o componente MultiSelect", () => {
             item.click()
         })
     })
+
+    it('Deve fechar o dropdown quando um clique ocorre fora do componente', () => {
+        const screen = render(
+          <div>
+            <div data-testid="outside">Área externa</div>
+            <MultiSelect items={testItems}
+              value={[testItems[0].id]}
+              onChange={(_id) => {}} 
+              onDropDownClose={() => {}}
+              />
+          </div>
+        );
+    
+        const dropDown = screen.getByTestId("undefinedcustomSelect");
+        fireEvent.click(dropDown);
+    
+        fireEvent.mouseDown(screen.getByTestId('outside'));
+        expect(screen.getByDisplayValue(testItems[0].rotulo)).toBeInTheDocument();
+      });
 })

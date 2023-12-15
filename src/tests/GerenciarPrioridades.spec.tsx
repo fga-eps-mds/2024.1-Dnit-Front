@@ -23,7 +23,7 @@ function setup() {
 }
 
 describe("Gerenciar Prioridades", () => {
-    it("Deve renderizar a página de gerenciar prioridades", async() => {
+    it("Deve retornar a tela inicial se não tiver permissão de visualizar prioridades", async() => {
         const screen = setup();
     })
 
@@ -150,5 +150,70 @@ describe("Gerenciar Prioridades", () => {
         act(() => {
             botaoAdicionar.click();
         })
+    })
+
+    it("Deve selecionar propriedade de condição", async () => {
+        autenticar(Permissao.PrioridadesVisualizar, Permissao.PrioridadesEditar);
+
+        const screen = setup();
+
+        await waitFor(() => expect(screen.getAllByTestId("undefinedcustomSelect")).toBeInTheDocument);
+        const propriedadeSelect = screen.getAllByTestId("undefinedcustomSelect")[0];
+        
+        const numeroDePropriedades = 6;
+
+        for (let i = 0; i < numeroDePropriedades; i++) {
+            act(() => {
+                propriedadeSelect.click();
+            });
+            const propriedade = screen.getByTestId(`undefined${i}`);
+            await waitFor(() => expect(propriedade).toBeInTheDocument);
+
+            act(() => {
+                propriedade.click();
+            });
+        }
+    })
+
+    it("Deve selecionar um operador de condição", async () => {
+        autenticar(Permissao.PrioridadesVisualizar, Permissao.PrioridadesEditar);
+
+        const screen = setup();
+
+        await waitFor(() => expect(screen.getAllByTestId("undefinedcustomSelect")).toBeInTheDocument);
+        const operadorSelect = screen.getAllByTestId("undefinedcustomSelect")[1];
+        
+        
+        act(() => {
+            operadorSelect.click();
+        });
+
+        const operador = screen.getByTestId("undefined0");
+        await waitFor(() => expect(operador).toBeInTheDocument);
+
+        act(() => {
+            operador.click();
+        });
+    })
+
+    it("Deve selecionar um valor de condição", async () => {
+        autenticar(Permissao.PrioridadesVisualizar, Permissao.PrioridadesEditar);
+
+        const screen = setup();
+
+        await waitFor(() => expect(screen.getAllByTestId("undefinedcustomSelect")).toBeInTheDocument);
+        const valorMultiSelect = screen.getAllByTestId("undefinedcustomSelect")[2];
+        
+        
+        act(() => {
+            valorMultiSelect.click();
+        });
+        
+        await waitFor(() => expect(screen.getByTestId("cbs0")).toBeInTheDocument);
+        const valor = screen.getByTestId("cbs0");
+
+        act(() => {
+            valor.click();
+        });
     })
 })

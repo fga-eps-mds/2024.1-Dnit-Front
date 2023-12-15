@@ -298,4 +298,34 @@ describe("Testes do dashboard", () => {
     const botao = screen.queryByText("Gerenciar Polos");
     expect(botao).toBeNull();
   });
+
+  test("Gerenciar Prioridades", async () => {
+    autenticar(Permissao.PrioridadesVisualizar);
+
+    const screen = render(
+      <MemoryRouter initialEntries={["/dashboard"]}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </MemoryRouter>
+    );
+
+    const botao = screen.getByText("Gerenciar Prioridades");
+    fireEvent.click(botao);
+  });
+
+  test("Gerenciar Prioridades Sem Permissão", async () => {
+    autenticar();
+
+    const screen = render(
+      <MemoryRouter initialEntries={["/dashboard"]}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </MemoryRouter>
+    );
+
+    const botao = screen.queryByText("Gerenciar Prioridades");
+    expect(botao).toBeNull();
+  });
 });

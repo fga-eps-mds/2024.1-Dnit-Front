@@ -62,6 +62,27 @@ describe("Testes para componente FatorForm", () => {
     await waitFor(() => expect(screen.getByTestId("remover-condicao-1")).toBeInTheDocument);
   })
 
+  it("Deve clicar no switch de ativo", async() => {
+    autenticar(Permissao.PrioridadesVisualizar, Permissao.PrioridadesEditar);
+
+    const screen = render(
+      <MemoryRouter>
+        <AuthProvider>
+          <FatorForm fator={fatoresPriorizacao[0]} onSaveFator={(f) => {}}></FatorForm>
+        </AuthProvider>
+      </MemoryRouter>
+    )
+    
+    const ativo = screen.getByTestId("ativo-UPS");
+    await waitFor(expect(ativo).toBeInTheDocument);
+
+    act(() => {
+      ativo.click();
+    })
+
+    
+  })
+
   it("Deve limitar o peso entre 0 e 100", async() => {
     autenticar(Permissao.PrioridadesVisualizar, Permissao.PrioridadesEditar);
 
