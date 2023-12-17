@@ -30,7 +30,6 @@ export default function MultiSelect({ items, value, label, onDropDownClose, onCh
   const checkAll: boolean = items.length === value.length && items.length > 0;
 
   const toggleDropdown = () => {
-    if (isOpen && onDropDownClose) onDropDownClose();
     setIsOpen(!isOpen);
   };
 
@@ -72,12 +71,15 @@ export default function MultiSelect({ items, value, label, onDropDownClose, onCh
     }
   }, [items])
 
+  useEffect(() => {
+    if (!isOpen && onDropDownClose) onDropDownClose();
+  }, [isOpen])
+
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fechaDropdown = (event: MouseEvent) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
-        onDropDownClose && onDropDownClose();
         setIsOpen(false);
       }
     };
