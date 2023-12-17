@@ -1,12 +1,8 @@
 import "./styles.css"
-import Select from "../Select";
-import MultiSelect from "../MultiSelect";
-import { useContext, useEffect, useState } from "react";
-import { fetchUnidadeFederativa } from "../../service/escolaApi";
+import { useContext, useState } from "react";
 import { FilterOptions } from "../../pages/gerencia/GerenciarUsuario";
-import { Condicao, FatorModel, Localizacao, Operador, Rede } from "../../models/prioridade";
+import { Condicao, FatorModel} from "../../models/prioridade";
 import FatorCondicaoSelect from "../FatorCondicaoSelect";
-import { fetchPorte } from "../../service/prioridadeApi";
 import { AuthContext } from "../../provider/Autenticacao";
 import { Permissao } from "../../models/auth";
 
@@ -14,15 +10,10 @@ interface FatorProps {
     fator: FatorModel;
     onSaveFator: (fator: FatorModel) => void;
     onDeleteFator?: (fator: FatorModel) => void;
-    condicaoUfs?: FilterOptions[];
     propriedades?: FilterOptions[];
-    municipios?: FilterOptions[];
-    situacoes?: FilterOptions[];
-    etapasEnsino?: FilterOptions[];
-    porte?: FilterOptions[];
 }
 
-export default function FatorForm ({ fator, onSaveFator, onDeleteFator, condicaoUfs, propriedades, municipios, situacoes, etapasEnsino, porte }: FatorProps) { 
+export default function FatorForm ({ fator, onSaveFator, onDeleteFator, propriedades }: FatorProps) { 
     const [nomeFator, setNomeFator] = useState(fator?.nome ?? "");
     const [pesoFator, setPesoFator] = useState(fator?.peso ?? 0);
     const [ativo, setAtivo] = useState(fator?.ativo ?? true);

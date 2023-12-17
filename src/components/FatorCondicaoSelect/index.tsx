@@ -19,14 +19,6 @@ interface CondicaoProps
     readonly porte?: FilterOptions[];
 }
 
-interface CondicaoOptions {
-    valores: FilterOptions[];
-    operadores: FilterOptions[];
-    propriedadeSelecionada: string;
-    operadorSelecionado: string;
-    valoresSelecionados: string[];
-}
-
 const SelecionarOperadores = (propriedade: string) => {
     if (propriedade == "6") {
         return [
@@ -51,7 +43,6 @@ async function fetchUf(): Promise<FilterOptions[]> {
     const listaUfs = await fetchUnidadeFederativa();
     const novaUf = listaUfs.map((u) => ({ id: '' + u.id, rotulo: u.sigla }));
     return novaUf;
-    // setListaUfs(novaUf);
 }
 
 const getSituacao = async (): Promise<FilterOptions[]> => {
