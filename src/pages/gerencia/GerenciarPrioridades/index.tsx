@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Collapse, CollapseProps, notification } from "antd";
 import Footer from "../../../components/Footer";
 import Header from "../../../components/Header";
@@ -8,10 +8,10 @@ import FatorForm from "../../../components/FatorForm";
 import { adicionarFatorPriorizacao, deletarFatorPriorizacao, editarCustosLogisticos, editarFatorPriorizacao, fetchCustosLogisticos, fetchFatoresPriorizacao, fetchPorte, fetchPropriedades } from "../../../service/prioridadeApi";
 import { CustoLogisticoModel } from "../../../models/prioridade";
 import { FilterOptions } from "../GerenciarUsuario";
-import { fetchEtapasDeEnsino, fetchMunicipio, fetchSituacao, fetchUnidadeFederativa } from "../../../service/escolaApi";
-import { SituacaoData } from "../../../models/service";
-import { SelectItem } from "../../../components/Select";
 import { FatorModel } from "../../../models/prioridade";
+import { AuthContext } from "../../../provider/Autenticacao";
+import { Permissao } from "../../../models/auth";
+import { useNavigate } from "react-router-dom";
 
 export default function GerenciarPrioridades() {
     const [parametrosCusto, setParametrosCusto] = useState<CustoLogisticoModel[]>([]);
@@ -19,21 +19,12 @@ export default function GerenciarPrioridades() {
     const [propriedades, setPropriedades] = useState<FilterOptions[]>([]);
     const [listaFatores, setListaFatores] = useState<FatorModel[]>([]);
     const [notificationApi, notificationContextHandler] = notification.useNotification();
-    const [ListaUfs, setListaUfs] = useState<FilterOptions[]>([]);
-    const [listaMunicipios, setListaMunicipios] = useState<FilterOptions[]>([]);
-    const [uf, setUF] = useState('');
-    const [opcoesSituacao, setOpcoesSituacao] = useState<SituacaoData[]>([]);
-    const [etapas, setEtapas] = useState<SelectItem[]>([]);
-    const [listaPortesEscolas, setPortesEscolas] = useState<FilterOptions[]>([]);
-
+    const { temPermissao } = useContext(AuthContext);
+    const navigate = useNavigate();
+    
     const obterListaFatores = () => {
         fetchFatoresPriorizacao()
-            .then((fs) => {
-                setListaFatores(fs);
-                // setFatorUPS(fs.find(f => f.nome === "UPS" && f.primario));
-                // setFatorCusto(fs.find(f => f.nome === "Custo Logistico" && f.primario))
-                // setOutrosFatores(fs.filter(f => !f.primario));
-            })
+            .then(setListaFatores)
             .catch(error => notificationApi.error({ message: 'Falha ao obter fatores de priorização.' + (error?.response?.data || '') }))
     }
 
@@ -51,9 +42,15 @@ export default function GerenciarPrioridades() {
 
     const salvarFator = (fator: FatorModel) => {
         if (fator.nome === "") {
+            notification.error({message: "Por favor, dê um nome ao fator."});
             return;
         }
-        
+
+        if (fator.fatorCondicoes.some(c => c.propriedade === 0 || c.operador === 0 || c.valores.length === 0)) {
+            notification.error({message: "Por favor, não deixe condições vazias."});
+            return;
+        }
+
         if (fator.id) {
             editarFatorPriorizacao(fator.id, fator)
                 .then((fatorAtualizado) => {
@@ -108,66 +105,26 @@ export default function GerenciarPrioridades() {
             .then(c =>setPropriedades(c.filter(f => f.id != "3" && f.id != "7")))
             .catch(error => notificationApi.error({ message: 'Falha na listagem de propriedades de escola. ' + (error?.response?.data || '') }))
     }
-    
-    async function fetchMunicipios(): Promise<void> {
-        const listaMunicipios = await fetchMunicipio(Number(uf));
-        const novoMunicipio = listaMunicipios.map((u) => ({ id: '' + u.id, rotulo: u.nome }));
-        setListaMunicipios(novoMunicipio);
-    }
-
-    async function obterPortesEscolas(): Promise<void> {
-        const listaPortesEscolas = await fetchPorte();
-        const novoPorte = listaPortesEscolas.map((u) => ({ id: u.id, rotulo: u.descricao }));
-        setPortesEscolas(novoPorte);
-    }
-
-    async function fetchUf(): Promise<void> {
-        const listaUfs = await fetchUnidadeFederativa();
-        const novaUf = listaUfs.map((u) => ({ id: '' + u.id, rotulo: u.sigla }));
-        setListaUfs(novaUf);
-    }
 
     const obterParametrosCusto = () => {
         fetchCustosLogisticos()
             .then(c => setParametrosCusto(c))
             .catch(error => notificationApi.error({ message: 'Falha na dos parâmetros de custo logístico. ' + (error?.response?.data || '') }))
     }
-
-    const getSituacao = async () => {
-        try {
-          const resposta = await fetchSituacao();
-          setOpcoesSituacao(resposta);
-        } catch (error) {}
-    };
-
+    
     useEffect(() => {
-        fetchEtapasDeEnsino()
-            .then(etapas => {
-            etapas.sort((a, b) => b.descricao.localeCompare(a.descricao));
-            setEtapas(etapas.map(e => ({ id: e.id.toString(), rotulo: e.descricao })));
-            })
-            .catch(error => notificationApi.error({ message: 'Falha ao obter etapas de ensino. ' + (error?.response?.data || '') }))
-    },[])
-
-    useEffect(() => {
+        if (!temPermissao(Permissao.PrioridadesVisualizar)) {
+            navigate("/dashboard");
+        }
         obterListaFatores();
-        getSituacao();
         obterParametrosCusto();
         obterPropriedadesCondicao();
-        fetchUf();
-        obterPortesEscolas();
     }, [])
-
-
-    useEffect(() => {
-        fetchMunicipios();
-    }, [uf]);
 
 
     const fatorUps = listaFatores.find(f => f.nome === "UPS" && f.primario);
     const fatorCustoLogistico = listaFatores.find(f => f.nome === "Custo Logistico" && f.primario);
 
- 
     const items: CollapseProps['items'] =
     [
             {
@@ -228,12 +185,10 @@ export default function GerenciarPrioridades() {
             label: "Outros fatores",
             children: (
                 <div>
-                    <button data-testid="botaoAdicionarFator" className="br-button primary" type="button" onClick={onAddFator}>Novo Fator</button>
+                    <button disabled={!temPermissao(Permissao.PrioridadesEditar)} data-testid="botaoAdicionarFator" className="br-button primary" type="button" onClick={onAddFator}>Novo Fator</button>
                     {listaFatores.filter(f => !f.primario).map((item) => (
-                        <FatorForm key={item.id} fator={item} condicaoUfs={ListaUfs} 
-                        propriedades={propriedades} municipios={listaMunicipios} 
-                        situacoes ={opcoesSituacao.map(s => ({id : s.id.toString(), rotulo: s.descricao}))} 
-                        etapasEnsino = {etapas} porte = {listaPortesEscolas} onSaveFator={salvarFator} onDeleteFator={excluirFator}/>
+                        <FatorForm key={item.id} fator={item} propriedades={propriedades} 
+                        onSaveFator={salvarFator} onDeleteFator={excluirFator}/>
                     ))}
                 </div>
                 )
