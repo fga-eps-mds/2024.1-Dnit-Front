@@ -47,6 +47,9 @@ export default function Dashboard() {
   const [podeCadastrarRodovias, setPodeCadastrarRodovias] = useState(
     temPermissao(Permissao.RodoviaCadastrar)
   );
+  const [podeCadastrarAcoes, setPodeCadastrarAcoes] = useState(
+    temPermissao(Permissao.AcaoCadastrar)
+  );
   const [podeGerenciarPerfis, setPodeGerenciarPerfis] = useState(
     temPermissao(Permissao.PerfilVisualizar)
   );
@@ -80,6 +83,7 @@ export default function Dashboard() {
       setPodeCadastrarEscola(temPermissao(Permissao.EscolaCadastrar));
       setPodeCadastrarSinistro(temPermissao(Permissao.SinistroCadastrar));
       setPodeCadastrarRodovias(temPermissao(Permissao.RodoviaCadastrar));
+      setPodeCadastrarAcoes(temPermissao(Permissao.AcaoCadastrar));
       setPodeGerenciarUsuario(temPermissao(Permissao.UsuarioVisualizar));
       setPodeGerenciarPerfis(temPermissao(Permissao.PerfilVisualizar));
       setPodeGerenciarEmpresas(temPermissao(Permissao.EmpresaVisualizar));
@@ -155,6 +159,15 @@ export default function Dashboard() {
             >
               <FileAddOutlined className="icon" />
               <p className="text">Adicionar Rodovias</p>
+            </Card>
+          )}
+            {podeCadastrarRodovias && (
+            <Card
+              className="card"
+              onClick={() => navigate("/cadastrarAcao")}
+            >
+              <FileAddOutlined className="icon" />
+              <p className="text">Adicionar Ações</p>
             </Card>
           )}
         </div>

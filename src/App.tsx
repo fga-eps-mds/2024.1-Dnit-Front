@@ -16,6 +16,7 @@ import GerenciarPerfis from "./pages/gerencia/GerenciarPerfis";
 import GerenciarUsuario from "./pages/gerencia/GerenciarUsuario";
 import GerenciarEmpresas from "./pages/gerencia/GerenciarEmpresas";
 import GerenciarPolos from "./pages/gerencia/GerenciarPolos";
+
 import {
   AuthContext,
   configuraAutenticacaoAxios,
@@ -26,6 +27,7 @@ import Ranque from "./pages/Ranque";
 import GerenciarPrioridades from "./pages/gerencia/GerenciarPrioridades";
 import GerenciarAcoes from "./pages/gerencia/GerenciarAcoes/Home";
 import GerarPlanejamento from "./pages/gerencia/GerenciarAcoes/GerarPlanejamento";
+import CadastrarAcao from "./pages/cadastro/CadastrarAcao";
 
 function App() {
   const { getAuth } = useContext(AuthContext);
@@ -42,6 +44,7 @@ function App() {
           <Route path="/cadastrarescola" element={<RegisterSchool />} />
           <Route path="/escolas-cadastradas" element={<EscolasCadastradas />} />
           <Route path="/cadastrarRodovias" element={<CadastrarRodovias />} />
+          <Route path="/cadastrarAcao" element={<CadastrarAcao></CadastrarAcao>} />
           <Route path="/solicitacoes" element={<GerenciarSolicitacoes />} />
           <Route path="/ranque" element={<Ranque />} />
           <Route path="/gerenciarUsuario" element={<GerenciarUsuario />} />

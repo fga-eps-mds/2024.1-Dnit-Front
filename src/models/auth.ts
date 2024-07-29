@@ -22,6 +22,7 @@ export enum Permissao {
   UsuarioPerfilEditar = "UsuarioPerfilEditar",
 
   RodoviaCadastrar = "RodoviaCadastrar",
+  AcaoCadastrar = "AcaoCadastrar",
 
   SinistroCadastrar = "SinistroCadastrar",
 

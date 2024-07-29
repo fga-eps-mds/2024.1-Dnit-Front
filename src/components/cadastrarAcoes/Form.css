@@ -1,0 +1,197 @@
+/* Formulario.css */
+:root {
+    --primary-color: #cbd7e4;
+    --mark-color: rgb(71, 68, 68);
+  }
+.form-container {
+    max-width: 75vw;
+    width: 100%; 
+    margin: 0 auto ; 
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); 
+  }
+  
+  .form-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    font-size: large;
+    text-align: left;
+    margin-bottom: 5px;
+  }
+  
+  .form-group input[type="text"],
+  .form-group input[type="number"],
+  .form-group input[type="time"],
+  .form-group select {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    background-color: var(--primary-color);
+  }
+  .checkbox-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .checkbox-group input[type="checkbox"] {
+    display: none;
+  }
+  
+  .checkbox-group label {
+    position: relative;
+    padding-left: 30px; 
+    cursor: pointer;
+    user-select: none;
+    font-size: 16px;
+  }
+  
+  .checkbox-group label::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid var( --mark-color);
+    border-radius: 3px;
+    background-color: #fff; 
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1); 
+  }
+  
+  .checkbox-group input[type="checkbox"]:checked + label::before {
+    background-color: var( --mark-color);
+    border-color: var( --mark-color);
+  }
+  
+  .checkbox-group label::after {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%) scale(0);
+    width: 10px;
+    height: 10px;
+    border-radius: 16px; 
+    background-color: #fff; 
+    transition: transform 0.2s ease;
+  }
+  
+  .checkbox-group input[type="checkbox"]:checked + label::after {
+    transform: translateY(-50%) scale(1);
+  }
+
+
+  .radio-group {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+  }
+  
+  .radio-group input[type="radio"] {
+    display: none; 
+  }
+  
+  .radio-group label {
+    position: relative;
+    padding-left: 30px; 
+    cursor: pointer;
+    user-select: none;
+    font-size: 16px;
+  }
+  
+  .radio-group label::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid var( --mark-color);
+    border-radius: 50%; 
+    background-color: #fff; 
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .radio-group input[type="radio"]:checked + label::before {
+    background-color: var(--mark-color);
+    border-color: var(--mark-color);
+  }
+  
+  .radio-group label::after {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%) scale(0);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #fff; 
+    transition: transform 0.2s ease;
+  }
+  
+  .radio-group input[type="radio"]:checked + label::after {
+    transform: translateY(-50%) scale(1);
+  }
+  
+  .time-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .time-group span {
+    margin: 0 5px;
+  }
+  
+  .form-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .form-buttons button {
+    width: 150px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 30px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .form-buttons button[type="button"] {
+    background-color: #6c757d;
+  }
+  
+  .form-buttons button:hover {
+    opacity: 0.6;
+  }
+  
+  .form-grid {
+    display: flex ;
+    justify-content:space-evenly;
+    padding: 5px;
+  }
+  .form-grid1 {
+    display: grid ;
+    grid-template-columns: auto auto auto;
+    align-items: baseline;
+    align-content: center;
+    gap: 10px;
+    padding: 10px;
+  }

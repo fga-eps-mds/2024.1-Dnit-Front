@@ -101,6 +101,14 @@
   justify-content: center;
   align-items: center;
 }
+.SecaoAcoes {
+  height: 86vh;
+  margin: 5%;
+  background-color: var(--white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .Lateral {
   background-color: var(--blue2);
