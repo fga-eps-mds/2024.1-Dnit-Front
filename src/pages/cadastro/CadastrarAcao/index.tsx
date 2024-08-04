@@ -11,13 +11,13 @@ function CadastrarAcao() {
   const navigate = useNavigate();
   const { temPermissao } = useContext(AuthContext);
 
-  /*
+  
   useEffect(() => {
-    if (!temPermissao(Permissao.AcaoCadastrar)) {
+    if (!temPermissao(Permissao.RodoviaCadastrar)) {
       navigate("/");
     }
   }, []);
-  */
+  
 
   return (
     <div className="App">

@@ -1,7 +1,10 @@
 /* Formulario.css */
 :root {
-    --primary-color: #cbd7e4;
-    --mark-color: rgb(71, 68, 68);
+    --primary-color: #d9d9d9;
+    --secundary-color: #fcfcfc;
+    --hover-color: #4096fc;
+    --mark-color: #4096fc;
+    --buttom-color: #1757ba;
   }
 .form-container {
     max-width: 75vw;
@@ -9,12 +12,13 @@
     margin: 0 auto ; 
     padding: 20px;
     border: 1px solid #ccc;
-    border-radius: 15px;
+    border-radius: 10px;
     background-color: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); 
   }
   
   .form-container h2 {
+    font-weight: bold;
     text-align: center;
     margin-bottom: 20px;
   }
@@ -24,8 +28,9 @@
   }
   
   .form-group label {
+    font-weight: 100;
     display: block;
-    font-size: large;
+    font-size:medium;
     text-align: left;
     margin-bottom: 5px;
   }
@@ -36,10 +41,27 @@
   .form-group select {
     width: 100%;
     padding: 15px;
-    border: 1px solid #ccc;
-    border-radius: 15px;
+    border: 2px solid #b9b9b9;
+    border-radius: 4px;
     background-color: var(--primary-color);
   }
+  .form-group input[type="text"]:hover{
+    background-color: var( --secundary-color);
+    border: 2px solid var(--hover-color);
+  }
+  .form-group input[type="number"]:hover{
+    background-color: var(--secundary-color);
+    border: 2px solid var(--hover-color);
+  }
+  .form-group input[type="time"]:hover{
+    background-color: var(--secundary-color);
+    border: 2px solid var(--hover-color);
+  }
+  .form-group select:hover{
+    background-color: var(--secundary-color);
+    border: 2px solid var(--hover-color);
+  }
+ 
   .checkbox-group {
     display: flex;
     flex-direction: column;
@@ -169,13 +191,13 @@
     padding: 10px 20px;
     border: none;
     border-radius: 30px;
-    background-color: #007bff;
+    background-color: var(--buttom-color);
     color: #fff;
     cursor: pointer;
   }
   
   .form-buttons button[type="button"] {
-    background-color: #6c757d;
+    background-color: var(--buttom-color);
   }
   
   .form-buttons button:hover {
