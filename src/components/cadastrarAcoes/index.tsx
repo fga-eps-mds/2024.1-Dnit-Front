@@ -16,6 +16,8 @@ export default function CriarAcao() {
     tamanhoEspaco: '',
     espacoCoberto: false,
     wifi: false,
+    data:'',
+    nomeGestor:'',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -97,6 +99,23 @@ export default function CriarAcao() {
           </div>
         </div>
         </div>
+
+        <div className="form-grid2">
+        <div className="form-group">
+        <label htmlFor="nomeEscola">Nome do gestor</label>
+          <input type="text" id="nomeGestor" name="nomeGestor" value={formData.nomeGestor}
+              onChange={handleChange} className="nomeGestor"  />
+        </div>
+
+        <div className="form-group">
+          <label>Data</label>
+          <div className="form-group" >
+            <input type='date' name="data" value={formData.data}
+                onChange={handleChange} style={{textAlign:"center"}}/>
+          </div>
+        </div>
+        </div>
+
         <div className="form-grid1">
         <div className="form-group">
           <label htmlFor="quantidadeAlunos">Quantidade de Alunos</label>

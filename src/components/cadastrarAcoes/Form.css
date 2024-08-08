@@ -38,6 +38,7 @@
   .form-group input[type="text"],
   .form-group input[type="number"],
   .form-group input[type="time"],
+  .form-group input[type="date"],
   .form-group select {
     width: 100%;
     padding: 15px;
@@ -46,6 +47,10 @@
     background-color: var(--primary-color);
   }
   .form-group input[type="text"]:hover{
+    background-color: var( --secundary-color);
+    border: 2px solid var(--hover-color);
+  }
+  .form-group input[type="date"]:hover{
     background-color: var( --secundary-color);
     border: 2px solid var(--hover-color);
   }
@@ -216,4 +221,15 @@
     align-content: center;
     gap: 10px;
     padding: 10px;
+  }
+  .form-grid2 {
+    display: grid ;
+    grid-template-columns: 80% 20%;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .nomeGestor {
+    width: 70%;
+    box-sizing: border-box; 
   }
